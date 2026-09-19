@@ -159,5 +159,7 @@
     function goHome() { error.hidden=true; showOnly(mediumView); }
     document.querySelector("#back-to-subjects").onclick=()=>showOnly(subjectsView); document.querySelector("#home-top").onclick=goHome; document.querySelector("#progress-top").onclick=()=>{ stopSpeaking(); renderProgress(); showOnly(progressView); }; document.querySelector("#back-to-chapters").onclick=()=>{ stopSpeaking(); showOnly(chaptersView); }; previousQuestion.onclick=()=>{ if (activeQuestionIndex>0) { activeQuestionIndex-=1; renderActiveQuestion(true); } }; nextQuestion.onclick=()=>{ if (activeQuestionIndex<activeQuestions.length-1) { activeQuestionIndex+=1; renderActiveQuestion(true); } else { stopSpeaking(); showOnly(chaptersView); } }; readQuestion.onclick=()=>{ if (speechActive||window.speechSynthesis?.speaking||window.speechSynthesis?.pending) stopSpeaking(); else speakQuestion(activeQuestions[activeQuestionIndex]); }; renderMediums(); renderSubjects(); renderProgress(); loading.hidden=true; showOnly(mediumView);
   </script>
+  <script data-goatcounter="https://examquiz.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
