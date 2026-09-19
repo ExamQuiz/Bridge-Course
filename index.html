@@ -38,8 +38,8 @@
     .subject-card h3 { margin:0 0 5px; font-size:19px; letter-spacing:-.035em; }
     .subject-card p { margin:0; color:var(--muted); font-size:12px; }
     .chapter-layout { display:grid; grid-template-columns:250px 1fr; gap:34px; align-items:start; }
-    .back-button { padding:0; color:var(--teal-dark); background:transparent; }
-    .back-button:hover { color:var(--coral); }
+    .back-button { padding:10px 14px; color:var(--teal-dark); background:var(--white); border:1px solid var(--line); border-radius:6px; box-shadow:0 4px 12px rgba(22,42,58,.05); }
+    .back-button:hover { color:var(--coral); border-color:var(--coral); background:#fffaf7; }
     .chapter-title { margin:0 0 6px; font-size:32px; letter-spacing:-.05em; }
     .chapter-copy { margin:0 0 22px; color:var(--muted); font-size:14px; line-height:1.5; }
     .chapter-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
@@ -104,13 +104,13 @@
   </style>
 </head>
 <body>
-  <header class="site-header"><div class="header-inner"><div class="topline"><div class="brand">ExamQuiz <span>for BridgeCourse</span></div><div class="top-actions"><button id="progress-top" class="secondary-button" type="button">My progress</button><button id="home-top" class="secondary-button" type="button">All subjects</button></div></div><p class="eyebrow">BEd. Bridge Course</p><h1>ब्रिज कोर्स की तैयारी को गति देने का प्रयास</h1><p class="subtitle">MCQs ब्रिज कोर्स के सिलेबस से बनाए गए हैं ताकि आप टॉपिक को जल्दी सीख सकें</p></div></header>
+  <header class="site-header"><div class="header-inner"><div class="topline"><div class="brand">ExamQuiz <span>for BridgeCourse</span></div><div class="top-actions"><button id="progress-top" class="secondary-button" type="button">My progress</button><button id="home-top" class="secondary-button" type="button">Home</button></div></div><p class="eyebrow">BEd. Bridge Course</p><h1>ब्रिज कोर्स की तैयारी को गति देने का प्रयास</h1><p class="subtitle">MCQs ब्रिज कोर्स के सिलेबस से बनाए गए हैं ताकि आप टॉपिक को जल्दी सीख सकें</p></div></header>
   <main>
     <div id="loading" class="notice">Loading your quiz library...</div>
     <div id="error" class="notice error" hidden></div>
     <section id="medium-view" hidden><div class="view-heading"><div><h2>अपना माध्यम चुनें</h2><p>Select the language for your practice material.</p></div></div><div id="mediums" class="subject-grid"></div></section>
     <section id="subjects-view" hidden><div class="view-heading"><div><h2>एक विषय चुनें</h2><p id="subject-copy">Six subjects, ready whenever you are.</p></div></div><div id="subjects" class="subject-grid"></div></section>
-    <section id="chapters-view" hidden><div class="chapter-layout"><div><button id="back-to-subjects" class="back-button" type="button">← Home</button></div><div><h2 id="chapter-title" class="chapter-title"></h2><p class="chapter-copy">Select a chapter to begin. Each chapter contains around 100 practice questions.</p><div id="chapters" class="chapter-list"></div></div></div></section>
+    <section id="chapters-view" hidden><div class="chapter-layout"><div><button id="back-to-subjects" class="back-button" type="button">← Back to subjects</button></div><div><h2 id="chapter-title" class="chapter-title"></h2><p class="chapter-copy">Select a chapter to begin. Each chapter contains around 100 practice questions.</p><div id="chapters" class="chapter-list"></div></div></div></section>
     <section id="progress-view" hidden><div class="view-heading"><div><h2>My progress</h2><p>Your subject-wise practice history on this device.</p></div></div><div id="progress-list" class="progress-list"></div></section>
     <section id="quiz" hidden aria-live="polite"><div class="quiz-toolbar"><div><button id="back-to-chapters" class="back-button" type="button">← Back to chapters</button><p id="progress"></p></div><div class="quiz-actions"><button id="read-question" class="primary-button" type="button">🔊 Read aloud</button></div></div><div id="questions"></div><div class="quiz-navigation"><button id="previous-question" class="secondary-button" type="button">← Previous</button><button id="next-question" class="primary-button" type="button">Next →</button></div></section>
   </main>
