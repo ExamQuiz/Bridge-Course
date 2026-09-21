@@ -137,7 +137,7 @@
       { name:"Pedagogy of Mathematics", slug:"pedagogy_of_mathematics", chapters:11 },
       { name:"Pedagogy of the World Around Us", slug:"pedagogy_of_world_around_us", chapters:11 }
     ];
-    const documentRoot="https://raw.githubusercontent.com/ExamQuiz/Bridge-Course/main/documents";
+    const documentRoot="https://github.com/ExamQuiz/Bridge-Course/blob/main/documents";
     const loading=document.querySelector("#loading"), error=document.querySelector("#error"), mediumView=document.querySelector("#medium-view"), subjectsView=document.querySelector("#subjects-view"), chaptersView=document.querySelector("#chapters-view"), progressView=document.querySelector("#progress-view"), quiz=document.querySelector("#quiz"), mediumsElement=document.querySelector("#mediums"), subjectsElement=document.querySelector("#subjects"), chaptersElement=document.querySelector("#chapters"), questionsElement=document.querySelector("#questions"), progress=document.querySelector("#progress"), progressList=document.querySelector("#progress-list"), previousQuestion=document.querySelector("#previous-question"), nextQuestion=document.querySelector("#next-question"), readQuestion=document.querySelector("#read-question");
     let selectedMedium, selectedSubject, activeQuestions=[], activeQuestionIndex=0, activeChapterNumber=0, activeAttemptId="", speechActive=false;
     const attemptStorageKey="examquiz-attempt-history-v1";
