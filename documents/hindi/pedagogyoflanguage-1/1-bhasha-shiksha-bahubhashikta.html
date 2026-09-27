@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>भाषा-शिक्षा की विभिन्न नीतियाँ एवं बहुभाषिकता — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>भाषा-शिक्षा की विभिन्न नीतियाँ एवं बहुभाषिकता</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — भाषा हमारे जीवन में",
+    text: "आज हम पढ़ेंगे — भाषा-शिक्षा की विभिन्न नीतियाँ एवं बहुभाषिकता। सोचिए ज़रा, हमारे रोज़मर्रा के जीवन में भाषा का कितना बड़ा महत्व है। हम भाषा के ज़रिए ही संवाद करते हैं और ज्ञान का आदान-प्रदान भी करते हैं। हम जिस परिवेश में रहते हैं, उस क्षेत्र की भाषा का असर हम पर ज़रूर पड़ता है। भारत एक बहुभाषिक और बहु-सांस्कृतिक देश है — यहाँ खान-पान, रहन-सहन, पर्व-त्योहार, और बोलियों में इतनी विविधता है कि हर कुछ किलोमीटर पर भाषा बदल जाती है। भाषा सिर्फ़ हमारे विचारों और संवादों को व्यक्त करने का माध्यम नहीं है — यह कहना बिल्कुल सही होगा कि किसी व्यक्ति का पूरा जीवन ही भाषा से तय होता है। आज हम भाषा-शिक्षण को समझेंगे, अलग-अलग आयोगों और नीतियों में भाषा को लेकर क्या सुझाव दिए गए हैं यह जानेंगे, और अंत में बहुभाषिकता को एक संसाधन के रूप में कैसे इस्तेमाल किया जाए, यह भी समझेंगे।"
+  },
+  {
+    title: "भाषा-शिक्षण — मातृभाषा का महत्व",
+    text: "अब समझते हैं कि भाषा की समझ इतनी ज़रूरी क्यों है। शिक्षक और विद्यार्थी दोनों के लिए एक-दूसरे की भाषा समझना ज़रूरी है। दिलचस्प बात यह है कि स्कूल जाने से पहले ही बच्चे भाषा के ज़रिए दुनिया को महसूस करने लगते हैं — वे घर पर परिवार के सदस्यों से शब्द सुनते हैं और बोलने की कोशिश करते हैं। यही कारण है कि हमारी प्राथमिक समझ अक्सर हमारी मातृभाषा में ही बनती है। यूनेस्को के शैक्षणिक आधारपत्र के अनुसार, शुरुआती शिक्षा के लिए मातृभाषा बहुत ज़रूरी है और इसे जितना हो सके बरकरार रखना चाहिए। एक उदाहरण से समझते हैं — गणित का एक पाठ है 'गुणा'। परंपरागत तरीके में सिर्फ़ लिखा जाता है '2 गुणा 3 बराबर 6', लेकिन अगर शिक्षक मातृभाषा में पूछें — 'अगर आपके पास 2 थालियाँ हैं और हर थाली में 3 आम रखे हैं, तो कुल कितने आम हुए?' — तो बच्चे अपनी स्थानीय भाषा में सहज उत्तर देते हैं, 'गुरुजी, दो थाल में तीन-तीन आम, मतलब छह आम।' यही मातृभाषा की ताकत है।"
+  },
+  {
+    title: "दो बच्चों की कहानी — भाषिक परिवेश का असर",
+    text: "अब एक बहुत सुंदर उदाहरण से समझते हैं कि भाषिक परिवेश बच्चे के सीखने पर कैसा असर डालता है। भाषाविज्ञानी चॉम्स्की कहते हैं कि अगर बच्चों को पर्याप्त अवसर और माहौल मिले तो वे किसी भी भाषा को सीखने की क्षमता रखते हैं। अब सुनिए भारत के दो परिवारों की कहानी। एक परिवार दिल्ली में रहता है और उसकी भाषा अंग्रेज़ी है। दूसरा परिवार झारखंड के छोटा नागपुर में रहता है और उसकी भाषा मुंडारी है। मुंडारी परिवार का बच्चा एक साल की उम्र से ही खेतों, जंगलों और नदियों की यात्रा करने लगता है और उससे जुड़ी शब्दावली सीखता है, जबकि अंग्रेज़ी भाषी बच्चे का परिचय कार्टून चैनल, खिलौनों, टीवी और टैब की दुनिया से होता है। जब मुंडारी बच्चा छह साल की उम्र में स्कूल जाता है, जहाँ शिक्षक हिंदी में पढ़ाते हैं, तो उसे कुछ समझ नहीं आता — स्कूल की दुनिया उसे बिल्कुल अलग और बेगानी लगती है। वहीं अंग्रेज़ी भाषी बच्चे को स्कूल में वही भाषा और वही माहौल मिलता है जो वह बचपन से जानता आया है। यह कहानी साफ़ बताती है कि घर की भाषा और स्कूल की भाषा के बीच एक पुल होना बहुत ज़रूरी है, ताकि हर बच्चे को बराबर अवसर मिले।"
+  },
+  {
+    title: "विभिन्न आयोगों की अनुशंसाएँ",
+    text: "अब समझते हैं कि आज़ादी के बाद से अलग-अलग आयोगों ने भाषा को लेकर क्या-क्या सुझाव दिए। हमारे संविधान की आठवीं अनुसूची में कुल बाईस भाषाओं को शामिल किया गया है, और अनुच्छेद तीन सौ तैंतालीस से तीन सौ इक्यावन तक भाषा से जुड़े प्रावधान हैं। सबसे पहले आया डॉक्टर राधाकृष्णन आयोग, जिसने संघ की भाषा, स्कूल और विश्वविद्यालय स्तर पर मातृभाषा, और लिपि जैसे मुद्दों पर विस्तार से चर्चा की। फिर आया कोठारी आयोग, जिसने भाषा नीति, क्षेत्रीय भाषा को अपनाना, और त्रिभाषा-सूत्र पर बात की। शिक्षा आयोग की रिपोर्ट ने प्राथमिक स्तर पर मातृभाषा में अच्छी तरह पढ़ने और निरक्षरता ख़त्म करने पर ज़ोर दिया, और कहा कि विदेशी भाषा के रूप में अंग्रेज़ी की पढ़ाई पाँचवीं कक्षा से पहले शुरू नहीं होनी चाहिए। राष्ट्रीय शिक्षा नीति उन्नीस सौ अड़सठ ने हिंदी और सभी भारतीय भाषाओं के विकास पर ज़ोर दिया। और राष्ट्रीय शिक्षा नीति उन्नीस सौ छियासी ने त्रिभाषा-सूत्र को पुरज़ोर तरीके से लागू करने और संपर्क-भाषा के रूप में हिंदी को विकसित करने की बात कही।"
+  },
+  {
+    title: "एनसीएफ 2005 — मातृभाषा और बहुभाषिक कक्षा",
+    text: "अब बात करते हैं राष्ट्रीय पाठ्यचर्या रूपरेखा दो हज़ार पाँच की, जिसने भाषा-शिक्षा को लेकर एक बहुत ज़रूरी बात कही — भाषा शिक्षण बहुभाषिक होना चाहिए, न सिर्फ़ कई भाषाओं को पढ़ाने के अर्थ में, बल्कि इस तरह की रणनीति बनाने के लिहाज़ से भी कि बहुभाषिक कक्षा को एक संसाधन के तौर पर इस्तेमाल किया जाए। इसमें कहा गया कि बच्चों की घरेलू भाषा स्कूल में शिक्षण का माध्यम होनी चाहिए, और स्कूल को बच्चों की घरेलू भाषाओं का सम्मान करना चाहिए। सुझाव यह था कि विद्यालय में पहली भाषा मातृभाषा या क्षेत्रीय भाषा हो, दूसरी भाषा हिंदी-भाषी राज्यों में अंग्रेज़ी या कोई और भाषा हो, और तीसरी भाषा हिंदी हो — जबकि ग़ैर-हिंदी भाषी राज्यों में दूसरी भाषा हिंदी या अंग्रेज़ी हो सकती है। इसमें यह भी ज़ोर दिया गया कि बच्चे घर की भाषा में पढ़ें, ताकि वे रटने की बजाय समझकर पढ़ने की दिशा में आगे बढ़ें, क्योंकि बच्चे मातृभाषा के माध्यम से कहीं ज़्यादा तेज़ी से सीखते हैं।"
+  },
+  {
+    title: "राष्ट्रीय शिक्षा नीति 2020 — भाषा को लेकर दृष्टि",
+    text: "अब समझते हैं कि नई राष्ट्रीय शिक्षा नीति दो हज़ार बीस में भाषा को लेकर क्या कहा गया है। यह नीति भाषाओं के प्रोत्साहन को बढ़ावा देती है और बहुभाषिकता पर बहुत ज़ोर देती है, ताकि सभी भाषाएँ फलें-फूलें और हमारे देश की राष्ट्रीयता और भावनात्मक एकता मज़बूत हो। इसमें मातृभाषा, शास्त्रीय भाषाएँ, और आदिवासी व लुप्तप्राय भाषाओं के विकास पर भी काम करने की बात कही गई है। नीति की सबसे अहम सिफ़ारिश यह है कि कम-से-कम कक्षा पाँच तक, और जहाँ तक संभव हो कक्षा आठ तक, शिक्षा का माध्यम मातृभाषा में होना चाहिए — और यह सिर्फ़ सरकारी नहीं, निजी स्कूलों पर भी लागू होता है। विज्ञान और सभी विषयों की किताबें घरेलू भाषाओं में उपलब्ध कराई जाएँगी। नीति में यह भी कहा गया है कि बहुभाषिकता से बच्चे की संज्ञानात्मक यानी सोचने-समझने की क्षमता बढ़ती है। बच्चे जो तीन भाषाएँ सीखते हैं, उनका चुनाव राज्यों, क्षेत्रों और ख़ुद विद्यार्थियों की मर्ज़ी से होगा, और अगर कोई विद्यार्थी कक्षा छह या सात में एक भाषा बदलना चाहे तो वह भी कर सकता है।"
+  },
+  {
+    title: "राष्ट्रीय पाठ्यचर्या रूपरेखा — बुनियादी स्तर 2022",
+    text: "अब बात करते हैं आधारभूत स्तर के लिए बनी राष्ट्रीय पाठ्यचर्या रूपरेखा दो हज़ार बाईस की। इसमें मातृभाषा के विकास पर बल देने के साथ-साथ बहुभाषिकता को बढ़ावा देने की बात कही गई है। इसमें कहा गया है कि भारत में बहुभाषिकता बहुत व्यापक है, और ज़्यादातर बच्चे अपने जीवन के शुरुआती सालों से ही एक से ज़्यादा भाषाओं के संपर्क में होते हैं। इसीलिए इस रूपरेखा का एक मुख्य लक्ष्य यही है कि एकदम शुरुआत से ही बच्चों के विकास के अनुरूप बेहतरीन मौखिक बहुभाषिक कौशलों की नींव मज़बूत की जाए। इसमें कहा गया है — चूँकि बच्चा घर की भाषा में ज़्यादा तेज़ी और गहराई से अवधारणाएँ सीखता है, इसलिए बुनियादी स्तर पर शिक्षण की प्राथमिक भाषा बच्चे की घर की भाषा या मातृभाषा या परिचित भाषा ही होनी चाहिए। जैसे, भूटिया भाषा में संतरे को 'सुन्तला' और हरी मिर्च को 'खोर्साणी' कहा जाता है — इस तरह बच्चे प्राथमिक स्तर पर ही अन्य भाषाओं से भी परिचित होने लगते हैं। साथ ही, गणित जैसे विषयों को भी अगर रोचक भाषिक शब्दावली से प्रस्तुत किया जाए — जैसे आयत और वृत्त के बीच एक मज़ेदार खेल-खेल संवाद — तो कठिन विषय भी आसानी से समझ आ जाता है।"
+  },
+  {
+    title: "राष्ट्रीय पाठ्यचर्या रूपरेखा — विद्यालयी शिक्षा 2023",
+    text: "अब समझते हैं विद्यालयी शिक्षा के लिए बनी राष्ट्रीय पाठ्यचर्या रूपरेखा दो हज़ार तेईस को। इसमें भाषा-शिक्षा को बच्चों के सर्वांगीण विकास का अभिन्न अंग माना गया है, और पहली भाषा — यानी एल वन — और दूसरी भाषा — यानी एल टू — दोनों की भूमिका को बहुत महत्वपूर्ण बताया गया है। इसका लक्ष्य है कि हर विद्यार्थी कम-से-कम तीन भाषाओं में एक स्वतंत्र वक्ता, पाठक और लेखक बने। कुछ मुख्य बातें इस प्रकार हैं — पहला, शिक्षा में तीन भाषाओं का ज्ञान ज़रूरी माना गया है, यानी मातृभाषा और हिंदी-अंग्रेज़ी में से कम-से-कम दो भाषाओं में दक्षता। दूसरा, क्षेत्रीय भाषा यानी पहली भाषा को प्राथमिक शिक्षा का माध्यम बनाया जाना चाहिए। तीसरा, प्राथमिक स्तर पर शिक्षण मातृभाषा में ही होना चाहिए, और भाषा को सिर्फ़ संचार का साधन न मानकर संस्कृति और पहचान के स्रोत के रूप में देखा जाना चाहिए। और चौथा, भाषा-शिक्षण संवादात्मक, क्रियात्मक और अनुभव-आधारित होना चाहिए, जिसमें सुनना, बोलना, पढ़ना और लिखना — चारों कौशलों का विकास किया जाए, और इसके लिए शिक्षकों को लगातार प्रशिक्षण मिलना चाहिए।"
+  },
+  {
+    title: "बहुभाषिकता क्या है और बहुभाषिक कक्षा",
+    text: "अब समझते हैं बहुभाषिकता का असली मतलब। बहुभाषिकता का मतलब है भाषिक विविधता, और यह हमारे जीवन का ज़रूरी हिस्सा है। हम सभी किसी-न-किसी रूप में बहुभाषी हैं, और एक से ज़्यादा भाषाएँ जानना हमें दूसरों से जुड़ने में मदद करता है। जैसे मीना नाम की एक भारतीय लड़की का उदाहरण है, जो हिंदी, अंग्रेज़ी और तेलुगु बोल सकती है — वह घर पर हिंदी-तेलुगु बोलती है, लेकिन स्कूल और काम पर अंग्रेज़ी का इस्तेमाल करती है। यही बहुभाषिकता उसे अलग-अलग सामाजिक स्थितियों में सहज बनाती है। अब बहुभाषिक कक्षा की बात करें — यह वह कक्षा है जहाँ बच्चे अलग-अलग भाषिक पृष्ठभूमि से आते हैं। ऐसी कक्षा में शिक्षक कुछ आसान तरीके अपना सकते हैं। पहला — दृश्य सहायक सामग्री का उपयोग करें, जैसे जानवरों-पक्षियों की तस्वीरें दिखाना। दूसरा — कोड-स्विचिंग करें, यानी मुख्य भाषा के साथ-साथ बच्चों की मातृभाषा के कुछ शब्द भी इस्तेमाल करें। तीसरा — समूह कार्य करवाएँ, जहाँ अलग-अलग भाषा के बच्चे आपस में बातचीत करें। और चौथा — एक साझा शब्दावली चार्ट बनाएँ, जिसमें एक ही शब्द को सभी भाषाओं में लिखा जाए — जैसे 'जल' शब्द को हिंदी, बांग्ला, उर्दू और उड़िया में साथ-साथ दिखाना।"
+  },
+  {
+    title: "बहुभाषिकता — एक संसाधन के रूप में",
+    text: "अब आख़िरी और बहुत ज़रूरी बात समझते हैं — हमें यह पूर्वाग्रह छोड़ना होगा कि अगर हम अपनी भाषा के अलावा कोई दूसरी भाषा सीखेंगे तो हमारी अपनी भाषा कमज़ोर हो जाएगी। ऐसा बिल्कुल नहीं है। दरअसल, भाषा-शिक्षण में बहुभाषिकता का इस्तेमाल एक बेहतरीन औज़ार के रूप में हो सकता है। इसके लिए ज़रूरी है कि शिक्षकों में बहुभाषिकता के प्रति जागरूकता हो। पाठ्यपुस्तक कक्षा में बहुभाषिकता के सफल इस्तेमाल का सबसे अच्छा आधार है — लेकिन सिर्फ़ सामग्री दे देने से बच्चा नहीं सीखता, शिक्षक का यह दायित्व है कि वह विस्तार से समझाए। कोशिश यह होनी चाहिए कि पाठ्यपुस्तकों में हमारी भाषिक और सांस्कृतिक विरासत की विविधता को दिखाया जाए, जैसे विभिन्न राज्यों की भाषाओं के पाठ और गतिविधियाँ शामिल करना। शोध यह भी बताते हैं कि जो बच्चे ज़्यादा भाषाएँ बोलते हैं, वे शैक्षणिक रूप से ज़्यादा रचनात्मक बनते हैं और उनमें सामाजिक सहनशीलता भी बढ़ती है। इसलिए बहुभाषी शिक्षण को हमेशा प्रोत्साहित किया जाना चाहिए, और बच्चे की घर की भाषा तथा स्कूल की भाषा के बीच एक मज़बूत पुल बनाया जाना चाहिए।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो चलिए, आज जो हमने सीखा उसे संक्षेप में दोहराते हैं। पहला — भाषा और परिवेश का बहुत गहरा संबंध है, जो भाषा सीखने को काफ़ी हद तक प्रभावित करता है। दूसरा — भाषा-शिक्षा बच्चे के सर्वांगीण विकास के लिए बहुत ज़रूरी है, क्योंकि बाक़ी सभी विषय भी भाषा के बिना नहीं पढ़ाए जा सकते। तीसरा — भाषा-अर्जन की क्षमता जन्मजात होती है, यानी सही माहौल मिले तो हर बच्चा कोई भी भाषा सीख सकता है। चौथा — आज़ादी के बाद से अलग-अलग आयोगों और नीतियों ने बार-बार मातृभाषा और त्रिभाषा-सूत्र पर ज़ोर दिया है — राधाकृष्णन आयोग से लेकर एनसीएफ दो हज़ार पाँच तक। पाँचवाँ — राष्ट्रीय शिक्षा नीति दो हज़ार बीस और उस पर आधारित एनसीएफ-एफएस दो हज़ार बाईस तथा एनसीएफ-एसई दो हज़ार तेईस, दोनों मातृभाषा में शुरुआती शिक्षा और कम-से-कम तीन भाषाओं में दक्षता पर ज़ोर देते हैं। और छठा — बहुभाषिकता कोई समस्या नहीं, बल्कि एक बहुमूल्य संसाधन है, जिसे कक्षा में सही तरीक़ों से इस्तेमाल करके हम हर बच्चे को उसकी अपनी भाषा से जोड़ते हुए नई भाषाएँ सीखने में सक्षम बना सकते हैं। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
