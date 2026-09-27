@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>स्व की भारतीय अवधारणा — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #fdfaf6;
+  --card: #ffffff;
+  --text: #2a2620;
+  --text-secondary: #6c6357;
+  --accent: #7a4a9e;
+  --accent-bg: #efe4f7;
+  --border: #e5dfe9;
+  --active-bg: #f4ecfa;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #19171c;
+    --card: #232028;
+    --text: #f0ede9;
+    --text-secondary: #b0a8b8;
+    --accent: #b98bde;
+    --accent-bg: #33283f;
+    --border: #362f3c;
+    --active-bg: #2c2434;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #19171c;
+  --card: #232028;
+  --text: #f0ede9;
+  --text-secondary: #b0a8b8;
+  --accent: #b98bde;
+  --accent-bg: #33283f;
+  --border: #362f3c;
+  --active-bg: #2c2434;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.3rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>स्व की भारतीय अवधारणा</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — मैं कौन हूँ?",
+    text: "आज हम पढ़ेंगे — स्व की भारतीय अवधारणा। सोचिए, अगर कोई आपसे पूछे 'तुम कौन हो', तो आप क्या जवाब देंगे? शायद अपना नाम बताएँगे, या अपनी नौकरी, या अपना रिश्ता — जैसे मैं किसी का बेटा हूँ, किसी की बेटी हूँ, या मैं एक शिक्षक हूँ। लेकिन क्या ये जवाब सच में बताते हैं कि हम असल में कौन हैं? यह सवाल जितना आसान लगता है, उतना ही गहरा है। बचपन से ही इंसान अपने बारे में एक समझ बनाना शुरू कर देता है — पहले अपने शरीर से, फिर दूसरों के साथ बातचीत से, भाषा से, और यादों से। दर्पण में खुद को देखकर इशारा करता बच्चा, अपने पसंदीदा विषय के बारे में बताता स्कूली बच्चा, या अपनी पहचान को लेकर उलझन में पड़ा किशोर — ये सब खुद को समझने की उसी यात्रा के अलग-अलग पड़ाव हैं। भारतीय दर्शन हमें एक कदम और आगे ले जाता है — यह पूछता है कि क्या इन सब भूमिकाओं और पहचानों के पीछे कोई और गहरी, स्थायी चीज़ है? वेदांत, सांख्य, बौद्ध और जैन परंपराएँ इसका जवाब तलाशती हैं, और कहती हैं कि हमारी असली पहचान शरीर और मन से भी आगे है — वह है शुद्ध चेतना।"
+  },
+  {
+    title: "स्व, पहचान और स्व-अवधारणा में फ़र्क",
+    text: "अब समझते हैं तीन ज़रूरी शब्दों का फ़र्क — स्व, पहचान, और स्व-अवधारणा। पहला है — स्व, यानी संस्कृत में आत्मन्। भारतीय दर्शन में इसे हर इंसान के अंदर मौजूद एक शाश्वत और कभी न बदलने वाला तत्व माना गया है — यह शुद्ध चेतना है, जो शरीर, मन और बाहरी हालात से प्रभावित नहीं होती। अद्वैत वेदांत जैसी परंपराओं के अनुसार, इसी स्व को ब्रह्म यानी परम सच्चाई से एक जान लेना ही जीवन का सबसे बड़ा लक्ष्य है, जिसे मोक्ष कहते हैं। दूसरा है — पहचान, यानी वो नाम और लेबल जो हमें समाज से मिलते हैं — जैसे हमारा नाम, लिंग, जाति, पेशा, या पारिवारिक भूमिका। ये सब बदलती रहती हैं और शरीर के साथ ही खत्म हो जाती हैं। और तीसरा है — स्व-अवधारणा, यानी हम खुद को अपने मन में कैसे देखते और आँकते हैं — जैसे 'मैं सक्षम हूँ' या 'मुझमें कुछ कमियाँ हैं'। यह मन और बुद्धि से बनती है, लेकिन यह भी सच्चा स्व नहीं है — भारतीय दर्शन कहता है कि मुक्ति के रास्ते पर इसे भी पार करना ज़रूरी है। तो याद रखिए — स्व स्थायी सच्चाई है, पहचान बदलती रहने वाला सामाजिक लेबल है, और स्व-अवधारणा हमारी मानसिक धारणा है।"
+  },
+  {
+    title: "अंतःकरण — मन, बुद्धि, स्मृति और अहंकार",
+    text: "अब समझते हैं कि भारतीय दर्शन में हमारी चेतना कैसे काम करती है। प्राचीन भारतीय चिंतन में एक शब्द है — अंतःकरण, यानी हमारा आंतरिक उपकरण। यह चार हिस्सों से मिलकर बनता है। पहला है — मनस, यानी मन, जो सोचने-समझने का काम करता है। दूसरा है — बुद्धि, यानी सही-गलत का फ़ैसला लेने की ताकत। तीसरा है — स्मृति, यानी याद रखने की क्षमता। और चौथा है — अहंकार, यानी 'मैं' का एहसास। ये चारों मिलकर तय करते हैं कि बच्चे कैसे महसूस करते हैं, कैसे सीखते हैं, कैसे तर्क करते हैं, और परिस्थितियों पर कैसे प्रतिक्रिया देते हैं। अगर एक शिक्षक इन चार हिस्सों को समझ ले, तो वह ऐसा सीखने का माहौल बना सकता है जो भावनात्मक रूप से संतुलित हो, दिमागी तौर पर प्रेरक हो, और नैतिक रूप से सार्थक हो। अद्वैत वेदांत में इसे सूक्ष्म शरीर का एक कार्यात्मक हिस्सा माना गया है, जबकि सांख्य दर्शन में इसे बुद्धि से जुड़ी तीन शक्तियों के रूप में देखा गया है। दोनों ही परंपराएँ इस बात पर ज़ोर देती हैं कि शिक्षा का मक़सद सिर्फ़ बाहरी व्यवहार बदलना नहीं, बल्कि अंदर से इंसान को बदलना होना चाहिए।"
+  },
+  {
+    title: "मन (मनस्) — ग्रहण करने वाली शक्ति",
+    text: "अब मन यानी मनस् को थोड़ा गहराई से समझते हैं। मनस् वह शक्ति है जो हमारी इंद्रियों — यानी आँख, कान, नाक, त्वचा और जीभ — से मिलने वाली जानकारी को ग्रहण करती है और उसे अस्थायी रूप से पकड़ कर रखती है, फिर आगे सोच-विचार के लिए बुद्धि के सामने पेश करती है। यह इच्छाओं, शंकाओं और शुरुआती प्रतिक्रियाओं का केंद्र भी है — इसलिए यह अक्सर तेज़ और बिना सोचे-समझे प्रतिक्रिया देता है। न्याय दर्शन के अनुसार, मनस् एक आंतरिक इंद्रिय है, और यह एक समय में सिर्फ़ एक ही चीज़ पर पूरा ध्यान दे सकता है — यही वजह है कि हम किसी एक क्षण में सिर्फ़ एक चीज़ पर ही पूरी तरह फ़ोकस कर पाते हैं। कक्षा में इसका मतलब है — शिक्षकों को ऐसा माहौल बनाना चाहिए जो रोचक गतिविधियों और सहज बदलावों के ज़रिए बच्चों के मन को शांत और ध्यानपूर्ण बनाए। जैसे दर्पण को साफ़ प्रतिबिंब के लिए चमकाना ज़रूरी है, वैसे ही ज्ञान को ठीक से समझने के लिए मन का शांत और स्थिर होना बहुत ज़रूरी है।"
+  },
+  {
+    title: "बुद्धि — विवेक और निर्णय की शक्ति",
+    text: "अब बात करते हैं बुद्धि की। अगर मनस् जानकारी इकट्ठा करने वाली शक्ति है, तो बुद्धि वह क्षमता है जो सोच-विचार करके, तर्क लगाकर, और मूल्यांकन करके सही फ़ैसला लेती है। भारतीय चिंतन में, खासकर वेदांत और सांख्य परंपराओं में, बुद्धि को मनस् से ज़्यादा सूक्ष्म और परिष्कृत माना गया है — यह जल्दबाज़ी में नहीं, बल्कि सोच-समझकर काम करने का मार्गदर्शन करती है। वेदांत में बुद्धि को स्व का वह पहलू माना गया है जो अर्थ निकालता है, सच और झूठ में फ़र्क करता है, और निजी पसंद-नापसंद से ऊपर उठ सकता है। बच्चों में नैतिकता और अंतरात्मा की समझ की शुरुआत भी बुद्धि से ही होती है। श्रीमद्भगवद्गीता में कहा गया है — 'बुद्धि वह दीपक है जो रास्ता दिखाती है। अगर दीपक स्थिर और साफ़ हो, तो हमारे कदम स्पष्ट होते हैं।' बच्चों में बुद्धि धीरे-धीरे विकसित होती है — पहले जिज्ञासा और नकल से, फिर तर्क, नियमों का पालन और नैतिक सवालों तक। इसीलिए स्कूल की शुरुआती कक्षाएँ जीवन भर सोचने-समझने की नींव रखने का सबसे अहम समय होती हैं। शिक्षक खुले सवाल पूछकर, जैसे 'जब कोई न देख रहा हो, तब भी क्या हमें बाँटना चाहिए', बच्चों की बुद्धि को विकसित करने में मदद कर सकते हैं।"
+  },
+  {
+    title: "स्मृति — याद रखने की शक्ति",
+    text: "अब समझते हैं स्मृति को, यानी याद रखने की क्षमता। स्मृति वह ताकत है जिसके ज़रिए हम तथ्यों, कौशलों और पुराने अनुभवों को याद करते हैं, जो हमारे आज के सीखने को दिशा देते हैं। यह पुराने ज्ञान को नई समझ से जोड़ती है और इस तरह सीखने की यात्रा में एक पुल का काम करती है। भारतीय दर्शन — खासकर योग और वेदांत परंपराओं में — स्मृति को पुराने अनुभवों से बने संस्कारों का हिस्सा माना गया है, जो हमारी आज की प्रतिक्रियाओं को आकार देते हैं। पतंजलि के योगसूत्र में स्मृति को एक मानसिक प्रवृत्ति बताया गया है, जिसे आत्म-जागरूकता और असरदार सीखने के लिए स्थिर करना ज़रूरी है। लेकिन ध्यान दीजिए — भारतीय चिंतन स्मृति को सिर्फ़ रटने तक सीमित नहीं रखता। इसमें भावनात्मक स्मृति, नैतिक स्मृति और अनुभव से जुड़ी स्मृति भी शामिल है — यानी हम बीते अनुभवों को कैसे संजोते हैं और उनसे क्या सीखते हैं। शिक्षक कहानी सुनाकर, गाने-रूटीन बनाकर, और नए पाठों को बच्चों के अपने जीवन के अनुभवों से जोड़कर स्मृति को मज़बूत बना सकते हैं, ताकि यह सिर्फ़ यांत्रिक न रहे बल्कि भावनात्मक और नैतिक रूप से भी गहरी हो।"
+  },
+  {
+    title: "पंचकोशीय विकास का परिचय",
+    text: "अब एक बहुत सुंदर अवधारणा समझते हैं — पंचकोशीय विकास। यह विचार तैत्तिरीय उपनिषद से आता है, जो भारतीय आध्यात्मिक दर्शन के मूल ग्रंथों में से एक है। पंचकोश का मतलब है 'पाँच आवरण' या 'पाँच परतें'। इस विचार के अनुसार, इंसान का अस्तित्व सिर्फ़ शरीर तक सीमित नहीं है, बल्कि पाँच परतों से बना है, जहाँ हर अगली परत पिछली से ज़्यादा सूक्ष्म होती है। ये पाँच कोष हैं — अन्नमय कोष, यानी भौतिक शरीर की परत; प्राणमय कोष, यानी जीवन-ऊर्जा की परत; मनोमय कोष, यानी मन और भावनाओं की परत; विज्ञानमय कोष, यानी बुद्धि और विवेक की परत; और आनंदमय कोष, यानी आनंद की परत। ये सभी परतें उस भीतरी सच्चाई यानी स्व को ढके हुए हैं, जो शुद्ध चेतना है, शाश्वत है, और भौतिक गुणों से परे है। प्राचीन भारतीय शिक्षा में इन पाँचों परतों के विकास के ज़रिए बौद्धिक विकास के साथ-साथ नैतिक नींव को भी उतना ही महत्व दिया गया। आइए अब इन पाँचों कोषों को एक-एक करके समझते हैं।"
+  },
+  {
+    title: "पहला कोष — अन्नमय और प्राणमय",
+    text: "सबसे पहला है — अन्नमय कोष, यानी हमारा भौतिक शरीर। यह अनाज यानी भोजन से बनता है, भोजन से ही पोषित होता है, और अंत में उसी में मिल जाता है। इसमें हमारी मांसपेशियाँ, हड्डियाँ, त्वचा और शरीर की सारी जैविक प्रणालियाँ आती हैं। यह कोष बहुत ज़रूरी है क्योंकि बाकी सभी परतों का आधार यही है — अगर शरीर स्वस्थ नहीं है, तो ऊँचे स्तर का कोई भी विकास मुश्किल है। शैक्षिक तौर पर, इसका मतलब है — शारीरिक शिक्षा, शरीर के प्रति जागरूकता, सफ़ाई, सही मुद्रा और गतिविधि-आधारित सीखने को बढ़ावा देना। दूसरा है — प्राणमय कोष, यानी जीवन-ऊर्जा की परत। यह साँस लेने, खून के बहाव, पाचन और शरीर की बाकी क्रियाओं को चलाता है, और शरीर तथा मन के बीच एक पुल का काम करता है। अगर इस कोष में असंतुलन हो, तो थकान, भावनात्मक अस्थिरता या बीमारी जैसी समस्याएँ हो सकती हैं। इसका विकास सही साँस लेने के अभ्यास यानी प्राणायाम और ऊर्जा को संतुलित रखने वाली जीवनशैली से होता है। कक्षा में, शिक्षक हल्की स्ट्रेचिंग, योगासन, और साँस से जुड़ी सरल गतिविधियों से बच्चों में इन दोनों परतों का पोषण कर सकते हैं।"
+  },
+  {
+    title: "मनोमय और विज्ञानमय कोष",
+    text: "अब तीसरा और चौथा कोष समझते हैं। तीसरा है — मनोमय कोष, यानी मन और भावनाओं की परत। इसमें हमारे मन, भावनाएँ, इच्छाएँ और इंद्रियों से जुड़े अनुभव शामिल हैं। यह तय करता है कि हम किसी परिस्थिति पर भावनात्मक रूप से कैसे प्रतिक्रिया देते हैं। भारतीय दर्शन के अनुसार यह अभी भी बदलता रहता है, इसलिए इसे भी असली स्व नहीं माना जाता। इसका पोषण सजगता यानी माइंडफुलनेस, भावनाओं को समझना, और सहानुभूतिपूर्ण माहौल से होता है। शिक्षक कहानियाँ सुनाकर, भूमिका-निभाने वाले खेलों से, और रोज़ाना बच्चों को अपनी भावनाएँ साझा करने का मौक़ा देकर इस कोष को मज़बूत कर सकते हैं। चौथा है — विज्ञानमय कोष, यानी बुद्धि और विवेक की परत। यह सही-गलत का फ़ैसला लेने, तर्क करने और गहरी समझ बनाने का काम करता है। यह पहले वाली परतों से ज़्यादा सूक्ष्म है और स्व-बोध के करीब है, लेकिन फिर भी असली स्व नहीं है क्योंकि यह अभी भी पुराने संस्कारों से प्रभावित रहता है। शिक्षक खुले सवाल पूछकर, नैतिक दुविधाओं पर चर्चा करवाकर, और चिंतनशील लेखन के ज़रिए इस कोष को मज़बूत कर सकते हैं — जैसे पूछना 'क्या नियम कभी तोड़े जा सकते हैं?'"
+  },
+  {
+    title: "आनंदमय कोष — सबसे भीतरी परत",
+    text: "अब आखिरी और सबसे गहरी परत समझते हैं — आनंदमय कोष, यानी आनंद और तृप्ति की परत। यह पाँचों कोषों में सबसे भीतरी है, और स्व के सबसे नज़दीक मानी जाती है। इसका अनुभव गहरी खुशी, शांति, या पूर्णता के रूप में होता है। यह आनंद हमेशा नहीं टिकता, बल्कि यह स्व की मौजूदगी का एक झलक भर है — यह गहरे ध्यान, निस्वार्थ सेवा, भक्ति, या गहरी नींद के दौरान थोड़ी देर के लिए महसूस होता है। इसका विकास ध्यान, मौन, कृतज्ञता और निस्वार्थ प्रेम के कामों से होता है। स्कूल में, इसका मतलब है — बच्चों को रचनात्मकता का जश्न मनाने का मौक़ा देना, जैसे चित्रकला, नृत्य और गाना, ताकि वे खुलकर और खुशी से खुद को व्यक्त कर सकें। हर बच्चे से किसी एक बात के लिए आभार जताने को कहना भी एक अच्छा सकारात्मक अभ्यास है। जब कक्षा का माहौल स्नेहपूर्ण, समावेशी और सराहना देने वाला होता है, तो हर बच्चा खुद को क़ीमती, सुरक्षित और स्वीकार्य महसूस करता है — और यही आनंदमय कोष के पोषण का असली मतलब है।"
+  },
+  {
+    title: "भारतीय समाज में स्व का विकास — आश्रम व्यवस्था",
+    text: "अब समझते हैं कि भारतीय समाज ने स्व की इस यात्रा को जीवन में कैसे उतारा। भारतीय आध्यात्मिक परंपराओं में स्व-साक्षात्कार की इस यात्रा को सहारा देने के लिए एक चार-स्तरीय जीवन-आदर्श बताया गया है, जिसे आश्रम-धर्म कहते हैं। पहली अवस्था है — ब्रह्मचर्य, यानी विद्यार्थी जीवन, जहाँ शिक्षा, आत्म-अनुशासन और चरित्र-निर्माण पर ज़ोर दिया जाता है। दूसरी है — गृहस्थ, यानी परिवार बसाने और समाज में अपनी ज़िम्मेदारियाँ निभाने का समय। ये दोनों अवस्थाएँ हमारी सामाजिक पहचान बनाने के लिए ज़रूरी मानी जाती हैं। तीसरी है — वानप्रस्थ, जहाँ इंसान धीरे-धीरे सांसारिक जीवन से हटकर भीतर की ओर देखना शुरू करता है। और चौथी और आखिरी है — संन्यास, जो पूरी तरह से आध्यात्मिक साधना और सच्चे स्व की खोज के लिए समर्पित होती है। भले ही आज सब लोग इन चारों अवस्थाओं का पूरी तरह पालन न करें, फिर भी यह ढाँचा हमें बताता है कि आध्यात्मिक जागरण से पहले सांसारिक कर्तव्य निभाना ज़रूरी है, और आखिरकार भौतिक दुनिया से आगे बढ़कर अपनी असली पहचान — स्व — को खोजना ही जीवन का लक्ष्य है। उपनिषदों का एक मशहूर वाक्य है — तत्त्वमसि, यानी तू वही है — जो कहता है कि हमारा निजी स्व ब्रह्मांड से अलग नहीं, बल्कि उसी का प्रतिबिंब है।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो चलिए, आज हमने जो सीखा उसे संक्षेप में दोहराते हैं। पहला — स्व, पहचान और स्व-अवधारणा तीन अलग-अलग चीज़ें हैं। स्व यानी आत्मन् शाश्वत और अपरिवर्तनीय है, पहचान सामाजिक और बदलती रहने वाली है, और स्व-अवधारणा हमारी मानसिक धारणा है। दूसरा — हमारा अंतःकरण चार हिस्सों से बना है — मनस् यानी मन, बुद्धि यानी विवेक, स्मृति यानी याददाश्त, और अहंकार यानी मैं का भाव — और ये सब मिलकर तय करते हैं कि बच्चे कैसे सीखते और प्रतिक्रिया देते हैं। तीसरा — पंचकोशीय विकास हमें बताता है कि इंसान पाँच परतों से बना है — भौतिक शरीर, जीवन-ऊर्जा, मन-भावनाएँ, बुद्धि-विवेक, और आनंद — और शिक्षा को इन सभी परतों का संतुलित पोषण करना चाहिए, सिर्फ़ किताबी ज्ञान तक सीमित नहीं रहना चाहिए। चौथा — भारतीय समाज की आश्रम व्यवस्था — ब्रह्मचर्य, गृहस्थ, वानप्रस्थ और संन्यास — हमें जीवन भर स्व की खोज करने का एक सामाजिक और नैतिक ढाँचा देती है। इन सभी भारतीय अंतर्दृष्टियों को शिक्षा में शामिल करने से हम ऐसे बच्चों को बड़ा कर सकते हैं जो शरीर से मज़बूत, मन से सक्षम, नैतिक रूप से स्थिर, और अपने गहरे स्व के प्रति जागरूक हों — और यही समग्र शिक्षा का असली मक़सद है।"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
