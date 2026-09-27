@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>गणित में शिक्षण अधिगम — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8; --card: #ffffff; --text: #202824; --text-secondary: #5f6b64;
+  --accent: #1a7a5e; --accent-bg: #dcf0e8; --border: #dbe7e0; --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+    --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+  --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif; line-height: 1.7; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+header { text-align: center; margin-bottom: 1.25rem; }
+header h1 { font-size: 1.25rem; margin: 0 0 0.25rem; font-weight: 700; }
+header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+.player { position: sticky; top: env(safe-area-inset-top, 0px); background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 10; }
+.now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
+.controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+button { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 0.55rem 0.8rem; font-size: 0.95rem; cursor: pointer; min-height: 44px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
+button:active { transform: scale(0.97); }
+.speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
+select { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; padding: 0.3rem 0.4rem; min-height: 36px; }
+.voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
+.sections { display: flex; flex-direction: column; gap: 0.7rem; }
+.section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; cursor: pointer; transition: background 0.2s; }
+.section.active { background: var(--active-bg); border-color: var(--accent); }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.section-title { font-weight: 600; font-size: 1rem; }
+.section-num { font-size: 0.78rem; color: var(--accent); background: var(--accent-bg); border-radius: 999px; padding: 0.1rem 0.55rem; white-space: nowrap; }
+.section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
+.section.active .section-text { display: block; color: var(--text); }
+.play-icon { font-size: 0.8rem; color: var(--accent); }
+footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>गणित में शिक्षण अधिगम</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — बच्चे स्वभाव से जिज्ञासु होते हैं",
+    text: "आज हम पढ़ेंगे — गणित में शिक्षण अधिगम। बच्चे स्वभाव से जिज्ञासु होते हैं और दुनिया के साथ संवाद करने के लिए लगातार खोजबीन करते रहते हैं। वे हर काम ख़ुद करके देखना पसंद करते हैं, चाहे वह कितना भी जटिल क्यों न हो। रचनावादी विचारक भी इसी सिद्धांत का उदाहरण देते हुए कहते हैं कि बच्चों को स्वयं करके सीखने के लिए प्रेरित करना चाहिए, ख़ासकर जब वे अमूर्त गणितीय अवधारणाएँ सीख रहे हों। यह पाठ आपको तीन मुख्य दृष्टिकोणों से परिचित कराएगा — अनुभवात्मक अधिगम, ई.एल.पी.एस उपागम, और चार-खंड शिक्षण पद्धति — जिनसे आप अपनी कक्षा में गणित को सार्थक और रुचिकर बना सकेंगे।"
+  },
+  {
+    title: "सीखने के प्रतिफल",
+    text: "इस पाठ को पढ़ने के बाद आप राष्ट्रीय शिक्षा नीति 2020 द्वारा बताए गए मुख्य दृष्टिकोणों — अनुभवात्मक शिक्षा, ई.एल.पी.एस, और चार-खंड शिक्षण पद्धति — को पहचान कर प्रस्तुत कर पाएँगे। आप इन उपागमों का अपनी कक्षा में उपयोग कर पाएँगे, और पाठ्यपुस्तकों व अन्य उपलब्ध शिक्षण-सामग्री का उचित और अर्थपूर्ण तरीक़े से गणित-शिक्षण में प्रयोग कर पाएँगे।"
+  },
+  {
+    title: "अनुभवात्मक अधिगम — सुधा की कक्षा",
+    text: "दूसरी कक्षा की शिक्षिका सुधा अपनी कक्षा को तीन अंकों का जोड़ सिखाना चाहती हैं। शुरुआत में उन्होंने देखा कि राधा ने अड़सठ जोड़ चौबीस को सही किया, लेकिन अड़तालीस जोड़ सात को एक सौ अठारह लिख दिया। सुधा ने इससे बच्चों की गलत धारणाओं को पहचाना, और अगले दिन 'साँप-सीढ़ी' के खेल का आयोजन किया, फिर तीलियों और गट्ठर की मदद से चर्चा कराई। सुधा असल में बच्चों को 'करके सीखने' का अनुभव दे रही थीं — एक ऐसी प्रक्रिया जहाँ सीखना सिर्फ़ जानकारी पाना नहीं, बल्कि अनुभव के साथ जुड़ना है। गतिविधि के साथ चर्चा जोड़ने से बच्चों को अपने अनुभव पर विचार करने का मौक़ा मिला, जिससे उनकी समझ और गहरी हुई।"
+  },
+  {
+    title: "कोल्ब के चार स्तंभ",
+    text: "कोल्ब द्वारा बताए गए अनुभवात्मक अधिगम के चार मुख्य स्तंभ हैं — मूर्त अनुभव, चिंतनशील अवलोकन, अमूर्त अवधारणा, और सक्रिय प्रयोग। मूर्त अनुभव का मतलब है व्यावहारिक और करके सीखने का अवसर देना — जैसे आकृतियाँ पढ़ाते समय बच्चों को उन्हें अपने दैनिक जीवन से जोड़ने देना। चिंतनशील अवलोकन में बच्चे अपनी सुलझाने की प्रक्रिया पर सोचते और उसे अपने शब्दों में बताते हैं। अमूर्त अवधारणा में बच्चे अपने चिंतन के आधार पर नए विचार बनाते हैं — जैसे चर्चा के बाद एक इमारत का मॉडल बनाने का प्रोजेक्ट देना। और सक्रिय प्रयोग में बच्चे नई अवधारणाओं को नई परिस्थितियों में आज़माते हैं।"
+  },
+  {
+    title: "ई.एल.पी.एस उपागम — आरती और सिद्धि की दो अलग शैलियाँ",
+    text: "आरती को कक्षा तीन के बच्चों को भाग सिखाना है। उसने सीधे बोर्ड पर भाग का एल्गोरिदम समझाना शुरू कर दिया — क्या यह सही तरीक़ा था? वहीं सिद्धि ने अलग राह चुनी। उसने पहले 'बोल भाई कितने' खेल खिलाया, जिसमें बच्चे संख्या के हिसाब से समूह बनाते थे। फिर उसने बटन बाँटने की गतिविधि कराई और चर्चा की, फिर चित्र बनवाए, और आख़िर में पाँचवें दिन प्रतीक — यानी चौबीस भाग तीन बराबर आठ — के रूप में मानक विधि सिखाई। सिद्धि ने असल में एन.ई.पी 2020 द्वारा सुझाया गया ई.एल.पी.एस उपागम अपनाया, जो मूर्त से अमूर्त की ओर धीरे-धीरे बढ़ता है।"
+  },
+  {
+    title: "ई-एल-पी-एस के चार चरण",
+    text: "ई.एल.पी.एस के चार चरण हैं। 'ई' यानी अनुभव — मूर्त वस्तुओं के साथ व्यावहारिक अन्वेषण, जैसे छड़ियों या बंडलों से दस के समूह बनाना। 'एल' यानी भाषा — जिसमें बच्चे अपने अनुभव को मौखिक रूप से बताते हैं, जैसे 'आपने अपने बंडल कैसे बनाए?' पूछना। 'पी' यानी चित्र — जहाँ अवधारणा को चार्ट या रेखाचित्र में बदला जाता है, जैसे बंडलों और छड़ियों से तेईस दिखाना। और 'एस' यानी प्रतीक — यह आख़िरी चरण है, जहाँ अवधारणा को अमूर्त अंकों या गणितीय संकेतों में प्रस्तुत किया जाता है। यह क्रम इसलिए ज़रूरी है ताकि प्रतीक सिर्फ़ अर्थहीन अक्षर न लगें, बल्कि वास्तविक अनुभवों का संक्षिप्त प्रतिनिधित्व बनें।"
+  },
+  {
+    title: "चार-खंड उपागम — गणित की चार धड़कनें",
+    text: "एन.सी.एफ 2023 में सुझाया गया एक और तरीक़ा है चार-खंड उपागम, जो मूलभूत संख्यात्मक कौशल मज़बूत करने के लिए बनाया गया है। इसके चार खंड हैं — मौखिक गणितीय चर्चा, कौशल शिक्षण, कौशल अभ्यास, और गणित के खेल। यह दृष्टिकोण गणित में एक समग्र शिक्षण-दृष्टिकोण पर ज़ोर देता है, जो वैचारिक समझ, प्रक्रियात्मक कौशल और सक्रिय सहभागिता — तीनों को साथ लेकर चलता है।"
+  },
+  {
+    title: "चारों खंडों की गहराई",
+    text: "पहला खंड, मौखिक गणित चर्चा, एक बेहतरीन वार्म-अप है — इसमें गीत, कविताएँ, पहेलियाँ और कहानी-सुनाना शामिल हैं, जैसे कुकीज़ बाँटने की कहानी से भाग सिखाना। दूसरा खंड, कौशल शिक्षण, वह जगह है जहाँ संकल्पनात्मक समझ का 'जादू' घटित होता है — यहाँ मूर्त सामग्री, चार्ट और स्पष्ट प्रदर्शन के ज़रिए 'कैसे' को 'क्यों' से जोड़ा जाता है। तीसरा खंड, कौशल अभ्यास, कार्यपत्रकों, समूह और स्वतंत्र गतिविधियों से समझ को सुदृढ़ करता है। और चौथा खंड, गणित का खेल, बोर्ड गेम, कार्ड गेम या 'मैथ हॉपस्कॉच' जैसी शारीरिक गतिविधियों से सीखी बात को मज़बूत करता है और सत्र को आनंददायक अंत देता है।"
+  },
+  {
+    title: "मैनिपुलेटिव्स — नलिनी और सुनीता का फ़र्क़",
+    text: "मैनिपुलेटिव्स यानी शिक्षण-अधिगम सामग्री अमूर्त गणितीय विचारों और मूर्त समझ के बीच की खाई पाटने का अनमोल औज़ार हैं। इसे एक उदाहरण से समझते हैं। कक्षा चार की शिक्षिका नलिनी ने ठोस आकृतियाँ पढ़ाते समय बच्चों से अलग-अलग डिब्बे मँगवाए, उनसे कुछ नया बनवाया, और फिर पूछा कि उन्होंने वह आकृति कैसे और क्यों बनाई। वहीं उनकी सहकर्मी सुनीता ने आकृतियों को परिभाषित करके और चित्र बनाकर पढ़ाना शुरू किया — बच्चे यहाँ सिर्फ़ निष्क्रिय दर्शक थे। नलिनी का तरीक़ा ज़्यादा असरदार था, क्योंकि उसमें बच्चे सक्रिय रूप से अन्वेषण कर रहे थे, अपने गुणों की पहचान कर रहे थे, और सामग्री से अपनापन महसूस कर रहे थे। मैनिपुलेटिव्स की सफलता उनके सोच-समझकर चयन और सही निर्देशों के साथ एकीकरण पर ही निर्भर करती है।"
+  },
+  {
+    title: "गणित की पाठ्यपुस्तक — मार्गदर्शक, पर एकमात्र स्रोत नहीं",
+    text: "अधिकांश भारतीय कक्षाएँ पाठ्यपुस्तकों के इर्द-गिर्द घूमती हैं, और यह शिक्षकों तथा अभिभावकों के लिए एक ज़रूरी संपर्क-सूत्र है। लेकिन आज की दुनिया में पाठ्यपुस्तक शिक्षण का एकमात्र स्रोत नहीं होनी चाहिए — यह सिर्फ़ एक मार्गदर्शिका हो सकती है। जैसे कक्षा तीन के पाठ 'खिलौनों का आनंद' में बच्चों को मिट्टी से आकृतियाँ बनवाई जा सकती हैं, या आस-पास के किसी पुराने स्मारक की आकृतियाँ खोजने का प्रोजेक्ट दिया जा सकता है। एक अच्छी पाठ्यपुस्तक रंगीन, आकर्षक और समझने में आसान होनी चाहिए, उसमें आलोचनात्मक सोच और चर्चा के अवसर हों, और वह रटने के बजाय गणितीय सोच को बढ़ावा दे।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो चलिए, संक्षेप में दोहराते हैं। पहला — कक्षा-शिक्षण बच्चों के ज्ञान-निर्माण पर केंद्रित होना चाहिए, जिसके लिए उन्हें व्यावहारिक अनुभवों के अवसर चाहिए। दूसरा — अनुभव, अगर चिंतन और चित्र-प्रतीक जैसे विविध प्रस्तुतीकरण से जुड़ा हो, तो बच्चों की समझ और रुचि, दोनों बढ़ती है। तीसरा — मैनिपुलेटिव्स और संसाधन कक्षा को जीवंत बनाते हैं, लेकिन उनका चयन उद्देश्यपूर्ण ढंग से होना चाहिए। और चौथा — गणित की पाठ्यपुस्तकें एक ज़रूरी संसाधन हैं, पर शिक्षण-अधिगम प्रक्रिया का एकमात्र स्रोत नहीं। अनुभवात्मक अधिगम, ई.एल.पी.एस और चार-खंड उपागम — ये तीनों मिलकर गणित को बच्चों के लिए सार्थक और आनंददायक बना सकते हैं। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
