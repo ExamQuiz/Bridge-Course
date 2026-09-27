@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>आकलन के अन्य पक्ष — 360 डिग्री आकलन, स्व-संशोधन — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>आकलन के अन्य पक्ष — 360 डिग्री आकलन, स्व-संशोधन</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    "title": "परिचय — आकलन शिक्षा की एक व्यवस्थित प्रक्रिया",
+    "text": "आज हम पढ़ेंगे — आकलन के अन्य पक्ष, यानी 360 डिग्री आकलन और स्व-संशोधन। शिक्षा में आकलन एक व्यवस्थित प्रक्रिया है, जो विद्यार्थियों की प्रगति को समझने और सीखने के प्रतिफलों को बेहतर ढंग से प्राप्त करने के लिए शिक्षकों को मार्गदर्शन का कार्य करती है। बुनियादी एवं प्रारंभिक स्तर पर बच्चों के सीखने की अलग-अलग शैलियाँ होती हैं, और उन्हें पहचान कर प्रतिफलों को अधिकतम सीमा तक प्राप्त करने में आकलन की प्रक्रिया अत्यंत महत्त्वपूर्ण भूमिका निभाती है। आज हम जानेंगे कि 360 डिग्री आकलन क्या है, और भाषा-शिक्षण में श्रवण, वाचन, पठन एवं लेखन के विकास में यह किस प्रकार सहायक है, साथ ही स्व-संशोधन के माध्यम से भाषा के विकास को कैसे समझा जा सकता है।"
+  },
+  {
+    "title": "सीखने के प्रतिफल",
+    "text": "इस पाठ को पढ़ने के बाद आप 360 डिग्री आकलन के सिद्धांतों एवं उनके अनुप्रयोग की समग्रता से व्याख्या कर पाएँगे। आप आकलन के लिए अकादमिक विषयवस्तु के साथ-साथ शिक्षार्थी से संबंधित विभिन्न संसाधनों की पहचान कर उनका प्रयोग कर सकेंगे। आप विद्यार्थियों के भाषा-संबंधी आकलन के लिए कक्षा एवं कक्षा के बाहर की विभिन्न गतिविधियों का वर्गीकरण और आकलन हेतु उपयोग कर पाएँगे, आकलन के दौरान प्रयोग की जाने वाली भाषा और शब्दों के प्रति संवेदनशीलता विकसित करेंगे, और भाषा के समग्र आकलन के माध्यम से विद्यार्थियों को स्व-संशोधन के लिए प्रेरित कर सकेंगे।"
+  },
+  {
+    "title": "'आकलन' क्या है — दैनिक जीवन से समझें",
+    "text": "आकलन शब्द का प्रयोग हम अपने दैनिक जीवन में कई अवसरों पर करते हैं। जब हम बाज़ार में सब्ज़ी खरीदते हैं और देखते हैं कि वह ताज़ा है या नहीं, महँगी है या सस्ती; या जब कपड़े खरीदते समय देखते हैं कि वे हम पर जँचेंगे या नहीं — यह सब आकलन ही है। शिक्षा में आकलन को इस प्रकार परिभाषित किया जा सकता है — यह विद्यार्थियों की प्रगति को समझने और सीखने के प्रतिफल की बेहतर ढंग से प्राप्ति के लिए शिक्षक के मार्गदर्शन की प्रक्रिया है, जिसमें परीक्षण, असाइनमेंट, प्रोजेक्ट और अवलोकन जैसे तरीकों से विद्यार्थियों के ज्ञान, कौशल और दृष्टिकोण के साक्ष्य एकत्र किए जाते हैं, ताकि विद्यार्थियों और शिक्षकों दोनों को उपयोगी फीडबैक मिल सके।"
+  },
+  {
+    "title": "360 डिग्री आकलन क्या है",
+    "text": "360 डिग्री आकलन को समझने के लिए कोणों की आकृतियों की कल्पना कीजिए — 90 डिग्री यानी समकोण से केवल एक चौथाई हिस्सा कवर होता है, 180 डिग्री यानी ऋजुकोण से आधा हिस्सा, जबकि 360 डिग्री ऐसा संपूर्ण कोण है जिसमें पूरे हिस्से को कवर करने की क्षमता होती है। इसी तरह, वह आकलन जो बच्चे का समग्रता से आकलन कर सकने में सक्षम हो — यानी बौद्धिक, भावनात्मक, सामाजिक, शारीरिक, नैतिक और आध्यात्मिक विकास सहित — उसे 360 डिग्री आकलन कहा जाता है। बच्चे का यह समग्र आकलन उससे जुड़े सभी व्यक्तियों — जैसे उसके सहपाठियों, अभिभावकों, शिक्षकों और स्वयं बच्चे — के माध्यम से किया जाना चाहिए।"
+  },
+  {
+    "title": "भाषा-शिक्षण में 360 डिग्री आकलन क्यों ज़रूरी है",
+    "text": "पारंपरिक रिपोर्ट-कार्ड यह तो बता देता है कि किसी बच्चे ने भाषा में कितने अंक प्राप्त किए, परंतु यह नहीं बता पाता कि बच्चा बातों को ध्यान से सुनकर छोटी बातचीत कर पाता है या नहीं, या सरल वाक्यों में अपने दैनिक अनुभवों का वर्णन कर पाता है या नहीं। बालक के भाषा-विकास से जुड़ी इस पूरी जानकारी को प्राप्त करने के लिए 360 डिग्री आकलन की आवश्यकता होती है — जिसके लिए सहपाठी, अभिभावक, शिक्षक और स्वयं बच्चे के फीडबैक के आधार पर उसके भाषा-स्तर का पता लगाया जा सकता है। यह फीडबैक राष्ट्रीय पाठ्यचर्या की रूपरेखाओं में उल्लिखित दक्षताओं के आधार पर लिया जा सकता है, जिसमें भाषाई कौशलों से जुड़े सभी पक्षों का समावेश होता है।"
+  },
+  {
+    "title": "शिक्षक और सहपाठियों द्वारा श्रवण-वाचन कौशल का आकलन",
+    "text": "बुनियादी स्तर पर कक्षा में कहानी पर चर्चा के दौरान शिक्षक बच्चों से उनके अपने परिवार के सदस्यों के नाम पूछकर, या एक ही अक्षर से शुरू होने वाले नामों की पहचान करवाकर श्रवण और वाचन कौशलों का आकलन कर सकते हैं। प्रारंभिक स्तर पर, कहानी सुनाने के बाद बच्चे जब कक्षा में चर्चा करते हैं, तो शिक्षक यह देखते हैं कि वे कितनी धाराप्रवाह और तर्कसंगत ढंग से अपने विचार साझा कर पा रहे हैं। सहपाठी भी खेल-खेल में एक-दूसरे का आकलन कर लेते हैं — जैसे पशु-पक्षियों की ध्वनि पहचानने का खेल, या अपने क्षेत्र के त्योहारों पर आपस में चर्चा करके एक-दूसरे की प्रस्तुति का आकलन करना।"
+  },
+  {
+    "title": "स्व-आकलन और अभिभावकों द्वारा श्रवण-वाचन कौशल का आकलन",
+    "text": "हर बच्चा स्वयं का आकलन करता है, परंतु अक्सर उसे यह समझने में दिक्कत होती है कि वह सही है या नहीं, और यदि कोई कठिनाई हो तो वह उसे शिक्षक या अभिभावक से साझा नहीं कर पाता — क्योंकि हम अक्सर गलतियों पर ध्यान केंद्रित करके बच्चे को हतोत्साहित कर देते हैं। इसके बजाय अगर हम कठिनाई के कारण पर ध्यान दें, तो बच्चा खुलकर चर्चा करेगा। घर पर बच्चा अधिकतर समय अभिभावकों के साथ बिताता है, इसलिए अभिभावक बातचीत के दौरान ध्यानपूर्वक सुनकर यह आकलन कर सकते हैं कि बच्चा किन शब्दों के उच्चारण में कठिनाई महसूस करता है, और इसे शिक्षक के साथ साझा करना भी उतना ही ज़रूरी है।"
+  },
+  {
+    "title": "पठन-कौशल का 360 डिग्री आकलन",
+    "text": "बुनियादी स्तर पर पठन-कौशल के आकलन के लिए कविता की पंक्तियों को चित्रों से मिलाने जैसी गतिविधियाँ करवाई जा सकती हैं, जिससे शिक्षक बच्चे की समझ का अभिलेख तैयार कर सके। प्रारंभिक स्तर पर पठन-संदर्भ से हटकर दी गई कोई कहानी पढ़ाकर यह देखा जा सकता है कि बच्चा किस तरह अनुमान लगाकर अर्थ निकाल रहा है। सहपाठी भी वाक्यों में शब्दों का क्रम बिगाड़कर एक-दूसरे से सही क्रम में लगवाने जैसे खेल खेलकर पठन-कौशल का आकलन करते हैं, जबकि अभिभावक घर पर समाचार-पत्र या सार्वजनिक स्थानों के संदेश साथ में पढ़कर अनौपचारिक ढंग से बच्चे के पठन-स्तर को समझ सकते हैं।"
+  },
+  {
+    "title": "लेखन-कौशल का 360 डिग्री आकलन",
+    "text": "बच्चों के लेखन-कौशल के आकलन के लिए शिक्षक चित्र दिखाकर उस पर कुछ लिखने को कह सकते हैं, और यह देख सकते हैं कि बच्चे ने विचारों और घटनाओं को किस क्रम में सजाया है। सहपाठी शब्द-युग्म बनाने जैसे खेल खेलकर, जैसे विलोम या पर्यायवाची शब्द जोड़कर, एक-दूसरे के लेखन-कौशल का आकलन कर सकते हैं। स्व-आकलन में शिक्षक की भूमिका सहयोगी की होनी चाहिए — जैसे श्रुतलेख के बाद स्वयं बच्चों को बोर्ड पर लिखे सही शब्दों से अपनी उत्तर-पुस्तिका मिलाकर सुधारने का अवसर देना। अभिभावक भी बच्चे से चित्र का शीर्षक लिखवाकर, या स्कूल से छुट्टी के लिए प्रार्थना-पत्र लिखवाकर उसके लेखन-कौशल का आकलन कर सकते हैं।"
+  },
+  {
+    "title": "भाषा-शिक्षण और स्व-संशोधन",
+    "text": "स्व-संशोधन स्वयं के आकलन से जुड़ी प्रक्रिया है। बुनियादी एवं प्रारंभिक स्तर पर भाषा-विकास में स्व-संशोधन का अर्थ है — बच्चों द्वारा किसी वयस्क के तत्काल या स्पष्ट मार्गदर्शन के बिना अपनी भाषाई त्रुटियों को पहचानना और उन्हें ठीक करने की क्षमता। यह एक आत्म-निरीक्षण की प्रक्रिया है। उदाहरण के लिए, कक्षा में बोर्ड पर अव्यवस्थित और अशुद्ध वर्तनी वाले कुछ वाक्य लिखकर बच्चों को अपनी उत्तर-पुस्तिका में उन्हें ठीक करने और सही क्रम में सजाने के लिए कहा जा सकता है। बाद में शिक्षक सही उत्तर बोर्ड पर लिख देते हैं, और बच्चे स्वयं जाँचते हैं कि वे कितने वाक्य सही लिख पाए — इस तरह बच्चों को स्व-संशोधन की प्रक्रिया में शामिल किया जा सकता है।"
+  },
+  {
+    "title": "सारांश — आज हमने क्या सीखा",
+    "text": "तो चलिए, आज जो सीखा उसे संक्षेप में दोहराते हैं। पहला — शिक्षा में आकलन एक व्यवस्थित प्रक्रिया है जो विद्यार्थियों की प्रगति समझने और सीखने के परिणामों को बेहतर बनाने में मदद करती है। दूसरा — 360 डिग्री आकलन वह प्रक्रिया है जो बच्चे के समग्र विकास का आकलन करती है, जिसमें सहपाठी, अभिभावक, शिक्षक और स्वयं बच्चे की प्रतिक्रिया शामिल होती है। तीसरा — बुनियादी और प्रारंभिक स्तर पर श्रवण, वाचन, पठन और लेखन-कौशलों का 360 डिग्री आकलन बेहद ज़रूरी है, जिसमें कक्षा के भीतर और बाहर की अकादमिक और गैर-अकादमिक गतिविधियाँ दोनों शामिल की जाती हैं। और चौथा — स्व-संशोधन एक आत्म-निरीक्षण की प्रक्रिया है, जिसमें बच्चे बिना किसी वयस्क के तत्काल मार्गदर्शन के अपनी भाषाई त्रुटियों को पहचानना और ठीक करना सीखते हैं। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

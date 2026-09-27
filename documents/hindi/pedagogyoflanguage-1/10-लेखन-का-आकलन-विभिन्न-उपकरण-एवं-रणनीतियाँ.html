@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>लेखन का आकलन — विभिन्न उपकरण एवं रणनीतियाँ — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>लेखन का आकलन — विभिन्न उपकरण एवं रणनीतियाँ</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    "title": "परिचय — पठन के बाद अब लेखन के आकलन की बारी",
+    "text": "आज हम पढ़ेंगे — लेखन का आकलन, विभिन्न उपकरण एवं रणनीतियाँ। पिछले पाठ में हमने पठन के आकलन में प्रयोग किए जाने वाले उपकरणों और रणनीतियों के बारे में जाना था। आज हम यह समझेंगे कि लेखन का आकलन किसे कहते हैं, इसके लिए कौन-कौन से उपकरण और रणनीतियाँ प्रयोग में लाई जा सकती हैं, संदर्भ में व्याकरण की लेखन-आकलन में क्या भूमिका है, समझ के साथ लिखना तथा विचारों का समायोजन किस प्रकार किया जा सकता है, और लेखन-आकलन हेतु कार्यपत्रक, आकलन-मद तथा प्रश्नपत्र का निर्माण किस प्रकार किया जा सकता है।"
+  },
+  {
+    "title": "सीखने के प्रतिफल",
+    "text": "इस पाठ को पढ़ने के बाद आप लेखन के आकलन के लिए विभिन्न उपकरण एवं रणनीतियों का प्रयोग कर पाएँगे। आप संदर्भ में व्याकरण की अवधारणा के अनुरूप कक्षा के वातावरण में अनुप्रयोग करना सीखेंगे। आप समझ के साथ लेखन के आकलन की अवधारणा को स्पष्ट कर पाएँगे और विचारों को समायोजित करके लेखन के आकलन की अवधारणा को भी स्पष्ट कर सकेंगे। इसके साथ ही आप लेखन के आकलन हेतु कार्यपत्रक, आकलन-मद और प्रश्न-पत्र का निर्माण करना सीख पाएँगे।"
+  },
+  {
+    "title": "लेखन के आकलन का परिचय — अभिव्यक्ति और संप्रेषण का माध्यम",
+    "text": "अभिव्यक्ति एवं संप्रेषण में लेखन की महत्त्वपूर्ण भूमिका होती है। किसी व्यक्ति में लिखने की कुशलता अन्य कौशलों जैसे सुनना, बोलना तथा पढ़ना से जुड़ी हुई है — जितना अच्छा हमारा सुनना, बोलना और पढ़ना होता है, उतना ही अच्छा हमारा लिखना होता है। राष्ट्रीय पाठ्यचर्या की रूपरेखा फाउंडेशनल स्टेज, 2022 के अनुसार आकलन सीखने-सिखाने की प्रक्रिया का एक अंश है, और प्रारंभिक कक्षाओं में आकलन औपचारिक से अधिक अनौपचारिक होना चाहिए। आकलन रचनात्मक होना चाहिए — यह विद्यार्थी और शिक्षक दोनों के लिए उपयोगी है, क्योंकि इसी के माध्यम से यह पता चलता है कि विद्यार्थी ने कितना सीखा है और शिक्षक को किस प्रकार की रणनीति अपनानी चाहिए।"
+  },
+  {
+    "title": "सुनकर लिखना — श्रुतलेख की भूमिका",
+    "text": "लेखन के आकलन का एक महत्त्वपूर्ण तरीका है श्रुतलेख, जो बोलने-सुनने की क्षमता के आकलन में भी सहायक है। पारंपरिक श्रुतलेख में केवल शब्दों को लिखना सीखने पर बल दिया जाता था, परंतु आधुनिक श्रुतलेख समझ के साथ लिखने पर बल देता है, जिससे लिखना सार्थक बनता है। इसकी प्रक्रिया के तीन सोपान हैं — पहला, आरंभ करने से पूर्व विद्यार्थियों को स्पष्ट निर्देश देना और सभी के तैयार होने की पुष्टि करना; दूसरा, अक्षर बोलते समय उच्चारण-स्थान का ध्यान रखना ताकि विद्यार्थी सही ढंग से सुन और लिख सकें। शुरुआत में एक अक्षर, फिर दो, तीन और चार अक्षर तथा मात्राओं वाले शब्दों का श्रुतलेख कराया जाता है, जिससे बच्चे के सुनकर समझने और लिखने के स्तर की पहचान होती है।"
+  },
+  {
+    "title": "सृजनात्मक लेखन — कहानी और उसका आकलन",
+    "text": "सृजनात्मक लेखन वास्तव में कल्पनाशील लेखन है, जिसके अंतर्गत कहानी, कविता, संवाद, अनुभव और सूचना-लेखन आते हैं। कहानी विद्यार्थियों के लिए दुनिया को जानने की खिड़की होती है। यहाँ एक बारीक अंतर समझना ज़रूरी है — कोई विद्यार्थी पढ़ी हुई कहानी को बिना किसी बदलाव के हूबहू लिख दे तो उसमें कल्पनाशीलता का अभाव रहता है, जबकि सृजनात्मक लेखन में धाराप्रवाहिता, लचीलापन, मौलिकता और विस्तारण — इन चार तत्त्वों की उपस्थिति ज़रूरी है। इन्हीं बिंदुओं के आधार पर रेटिंग स्केल के रूप में आकलन-पत्र तैयार किया जा सकता है, जिसमें यह देखा जाता है कि घटनाएँ धाराप्रवाह रूप में हैं या नहीं, घटनाओं का विस्तारण रोचक ढंग से हुआ है या नहीं, और शब्दों के चयन में सार्थकता है या नहीं।"
+  },
+  {
+    "title": "सृजनात्मक लेखन — कविता और संवाद",
+    "text": "भावनाओं की अभिव्यक्ति को सरसता से प्रस्तुत करने के लिए कविता का आश्रय लेना श्रेयस्कर है। बुनियादी चरण में कविता सुनना और गाना ही आकलन का आधार बनता है, जबकि प्रारंभिक चरण में विषय, भाव, संरचना, भाषा, तुकबंदी और कल्पनाशीलता जैसे बिंदुओं पर रेटिंग स्केल से आकलन किया जा सकता है। इसी तरह संवाद-लेखन किसी कहानी को जीवंत बनाने में महत्त्वपूर्ण भूमिका निभाता है — पात्रों के व्यक्तित्व के अनुरूप स्वाभाविक भाषा का प्रयोग होना चाहिए। बुनियादी चरण में संवाद-लेखन की अपेक्षा संवाद करना या बातचीत करना गतिविधि पर अधिक ध्यान दिया जाना चाहिए, जबकि आकलन-पत्र में विराम-चिह्नों के प्रयोग, पात्रों के अनुरूप भाषा और तारतम्यता जैसे बिंदु शामिल किए जाते हैं।"
+  },
+  {
+    "title": "अनुभव-लेखन और सूचना-लेखन",
+    "text": "अनुभव लिखना विद्यार्थी की सृजनात्मकता को परिलक्षित करता है — यह उसे अपने जीवन में घटित होने वाली घटनाओं का स्वतंत्र रूप से वर्णन करने के लिए प्रेरित करता है। बुनियादी चरण में अनुभव को आपसी बातचीत गतिविधि में सम्मिलित कर आकलन किया जा सकता है, जबकि प्रारंभिक चरण में स्व-अनुभव लेखन-गतिविधि का आकलन रेटिंग स्केल से किया जा सकता है, जिसमें भाषा की शुद्धता से अधिक भावों को प्रधानता दी जाती है। सूचना-लेखन भी एक प्रकार का सृजनात्मक लेखन है — विद्यार्थी कक्षा में सीखे हुए अनुभवों को सूचना के रूप में अभिव्यक्त करना सीखते हैं। सूचना छोटी और स्तरानुसार होनी चाहिए ताकि विद्यार्थी उसे आसानी से याद रख सकें और बता सकें।"
+  },
+  {
+    "title": "शब्द, वाक्य, अनुच्छेद-संयोजन और विराम-चिह्न",
+    "text": "सृजनात्मक लेखन में शब्द, वाक्य और अनुच्छेद-संयोजन का बहुत महत्त्व है। शब्दों के संयोजन में उचित शब्दों का चयन ज़रूरी है, वाक्यों के संयोजन में यह ध्यान रखना चाहिए कि वे सुसंगत रूप से एक-दूसरे से जुड़े हों — छोटे और सरल वाक्य पाठक को अधिक आकर्षित करते हैं। अनुच्छेदों का निर्माण करते समय हर अनुच्छेद किसी विशिष्ट विचार पर आधारित होना चाहिए और अनुच्छेदों में आपसी जुड़ाव होना चाहिए। इसके साथ ही विराम-चिह्नों का ज्ञान भी लेखन-कौशल के विकास में महत्त्वपूर्ण भूमिका निभाता है — पूर्ण विराम, अल्पविराम, प्रश्नवाचक चिह्न, विस्मयादिबोधक चिह्न जैसे चिह्नों का उचित प्रयोग विद्यार्थी की समझ को दर्शाता है, विशेषकर संवाद-लेखन में।"
+  },
+  {
+    "title": "संदर्भ में व्याकरण — पाठ के भीतर से सीखना",
+    "text": "राष्ट्रीय शिक्षा नीति 2020 व्याकरण को अलग से पढ़ने के स्थान पर पाठ के संदर्भ में पढ़ने की अनुशंसा करती है। उदाहरण के लिए, कक्षा तीन की कहानी 'आम का पेड़' पढ़ते समय विद्यार्थियों को कहानी में आए नाम-वाले शब्दों को गोला बनाकर चिह्नित करने को कहा जा सकता है — यह नाम व्यक्ति, वस्तु, स्थान या भाव का भी हो सकता है। इस तरह विद्यार्थी बिना रटे, दैनिक जीवन में संज्ञा जैसे व्याकरणिक तत्त्वों से परिचित होते हैं। संदर्भ में व्याकरण का आकलन करते समय यह ध्यान रखना ज़रूरी है कि हमें व्याकरण के सिद्धांतों का नहीं, बल्कि व्यावहारिक व्याकरण का आकलन करना है — यानी बोलते-लिखते समय सही वाक्य-रचना, वचन और लिंग का उचित प्रयोग।"
+  },
+  {
+    "title": "समझ के साथ लेखन और विचारों को समायोजित करना",
+    "text": "प्राथमिक स्तर पर समझ के साथ लेखन का अर्थ केवल अक्षर-ज्ञान और वाक्य-संरचना सिखाना नहीं, बल्कि विद्यार्थी को भाषा के माध्यम से विचारों, भावनाओं और अनुभवों को अर्थपूर्ण रूप में व्यक्त करना सिखाना है। इसके लिए कहानी सुनाना-लिखवाना, चित्रों के माध्यम से कहानी बनाना, और खेल के माध्यम से लिखना जैसी गतिविधियाँ करवाई जा सकती हैं। इसी के साथ, प्राथमिक स्तर पर विद्यार्थी विचारों को अक्सर मौखिक रूप से अधिक और धाराप्रवाह तो व्यक्त कर लेते हैं, पर वे उचित दिशा में हों यह ज़रूरी नहीं — इसलिए अध्यापक का काम है विद्यार्थियों को प्रश्न पूछने की स्वतंत्रता देकर, विभिन्न दृष्टिकोणों से परिचित कराकर, उनके विचारों को समायोजित करने में सहायता करना, जिससे लेखन को एक दिशा और दृष्टिकोण-निर्माण की नींव मिलती है।"
+  },
+  {
+    "title": "कार्यपत्रक, आकलन-मद और प्रश्नपत्र का निर्माण",
+    "text": "लेखन के आकलन में कार्यपत्रक एक महत्त्वपूर्ण भूमिका निभाता है, जबकि प्रश्नपत्र परीक्षा लेने के उद्देश्य से निर्मित किया जाता है। आकलन-मद के निर्माण में कुछ बिंदु ध्यान में रखने ज़रूरी हैं — पहला, स्तर का निर्धारण यानी बुनियादी या प्रारंभिक; दूसरा, पाठ्यचर्या-लक्ष्य और तीसरा, संबंधित दक्षता का निर्धारण; चौथा, सीखने के प्रतिफल तय करना; पाँचवाँ, कठिनाई-स्तर के अनुसार सरल, मध्यम और कठिन प्रश्नों की संख्या तय करना; छठा, विभिन्न प्रकार के प्रश्नों का चयन, जैसे एक शब्द में उत्तर, चित्र देखकर वाक्य लिखना या मिलान करना; और अंत में स्पष्ट भाषा, पर्याप्त स्थान, चित्रों का प्रयोग तथा अंक-निर्धारण का ध्यान रखना। इसी आधार पर एक ब्लूप्रिंट तैयार होता है जो प्रश्नपत्र की रूपरेखा तय करता है और कॉपी जाँचने की प्रक्रिया को पारदर्शी बनाता है।"
+  },
+  {
+    "title": "सारांश — आज हमने क्या सीखा",
+    "text": "तो चलिए, आज जो सीखा उसे संक्षेप में दोहराते हैं। पहला — लेखन का आकलन यह इंगित करता है कि सीखने वाले ने कितनी दक्षताएँ प्राप्त कर ली हैं। दूसरा — इसके लिए सुनकर लिखना यानी श्रुतलेख, तथा सृजनात्मक लेखन के अंतर्गत कहानी, कविता, संवाद, अनुभव और सूचना-लेखन, शब्द-वाक्य-अनुच्छेद-संयोजन तथा विराम-चिह्नों जैसे उपकरणों का प्रयोग किया जा सकता है। तीसरा — व्याकरण को अलग से न पढ़ाकर पाठ के संदर्भ में पढ़ाना चाहिए, और आकलन व्यावहारिक व्याकरण का होना चाहिए, सिद्धांतों का नहीं। चौथा — समझ के साथ लेखन और विचारों का समायोजन विद्यार्थी की रचनात्मकता और दृष्टिकोण-निर्माण में मदद करता है। और पाँचवाँ — कार्यपत्रक और प्रश्नपत्र का निर्माण करते समय स्तर, पाठ्यचर्या-लक्ष्य, दक्षता, सीखने के प्रतिफल, कठिनाई-स्तर और स्पष्ट भाषा जैसे बिंदुओं का ध्यान रखना ज़रूरी है। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
