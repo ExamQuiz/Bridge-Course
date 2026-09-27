@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>चार ब्लॉक मॉडल एवं मौखिक भाषा-विकास — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>चार ब्लॉक मॉडल एवं मौखिक भाषा-विकास</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — घर है भाषा की पहली पाठशाला",
+    text: "आज हम पढ़ेंगे — चार ब्लॉक मॉडल एवं मौखिक भाषा-विकास। बचपन की सबसे पहली पाठशाला घर होती है। माँ की लोरी, पापा की पुकार, बहन का हँसाना — ये सब मिलकर भाषा का पहला अनुभव बनाते हैं। बच्चे सुनकर, बोलकर सहजता से अपने परिवेश की भाषा को ग्रहण कर लेते हैं। यह सिद्ध हो चुका है कि बच्चे अपनी मातृभाषा या घरेलू भाषा में ही अवधारणाओं को सबसे तेज़ी से सीखते हैं। जब वे विद्यालय आते हैं, तो उनका सामना भाषा के एक नए रूप से होता है, और अगर इस भाषा को घर की भाषा की तरह ही सुनने-बोलने के अवसर मिलें, तो सीखना बहुत सहज हो जाता है। आज हम जानेंगे कि सुनना और बोलना भाषा की नींव कैसे बनाते हैं, और शिक्षक इन्हें कक्षा में कैसे शामिल कर सकते हैं। साथ ही हम एक बहुत प्रभावी शिक्षण पद्धति — चार ब्लॉक मॉडल — के बारे में भी जानेंगे, जिसका पहला और आधारभूत हिस्सा है मौखिक भाषा-विकास।"
+  },
+  {
+    title: "सीखने के प्रतिफल",
+    text: "इस पाठ को पढ़ने के बाद आप चार ब्लॉक मॉडल के हर घटक — सुनना, बोलना, पढ़ना और लिखना — को परिभाषित कर पाएँगे। आप सुनने और बोलने में मातृभाषा और बहुभाषिकता की भूमिका को समझ पाएँगे। अपनी कक्षा के अनुभवों के आधार पर मौखिक भाषा से जुड़ी गतिविधियों को चुन और लागू कर पाएँगे, और चार ब्लॉक मॉडल के सभी हिस्सों को जोड़ते हुए एक पूरी भाषा-शिक्षण रणनीति भी बना पाएँगे।"
+  },
+  {
+    title: "चार खंडीय मॉडल — भाषा सीखने का ढाँचा",
+    text: "भाषा सिर्फ़ शब्दों का ज्ञान नहीं है, बल्कि सोचने, समझने, व्यक्त करने और जुड़ने का माध्यम है। तो क्या बच्चों को भाषा में दक्ष बनाने के लिए केवल किताबें पढ़ाना काफ़ी है? बिल्कुल नहीं। भाषा के कौशलों का विकास उसे ज़िंदगी से जोड़कर ही संभव है। इसी सोच से बुनियादी स्तर की राष्ट्रीय पाठ्यचर्या की रूपरेखा, 2022 में 'चार खंडीय मॉडल' का प्रस्ताव किया गया, जो फाउंडेशनल और प्रेपरेटरी स्तर पर भाषा-शिक्षण के चार मुख्य आयामों पर आधारित है — मौखिक भाषा-विकास, शब्द-पहचान, पढ़ना, और लिखना। इस ढाँचे का हर हिस्सा एक दरवाज़े की तरह है जो बच्चे को भाषा की दुनिया में प्रवेश करने का मौका देता है। इसमें सिर्फ़ किताब पढ़वाने की बात नहीं है, बल्कि बच्चों को बोलने, अपनी बात कहने, सुनने और समझने के भरपूर अवसर देने की बात कही गई है।"
+  },
+  {
+    title: "मौखिक भाषा-विकास — जहाँ से शुरू होती है यात्रा",
+    text: "मौखिक भाषा-विकास यानी सुनना और बोलना, यह चार खंडीय मॉडल का पहला और सबसे बुनियादी हिस्सा है। यही वह आधार है जिससे भाषा की यात्रा शुरू होती है। जब बच्चे अपने अनुभव, कल्पनाएँ और विचार बोलकर साझा करते हैं, तो वे भाषा के प्रति आत्मविश्वासी और अभिव्यक्तिपूर्ण बनते हैं। जब वे कहानी सुनते हैं, कविता दोहराते हैं, या खेल-गीत गाते हैं, तो वे भाषा से खेलते भी हैं और सीखते भी हैं। इसके बाद आता है शब्द-पहचान, जिसमें शब्दों को पहचानना, उनका उच्चारण, वर्णों की बनावट और ध्वनियों का अंतर समझना शामिल है। फिर आता है पढ़ना — जो सिर्फ़ अक्षरों को जोड़ना नहीं, बल्कि समझ के साथ पढ़ना है। और आख़िर में लिखना — अपने विचारों को लिखकर व्यक्त करने का कौशल, जो मौखिक भाषा और पढ़ने की क्षमता पर ही निर्भर करता है।"
+  },
+  {
+    title: "रीना दीदी की कक्षा — बदलाव की एक जीवंत कहानी",
+    text: "आइए, एक कक्षा में चलते हैं और देखते हैं कि यह मॉडल असल ज़िंदगी में कैसे काम करता है। रीना दीदी गुजरात के एक गाँव की प्राथमिक विद्यालय में कक्षा दो की शिक्षिका हैं। उन्होंने देखा कि उनकी कक्षा के बच्चे क्रम में तो वर्णमाला सुना देते थे, लेकिन बिना क्रम के वे पढ़ नहीं पाते थे। जब उनसे अपनी बात कहने को कहा जाता, तो वे चुप हो जाते, संकोच करते। जब रीना दीदी ने राष्ट्रीय शिक्षा नीति में चार ब्लॉक मॉडल के बारे में पढ़ा, तो उन्होंने इसे आज़माने का फ़ैसला किया। हर सुबह दस मिनट वे और बच्चे एक-दूसरे से बातें करने लगे — उनके घर के पास के पेड़, खेल, त्योहार जैसे विषयों पर। दो हफ़्तों में ही बच्चों की बोलने की हिचक कम होने लगी, उनका आत्मविश्वास बढ़ा, और वे पाठ पढ़ने में भी रुचि लेने लगे, क्योंकि अब उन्हें उस पर बात करने का मौक़ा मिल रहा था।"
+  },
+  {
+    title: "गिलहरी से जुड़ी कक्षा — जब शब्द बच्चों के जीवन का हिस्सा बनते हैं",
+    text: "रीना दीदी बच्चों की बातचीत से निकलने वाले शब्दों को रोज़ श्यामपट पर लिखतीं, उनके अर्थ और उच्चारण पर बात करतीं, और बच्चों को अपने मन से वाक्य बनाने के लिए प्रेरित करतीं। एक दिन उनकी कक्षा में एक गिलहरी आ गई। उन्होंने झट गिलहरी से जुड़ी कविता का एक पोस्टर निकाला और बच्चों के साथ मिलकर उस पर बातचीत शुरू कर दी। बच्चों ने कविता में रुचि दिखाई, उसे गाया, और फिर दीदी ने उन शब्दों की ओर इशारा किया जिनका बच्चे प्रयोग कर रहे थे — जैसे गिलहरी, कोट, पूँछ, काली, पीली। पढ़ना अब एक बोझ नहीं, बल्कि खोज की प्रक्रिया बन गया। इसके बाद बच्चों ने उन शब्दों को अपनी लेखन-पुस्तिकाओं में लिखा, और धीरे-धीरे उनका पढ़ना-लिखना बेहतर होता गया। यह उदाहरण दिखाता है कि जब भाषा को जीवन से जोड़ा जाता है, तो बच्चे बोलते हैं, सुनते हैं, पढ़ते हैं और लिखते हैं — न केवल परीक्षा पास करने के लिए, बल्कि अपनी पहचान और अभिव्यक्ति के लिए।"
+  },
+  {
+    title: "भाषाई कौशल — एक ही पेड़ की शाखाएँ",
+    text: "जब हम भाषा की बात करते हैं, तो अक्सर उसे चार आयामों में बाँटते हैं — सुनना, बोलना, पढ़ना और लिखना। ये चारों वस्तुतः भाषा की चार अलग-अलग खिड़कियाँ लगती हैं, लेकिन जब हम गहराई से देखें, तो पाते हैं कि ये खिड़कियाँ किसी एक ही कमरे की ओर खुलती हैं — एक ही अनुभव, एक ही चेतना, एक ही समझ की ओर। ये सभी कौशल एक-दूसरे से गुँथे हुए हैं, एक-दूसरे को सहारा देते हैं। चार खंडीय मॉडल की ख़ूबसूरती यही है कि यह भाषाई कौशलों के चारों आयामों को आपस में जोड़ता है। भाषा एक पेड़ की तरह है — उसकी जड़ें हैं सुनना, तना है बोलना, शाखाएँ हैं पढ़ना, और पत्तियाँ हैं लिखना — लेकिन ये सब मिलकर एक ही वृक्ष की रचना करते हैं, जिसका नाम है संप्रेषण और समझ।"
+  },
+  {
+    title: "सुनने का कौशल — सिर्फ़ आवाज़ पकड़ना नहीं",
+    text: "हम सबका भाषा की दुनिया में प्रवेश करने का पहला रास्ता सुनना ही होता है। माँ की लोरी, पिता की सीख, दोस्तों की बातचीत — यह सब हमें शब्द मात्र नहीं, समझ देते हैं। लेकिन सुनना केवल कानों से ध्वनि पकड़ना नहीं है — जब हम सुनते हैं, तो शब्दों के पीछे छिपे भाव, इरादे और संदर्भ भी पकड़ने की कोशिश करते हैं। यह एक मानसिक और भावनात्मक क्रिया है। इसे एक उदाहरण से समझते हैं — उड़ीसा के एक विद्यालय में शिक्षक ने 'शेर और सियार' की कहानी सुनाई। कहानी ख़त्म होते ही एक बच्चे ने पूछा — 'सर, क्या शेर वाक़ई इतना चालाक होता है?' यह सवाल बताता है कि बच्चा सिर्फ़ सुन नहीं रहा था, वह सोच रहा था, विश्लेषण कर रहा था, कहानी को अपने अनुभवों और तर्क से जोड़ रहा था। सुनना तभी सार्थक होता है जब उसके बाद कोई सवाल, कोई विचार या कोई प्रतिक्रिया जन्म लेती है। एक अच्छे श्रोता में दो गुण ख़ास होते हैं — धैर्य और सम्मान।"
+  },
+  {
+    title: "बोलने का कौशल — विचार, भाषा और श्रोता",
+    text: "बोलना मनुष्य की सबसे पुरानी अभिव्यक्ति है। बोलना केवल शब्द कहना नहीं है — यह वह सेतु है जिससे बच्चा अपने भीतर के विचार, अनुभव और भावनाएँ बाहर लाता है। बोलने से तीन सवाल जुड़े हैं — क्या कहना है यानी विचार और भाव, कैसे कहना है यानी भाषा और प्रस्तुति, और किसे कहना है यानी श्रोता। एक दिलचस्प उदाहरण देखें — कक्षा में आरव बड़े उत्साह से बता रहा था, 'हम लोग पार्क पहुँचे और झूला झूलने लगा।' शिक्षक ने पूछा, 'आरव, कौन झूला झूलने लगा — हम लोग या झूला?' आरव थोड़ी देर सोचकर बोला, 'अरे! मुझे कहना था, हम लोग पार्क पहुँचे और झूले पर झूलने लगे।' यह कोई ग़लती नहीं, बल्कि आरव के भीतर चल रही भाषिक आकुलता का संकेत है — जब सोचने की गति बहुत तेज़ होती है और ज़ुबान उसे थाम नहीं पाती। बोलने में आत्मविश्वास तब आता है जब बच्चों को बोलने के अवसर, समर्थन और सराहना मिलती है, और जब उनकी घर की भाषा को कक्षा में उचित सम्मान मिलता है — चाहे उनके उच्चारण में स्टेशन को टेशन कहने जैसी घरेलू छाया ही क्यों न दिखे।"
+  },
+  {
+    title: "मौखिक भाषा-कौशल क्यों ज़रूरी है",
+    text: "पढ़ने-लिखने की कुशलता की बुनियाद मौखिक भाषा पर ही टिकी होती है। बच्चा सबसे पहले बोलकर और सुनकर ही भाषा की समझ विकसित करता है, और यही समझ धीरे-धीरे उसे पढ़ने-लिखने तक ले जाती है। इसके साथ ही मौखिक भाषा का विकास सोचने-समझने की शक्ति भी बढ़ाता है, सामाजिक जुड़ाव और आत्मविश्वास मज़बूत करता है, भावनाओं की अभिव्यक्ति का माध्यम बनता है, और भाषा की विविधता व रचनात्मकता को जन्म देता है। साफ़ है कि बच्चों को जितना अधिक खुलकर बोलने दिया जाए, उतना ही उनका आत्मविश्वास, सोचने की क्षमता और भाषा-प्रवाह बढ़ता है। इसलिए हमें कक्षाओं को ऐसी जगह बनाना होगा जहाँ बच्चा बिना डर, बिना झिझक, खुलकर बोल सके — क्योंकि भाषा दबाव से नहीं, संवाद से आती है।"
+  },
+  {
+    title: "मौखिक भाषा-विकास की गतिविधियाँ",
+    text: "मौखिक भाषा के विकास के लिए बच्चों को बोलने के अवसर देना सबसे ज़रूरी है। इसके लिए कई रोचक गतिविधियाँ अपनाई जा सकती हैं। बातचीत — जैसे बिहार के एक शिक्षक ने बच्चों से पूछा, 'तुम्हारा मनपसंद खाना क्या है?' और इससे पूरी एक बातचीत की श्रृंखला शुरू हो गई। चित्र-वर्णन — जैसे राजस्थान में एक शिक्षक ने ऊँट का पोस्टर दिखाकर पूछा, 'इस चित्र में क्या हो रहा है?' और बच्चे अनायास बोलने लगे। अनुभवों की साझेदारी, अभिनय और भूमिका-निर्वाह, प्रश्न पूछना और अपनी राय देना, खेल और भाषाई खेल जैसे 'शब्दों की सीढ़ी', स्थितिपरक बातचीत, सृजनात्मक चिंतन जैसे 'यदि मैं एक पेड़ होती तो...', शिक्षक और बच्चों द्वारा कहानी कहना, स्थानीय लोकगीत और पहेलियाँ, और 'सुनो और करो' जैसी शारीरिक गतिविधियाँ — ये सब मिलकर बच्चों की मौखिक भाषा की नींव मज़बूत करती हैं, जो आगे चलकर पढ़ने-लिखने के कौशलों का आधार बनती है।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो चलिए, आज जो सीखा उसे संक्षेप में दोहराते हैं। पहला — चार ब्लॉक मॉडल में मौखिक भाषा-विकास, शब्द-पहचान, पढ़ना और लिखना शामिल हैं, और मौखिक भाषा-विकास बच्चों की भाषा की नींव है। दूसरा — सुनना-बोलना और पढ़ना-लिखना आपस में जुड़े हों तो भाषा-शिक्षण असरदार होता है। तीसरा — बातचीत, भूमिका-निभाना और खेल जैसी गतिविधियाँ बच्चों के स्थानीय अनुभवों से जुड़ी होनी चाहिए, जैसा रीना दीदी की कक्षा में गिलहरी की कविता के ज़रिए हुआ। चौथा — बातचीत, चित्र-वर्णन, कहानी कहना, नाटक, भाषण और सवाल पूछना — ये सब मौखिक भाषा-विकास के महत्वपूर्ण तरीक़े हैं। और पाँचवाँ — बोलना सिर्फ़ शब्दों का उच्चारण नहीं है, यह उस भीतरी विचार को बाहर लाना है जो बच्चा अपने अनुभवों में जी रहा है। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

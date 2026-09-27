@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>शब्द-पहचान की विभिन्न रणनीतियाँ — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>शब्द-पहचान की विभिन्न रणनीतियाँ</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — भाषा जीवन में इतनी घुली-मिली क्यों है",
+    text: "आज हम पढ़ेंगे — शब्द-पहचान की विभिन्न रणनीतियाँ। पिछले दो पाठों में हमने भाषा और भाषा-अर्जन की प्रक्रिया को विस्तार से समझा था। हमने यह भी जाना कि भाषा हमारे जीवन का अभिन्न अंग होने के साथ-साथ व्यक्तित्व-निर्माण का भी अहम ज़रिया है। हम जिस भाषा के परिवेश में रहते हैं, उसकी ध्वनियों, शब्दों और वाक्यों को हम सहज रूप से अपना लेते हैं, और इन सबमें अर्थ हमेशा मौजूद रहता है। मातृभाषा सीखते समय हम सबसे पहले अर्थपूर्ण वाक्य और शब्द ही सुनते-बोलते हैं। छोटे बच्चे जो भाषा सुनते हैं, उसकी ध्वनियों को बोलने की कोशिश करते हैं, और यह सब इतने सहज ढंग से होता है कि किसी तरह का तनाव या बोझ महसूस नहीं होता। आज हम चार ब्लॉक मॉडल के दूसरे बड़े हिस्से — शब्द-पहचान — के बारे में विस्तार से जानेंगे, जिसमें ध्वनि-जागरूकता, ध्वनि-आकृति का संबंध, और वर्णों-शब्दों को पढ़ना-लिखना शामिल है।"
+  },
+  {
+    title: "सीखने के प्रतिफल",
+    text: "इस पाठ को पढ़ने के बाद आप चार ब्लॉक मॉडल का संक्षिप्त विवरण दे पाएँगे, शब्द-पहचान और उसके उप-घटकों की अवधारणा को स्पष्ट कर पाएँगे, ध्वन्यात्मक जागरूकता के विकास की व्याख्या कर पाएँगे, इसके लिए उचित कक्षाई गतिविधियाँ बना पाएँगे, अक्षर-पहचान और ध्वनि-आकृति के संबंध के लिए विभिन्न रणनीतियों का प्रयोग कर पाएँगे, और लिखित शब्दों-वाक्यों की पहचान, लिखने व पढ़ने के विकास के लिए सही प्रक्रियाओं का इस्तेमाल कर पाएँगे।"
+  },
+  {
+    title: "जंगल का पोस्टर — एक गतिविधि में कई कौशल",
+    text: "आइए एक उदाहरण से समझते हैं कि कैसे एक ही गतिविधि के इर्द-गिर्द भाषा के कई कौशल विकसित होते हैं। कक्षा एक में शिक्षक बच्चों को एक 'जंगल' शीर्षक पोस्टर दिखाते हैं, जिस पर शेर, हिरन, साँप, बंदर जैसे जानवर बने हैं। सबसे पहले चित्र पर बातचीत होती है, जिसमें बच्चे अपने अनुभव साझा करते हैं — जैसे 'मैंने भी बगीचे में एक साँप देखा था।' फिर चित्र में दिखी चीज़ों के शब्द बोर्ड पर लिखे जाते हैं, और उन्हें एक-एक करके उँगली रखकर पढ़ा जाता है। चूँकि शुरुआत में शब्द एक तस्वीर की तरह ही होता है, इसलिए ध्वनि के साथ उसकी लिखित आकृति का संबंध बनने लगता है। फिर शब्द में आए वर्णों की पहचान की जाती है, बच्चे अपनी पसंद की चीज़ों का चित्र बनाते हैं, और शिक्षक की मदद से उसका नाम लिखते हैं। इस एक गतिविधि से सुनना, बोलना, शब्द-पहचान, पढ़ना और लिखना — सभी कौशल एक साथ विकसित होते हैं।"
+  },
+  {
+    title: "सोहम और नानी की बातचीत — शब्द-पहचान का संकट",
+    text: "अब एक और उदाहरण से समझते हैं कि मौखिक भाषा और शब्द-पहचान में क्या फ़र्क़ है। सोहम अपनी नानी के साथ एक चित्रात्मक कहानी की किताब देख रहा है और कहता है, 'नानी, वो देखो! चिड़िया पानी में नहा रही है!' सोहम की यह बातचीत भावपूर्ण और व्याकरण-सम्मत है। लेकिन जब नानी पूछती हैं, 'अच्छा, बताओ इस किताब में चिड़िया कहाँ लिखा है?', तो सोहम के सामने शब्द की पहचान का संकट आ जाता है — क्योंकि भाषा के लिखित रूप से उसका परिचय अभी बहुत कम है। यह दिखाता है कि तीन-चार साल का बच्चा भी अपनी मातृभाषा में बहुत सहजता से बात कर सकता है, लेकिन उसी शब्द को लिखित रूप में पहचानना एक अलग कौशल है, जो बार-बार किताब पढ़ने और शब्द व उसकी लिखित आकृति के बीच संबंध बनने से ही विकसित होता है।"
+  },
+  {
+    title: "ध्वन्यात्मक जागरूकता — भाषा की ध्वनियों को पहचानना",
+    text: "हर भाषा की अपनी अलग ध्वनियाँ होती हैं। उदाहरण के लिए सिक्किम की लिम्बू भाषा में 'आम' को 'आँप' कहा जाता है, और मणिपुरी की ताङखुल भाषा में 'नींबू' को 'चाम्प्रा' कहा जाता है। इससे पता चलता है कि अलग-अलग भाषाओं में एक ही चीज़ के लिए अलग-अलग शब्द और ध्वनियाँ होती हैं, लेकिन तीन-चार साल के बच्चे भी यह बता सकते हैं कि किसी शब्द में कितनी आवाज़ें छिपी हैं — जैसे 'आम' में दो आवाज़ें हैं, 'आ' और 'म', और 'मछली' में तीन आवाज़ें हैं। इसी को ध्वन्यात्मक जागरूकता कहते हैं — यानी भाषा की ध्वनि-संरचना की समझ, कि वाक्य किन शब्दों, शब्दांशों और छोटी ध्वनि-इकाइयों से बने हैं। यह ज्ञान पहले मौखिक रूप से विकसित होता है, और यह डिकोडिंग सीखने के लिए सबसे ज़रूरी बुनियादी कौशलों में से एक है। दिलचस्प बात यह है कि किसी शब्द में एक ध्वनि बदलने से पूरा अर्थ बदल जाता है — जैसे 'नल' में 'न' के स्थान पर 'म' रख दें तो वह 'मल' बन जाता है, और 'क' रख दें तो 'कल'।"
+  },
+  {
+    title: "ध्वनि-प्रतीक का संबंध — आवाज़ और उसकी लिखित पहचान",
+    text: "हमारे आस-पास घंटी, हॉर्न, साइकिल की घंटी जैसी अनेक आवाज़ें होती हैं, जिन्हें हम बार-बार सुनकर पहचानने लगते हैं। ठीक इसी तरह आवाज़ और उसके लिखित प्रतीक — यानी वर्ण, अक्षर, शब्द या वाक्य — के बीच भी एक संबंध बनता है, जिसे ध्वनि-प्रतीक-संबंध कहा जाता है। जब यह संबंध मज़बूत होता है, तो आवाज़ सुनते ही उसकी लिखित आकृति दिमाग़ में उभर आती है। इसे हम रोज़मर्रा में देखते हैं — छोटे बच्चे जब दुकान पर जाते हैं तो 'हाइड एंड सीक' जैसे बिस्कुट के नाम को पहचान लेते हैं, बिना पढ़ना सीखे, क्योंकि उन्होंने बार-बार उस नाम को उसकी आवाज़ के साथ जोड़कर देखा है। बुनियादी स्तर की राष्ट्रीय पाठ्यचर्या की रूपरेखा डिकोडिंग को इसी संदर्भ में समझाती है — प्रतीकों और उनकी ध्वनियों के बीच संबंध को समझकर लिखित शब्दों का उच्चारण करना। लेकिन ध्यान रहे, डिकोडिंग 'पढ़ना' नहीं है — जब तक अर्थ ग्रहण न हो, वह पढ़ना नहीं कहलाएगा।"
+  },
+  {
+    title: "सुहानी की कक्षा — कविता से शब्द-पहचान तक",
+    text: "बालवाटिका तीन में सुहानी अपनी कक्षा में 'बोलो बादल' शीर्षक कविता का पोस्टर टाँगती हैं और बच्चों के साथ आनंद से गाती हैं। वह बच्चों से उनके अनुभव पूछती हैं — बादलों में उन्हें किस-किस की तस्वीर नज़र आती है, बारिश आने पर क्या-क्या मज़े करते हैं। फिर बच्चे बादलों की तस्वीर बनाते हैं और उसका नाम लिखते हैं — बादल! सुहानी बच्चों से पूछती हैं कि कविता के पोस्टर में 'बादल' शब्द कहाँ लिखा होगा, और बच्चे अनुमान के आधार पर सही शब्द पर उँगली रख देते हैं, क्योंकि सुहानी ने उँगली रखकर ही कविता को बार-बार गाया और पढ़ाया था। इसके बाद सुहानी 'ब' अक्षर से बनने वाले शब्द-चित्र कार्ड दिखाती हैं — बस, सेब, गुब्बारा, तबला, बैंगन, बस्ता — और बच्चे धीरे-धीरे अनुमान लगाकर सही शब्द बताना सीख जाते हैं। जब वस्तु और उसके नाम के बीच संबंध मज़बूत होता जाता है, तो ध्वनि-प्रतीक का संबंध भी उतना ही दृढ़ होता जाता है।"
+  },
+  {
+    title: "वर्णों और शब्दों का लेखन एवं पठन",
+    text: "वर्णों और शब्दों की पहचान के साथ-साथ उनका लेखन भी जुड़ा हुआ है। लेखन से पहले बच्चों को चीज़ों, घटनाओं और अनुभवों के बारे में खुलकर बातचीत के मौक़े देने चाहिए, ताकि वे आत्मविश्वास के साथ अपनी बात कह-सुन सकें। एक दिलचस्प बात यह है कि छोटे बच्चे जब लिखते हैं, तो साथ-साथ बोलते भी जाते हैं — इससे वे अपने काम को नियंत्रित करते हैं और अपने लिखे शब्दों को पढ़ भी लेते हैं। ध्यान देने वाली बात यह है कि वर्णों और शब्दों का लेखन एक अर्थपूर्ण प्रक्रिया का हिस्सा होना चाहिए, यांत्रिक नहीं — जैसे पूरा पन्ना भरकर सिर्फ़ 'अ' और 'A' लिखते जाना बच्चों के लिए बेहद नीरस और निरर्थक होता है। इसके विपरीत सुहानी की कक्षा में बच्चों ने 'बोलो बादल' कविता को गाने-गुनगुनाने का आनंद लिया, फिर 'ब' वर्ण और उससे बनने वाले शब्दों को लिखने का सार्थक अभ्यास किया, क्योंकि अब वे जानते थे कि वे क्या लिख रहे हैं और क्यों।"
+  },
+  {
+    title: "शब्द-पहचान के लिए मज़ेदार रणनीतियाँ",
+    text: "शब्द-पहचान के कौशल को मज़बूत करने के लिए कई तरह की रोचक गतिविधियाँ अपनाई जा सकती हैं। जैसे 'घुमरी परैया' कविता के आधार पर बार-बार आने वाले शब्दों की पहचान करवाना, फिर उनमें आए किसी ध्वनि-विशेष जैसे 'घ' की पहचान करवाना, और उससे शुरू होने वाले अन्य शब्द बताने के लिए कहना — जैसे घोड़ा, घड़ी, घास, घर। समान लय वाले शब्द बताने के लिए भी कहा जा सकता है, भले ही वे निरर्थक शब्द हों, क्योंकि इससे पता चलता है कि बच्चे शब्दों की लय को पहचान रहे हैं। अधूरी कविता को पूरा करवाना, चित्रों की शुरुआती आवाज़ पर घेरा लगवाना, समान लय वाले शब्दों का चित्रों के साथ मिलान करवाना, और शब्द-पहियों के खेल से भी बच्चे अक्षरों को पहचानने के साथ-साथ नए अर्थपूर्ण शब्द बनाना सीखते हैं। इन सभी गतिविधियों में बच्चों की मौखिक भाषा एक नींव का काम करती है — वे जितना अधिक सुनते-बोलते हैं, उनका पढ़ना-लिखना उतना ही सहज होता जाता है।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो चलिए, आज जो सीखा उसे संक्षेप में दोहराते हैं। पहला — भाषा की लिपि दरअसल ध्वनि की ओर इशारा करने वाले चिह्न हैं, जो फिर से भाषा के मौखिक रूप से जुड़ जाते हैं। इसीलिए शब्द-पहचान, पढ़ना और लिखना सीखने में मौखिक भाषा-विकास की एक ख़ास भूमिका है। दूसरा — ध्वन्यात्मक जागरूकता भाषा की ध्वनि-संरचना की समझ है, जो पहले मौखिक रूप से विकसित होती है। तीसरा — ध्वनि का लिखित रूप पहचानना ही ध्वनि-प्रतीक-संबंध कहलाता है, और डिकोडिंग का मतलब है प्रतीकों और उनकी ध्वनियों के बीच के संबंध को समझकर लिखित शब्दों को समझना — लेकिन डिकोडिंग पढ़ना नहीं है, यह पढ़ना सीखने में शामिल एक कुशलता भर है। चौथा — वर्णों और शब्दों की पहचान के साथ उनका लेखन भी जुड़ा है, और यह लेखन एक अर्थपूर्ण प्रक्रिया का हिस्सा होना चाहिए, यांत्रिक नहीं। पाँचवाँ — लिखित भाषा के अभ्यास से पहले मौखिक भाषा का प्रयोग ज़्यादा फ़ायदेमंद होता है, और बच्चों को अर्थपूर्ण लेखन के भरपूर मौक़े मिलने चाहिए। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

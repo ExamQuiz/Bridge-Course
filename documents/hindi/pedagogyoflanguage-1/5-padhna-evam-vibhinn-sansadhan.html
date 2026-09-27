@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>पढ़ना एवं विभिन्न संसाधन — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>पढ़ना एवं विभिन्न संसाधन</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — पढ़ना एक अनिवार्यता बन चुका है",
+    text: "आज हम पढ़ेंगे — पढ़ना एवं विभिन्न संसाधन। भाषा की रहस्यमयी और रोमांचकारी दुनिया में मौजमस्ती से घूम रहे बच्चों को भाषा का आनंद देने के लिए पढ़ना-लिखना सिखाने की ज़रूरत से इनकार नहीं किया जा सकता। छपाई के विकास से पहले अभिव्यक्ति, संप्रेषण और ज्ञान के हस्तांतरण में वाचिक परंपरा की अपनी एक बड़ी भूमिका थी, लेकिन आज हम चारों ओर मुद्रित और लेखन से समृद्ध परिवेश से घिरे हैं, इसलिए पढ़ना-लिखना एक आवश्यकता ही नहीं, बहुत बड़ी अनिवार्यता भी बन गया है। सुनना और बोलना स्वाभाविक प्रक्रियाएँ हैं — बच्चे जिस परिवेश में बड़े होते हैं, उस भाषा के शब्दों और वाक्यों को अपनी आवश्यकतानुसार अर्जित करते चलते हैं। लेकिन पढ़ना सीखने के लिए सायास यानी सजग प्रयत्न की ज़रूरत होती है, यद्यपि यह भी एक स्वाभाविक प्रक्रिया है। आज हम पढ़ने के वास्तविक अर्थ, इसमें शामिल कौशलों और सहायक तत्वों को समझेंगे।"
+  },
+  {
+    title: "सीखने के प्रतिफल",
+    text: "इस पाठ को पढ़ने के बाद आप पठन की अवधारणा की व्याख्या कर पाएँगे, पठन में शामिल कौशल और सहायक तत्वों की जानकारी प्राप्त कर पाएँगे, पठन में स्कीमा-निर्माण के महत्व को रेखांकित कर पाएँगे, पठन के विभिन्न प्रकारों को समझ के साथ परिभाषित कर पाएँगे, कक्षाई प्रक्रियाओं में पठन की विभिन्न विधियों का अभ्यास कर पाएँगे, और पठन के विकास के लिए विविध प्रकार के संसाधनों की पहचान कर पाएँगे।"
+  },
+  {
+    title: "पढ़ना है समझना",
+    text: "क्या आपने कभी सोचा है कि पढ़ना क्या है, और क्या अर्थ के अभाव में पढ़ने को पढ़ना माना जाएगा? इसे एक उदाहरण से समझते हैं। मान लीजिए आपके सामने एक वाक्य है जिसकी लिपि आप पहचानते हैं, आपने उसके अक्षर और शब्द भी पहचान लिए, उन्हें उच्चरित भी किया — लेकिन क्या आप उस वाक्य से कोई अर्थ निकाल पाए? अगर नहीं, तो इसका मतलब है कि शब्दों की पहचान करना और उनका उच्चारण कर पाना 'पढ़ना' नहीं है, बल्कि उसमें से अर्थ ढूँढ पाना ही असली 'पढ़ना' है। भाषा वैज्ञानिकों ने अनेक प्रयोगों के आधार पर यह निष्कर्ष निकाला है कि अक्षर पहचानने और पढ़ने में ज़मीन-आसमान का अंतर है। पढ़ने की व्यापक परिभाषा यह कहती है कि पढ़ना केवल लिपि या लिपिबद्ध भाषा को भेदना ही नहीं, बल्कि अनेक स्तरों पर और उस सामग्री के कई पहलुओं से बातचीत करना भी है — यानी मुद्रित सामग्री के अर्थ को समझना, उसके प्रति अपना नज़रिया बनाना, और अपनी निजी समझ विकसित करना।"
+  },
+  {
+    title: "पढ़ना क्यों सीखा जाता है",
+    text: "अगर आपसे पूछा जाए कि आपने पढ़ना क्यों सीखा, तो आपके पास अनेक जवाब होंगे — कहानियों में रुचि थी, किताबों में छिपे ज्ञान को जानने की उत्सुकता थी, तरह-तरह की जानकारी चाहिए थी, अपनी बचत का हिसाब-किताब रखना था, दूसरों की भावनाएँ और विचार जानने थे, या फिर अपने दैनिक जीवन को आसान बनाना था। इन सभी कारणों में एक बात छिपी है — कुछ भी सीखना है तो पढ़ना आना चाहिए। पठन-पाठन सचेतन शिक्षा और सचेतन अध्ययन के लिए एक अनिवार्य पूर्वाधार है। हमारे देश में लंबे समय तक वाचिक परंपरा का ही वर्चस्व रहा — लेन-देन, ज्ञान का हस्तांतरण, मनोरंजन, सब कुछ बोलकर-सुनकर होता था। लेकिन छपाईखाने के आविष्कार के साथ पढ़ने-लिखने की परंपरा ने जड़ें जमाईं, और आज औपचारिक-अनौपचारिक संवाद से लेकर व्यापार तक, हर जगह पढ़ना-लिखना ज़रूरी हो गया है। यह सिर्फ़ कुछ नया सीखने की सीढ़ी नहीं, बल्कि मानवीय गरिमा को बनाए रखने का माध्यम भी है।"
+  },
+  {
+    title: "पढ़ने में शामिल कौशल — एकल नहीं, अनेक",
+    text: "दुनिया के किसी भी कोने में रहने वाले किसी भी उम्र के व्यक्ति के पास अगर कोई सबसे रोमांचकारी चीज़ है, तो वह है पढ़ने का कौशल। यह तिलस्मी दरवाज़ा है जिसे खोलकर कभी हम परीलोक में पहुँच जाते हैं, तो कभी ज्ञान की अपार संपदा वाली दुनिया की सैर कर आते हैं। जैसा हमने पहले भी देखा, पढ़ना केवल डिकोडिंग करना भर नहीं है, बल्कि छपी सामग्री से अनेक स्तरों पर बातचीत करना भी है। पढ़ने का कौशल बेहद सहज है — जैसे घर में दादी-नानी अख़बार पढ़ते हुए बार-बार 'दैनिक हिंदुस्तान' शब्द सुनाती हैं, तो पोती उस शब्द को बिना वर्णमाला सीखे ही पहचानने लगती है। लेकिन साथ ही यह जटिल और रहस्यमय भी है, ख़ासकर उन बच्चों के लिए जिन्हें छपी सामग्री देखने के कम मौक़े मिले हैं। सबसे ज़रूरी बात यह समझनी है कि पढ़ना एकल कौशल नहीं है — इसमें अनेक कौशल एक-दूसरे से जुड़े हुए हैं, और कोई भी एक कौशल अपने-आप में पूर्ण नहीं है।"
+  },
+  {
+    title: "इमरान, मनोज, निशी और सुनीरा — पढ़ने के अलग-अलग तरीक़े",
+    text: "एक ही वाक्य को पढ़ने के अलग-अलग तरीक़े देखकर हम पढ़ने में सहायक तत्वों को बेहतर समझ सकते हैं। अध्यापक ने बोर्ड पर लिखा — 'वह दौड़कर आम उठा लाया।' इमरान इसे अक्षरों को जोड़कर, वर्णमाला की तरह पढ़ता है। मनोज हर वर्ण को अलग-अलग करके बोलता है। लेकिन निशी इसे पढ़ती है — 'लड़के ने आम उठाया' — उसने वाक्य के साथ बने चित्र को देखकर अनुमान लगाया। और सुनीरा पढ़ती है — 'बच्चा आम भागते लाया।' इन उदाहरणों से पता चलता है कि पढ़ना सीखने में कई सहायक तत्व ज़रूरी हैं — भाषा से परिचय, संदर्भ को ग्रहण कर पाना, लिपि यानी अक्षर-ध्वनि से परिचय, वाक्य-संरचना और शैली से परिचय, और मुद्रित सामग्री के विषय से परिचय। इन्हीं परिस्थितियों में हम असल में 'पढ़ना' सीख पाते हैं — केवल शब्दों को उच्चरित कर लेना यह प्रक्रिया पूरी नहीं करता।"
+  },
+  {
+    title: "स्कीमा का निर्माण — पुराने अनुभवों से नए अर्थ",
+    text: "आपने देखा होगा कि बच्चे कैलेंडर, दीवारों या विज्ञापनों पर बड़े अक्षरों में जो भी लिखा देखते हैं, उसे पढ़ना सीखे बग़ैर ही पहचान लेते हैं। ऐसा इसलिए होता है क्योंकि पढ़ना सीखने में भी शब्दों की छवियाँ मानस में इसी तरह बनती हैं, जिसे हम 'स्कीमा-निर्माण' की प्रक्रिया कहते हैं। इसमें पूर्व-ज्ञान और पूर्व-अनुभव महत्वपूर्ण भूमिका निभाते हैं। इसे डाकख़ाने के उदाहरण से समझें — जैसे डाकघर में अलग-अलग जगहों से आने वाली चिट्ठियों के लिए अलग-अलग ख़ाने बने होते हैं, ठीक उसी तरह हमारे अनुभव भी स्कीमा के रूप में विशेष ख़ानों में व्यवस्थित होते जाते हैं। जैसे-जैसे नए अनुभव मिलते हैं, वस्तुओं और घटनाओं की अवधारणाएँ आकार लेती जाती हैं। किसी वाक्य को पढ़ते समय शब्दों की छवि के साथ-साथ उनका अर्थ भी हमारे मानस में आकार लेता चलता है — जैसे 'हामिद को चिमटा लेने का ख़्याल आया' पढ़ते समय पहले बच्चे का चित्र, फिर चिमटे की छवि, और साथ में हामिद की मन:स्थिति भी हमारे मन में उभरने लगती है।"
+  },
+  {
+    title: "पढ़ने के लिए सामग्री कैसी हो",
+    text: "बच्चों द्वारा पढ़ना सीखने की प्रक्रिया में संबंध जोड़ने और अर्थ की खोज करने की इच्छा पढ़ने के केंद्र में होती है, और इस अर्थ को तलाशने में पाठ्यसामग्री का संदर्भ बहुत महत्वपूर्ण होता है। इसलिए सामग्री का चयन करते समय कुछ बातों का ख़ास ध्यान रखना ज़रूरी है — सामग्री बच्चों के सामाजिक-सांस्कृतिक परिवेश से जुड़ी हो, उनके बौद्धिक स्तर और रुचियों के अनुरूप हो, उन्हें ऐसा लगे कि सामग्री उनसे संवाद कर रही है, वह उनकी कल्पना-शक्ति को पोषित करे, चित्रात्मक हो ताकि वे सामग्री के बारे में अनुमान लगा सकें, और स्थानीय भाषाओं की पहेलियाँ, चुटकुले, तुकबंदियाँ शामिल हों जो पठन के प्रति आकर्षित करें। बहुत से भाषा वैज्ञानिक स्तरवार पठन-सामग्री की भी सिफ़ारिश करते हैं — जैसे एन.सी.ई.आर.टी. द्वारा विकसित 'बरखा' श्रृंखला, जिसमें बच्चों को अति-प्रिय विषयों पर छोटी-छोटी कहानियाँ गढ़ी गई हैं। कुछ बाल साहित्य ब्रेल लिपि में भी उपलब्ध होना चाहिए, ताकि दृष्टि-बाधित बच्चों को भी कठिनाई न हो।"
+  },
+  {
+    title: "पठन के प्रकार — सस्वर, मौन और गहन पठन",
+    text: "पठन के कई प्रकार होते हैं। सस्वर पठन यानी बोलकर पढ़ना — इसमें आँख, कान, मस्तिष्क और उच्चारण अवयव सक्रिय हो जाते हैं, और बुनियादी स्तर के बच्चों के लिए यह ज़रूरी है क्योंकि इसी से पता चलता है कि वे सही बोल भी रहे हैं या नहीं। धीरे-धीरे यह मौन पठन में बदलता जाता है, जिसमें पढ़ने की गति बढ़ती है, मानसिक थकान कम होती है, और एकाग्रता बनी रहती है जो अर्थ-बोध के लिए ज़रूरी है। गहन पठन इससे भी आगे की बात है — इसमें पूरे धैर्य के साथ पाठ्यसामग्री को पढ़ना, शब्दों से ग्रहण किए गए अर्थों पर विचार-विमर्श करना, और घटनाओं का विश्लेषण करना शामिल है। इसके अलावा साझा पठन है, जिसमें दो या अधिक बच्चे मिलकर एक ही सामग्री पढ़ते हैं और अपने विचार एक-दूसरे से साझा करते हैं, निर्देशित पठन है, जिसमें अध्यापक प्रश्नों के ज़रिए बच्चों को अर्थ तक पहुँचाते हैं, और स्वतंत्र पठन है, जिसमें बच्चे अपनी रुचि की किताब लेकर अपनी गति से पढ़ते हैं और पढ़ने के प्रति ललक पैदा करते हैं।"
+  },
+  {
+    title: "पढ़ना सिखाने की रणनीतियाँ — अक्षर, शब्द या समग्र भाषा",
+    text: "पढ़ना सिखाने की एक बहुत प्रचलित रणनीति है 'अक्षर-पद्धति', जिसमें बच्चों को वर्णमाला का चार्ट दिखाकर हर अक्षर का उच्चारण करवाया जाता है — जैसे 'ग से गमला'। लेकिन यह बहुत यांत्रिक प्रक्रिया है, क्योंकि इसमें बच्चे कोई संदर्भ नहीं जोड़ पाते, और वर्षभर मेहनत के बाद भी कई बार पढ़ना नहीं सीख पाते। दूसरी है 'शब्द-पद्धति', जिसमें बच्चों के जीवन से जुड़े शब्दों को लेकर पढ़ना सिखाया जाता है, लेकिन यहाँ भी संदर्भ पूरी तरह नहीं जुड़ पाता क्योंकि शब्द अपने आप में पूर्ण सार्थक इकाई नहीं हैं। तीसरी और अपेक्षाकृत वैज्ञानिक पद्धति है 'समग्र भाषा-पद्धति', जिसमें बच्चों के परिवेश से जुड़ी रोचक सामग्री — कहानी, कविता, घटना — को पठन-सामग्री के रूप में प्रस्तुत किया जाता है, जिससे बच्चे अपने अनुभव जोड़ पाते हैं। राष्ट्रीय शिक्षा नीति 2020 'संतुलित साक्षरता उपागम' की सिफ़ारिश करती है, जो पारंपरिक अक्षर-पद्धति और समग्र भाषा-पद्धति के बीच एक संतुलन बनाता है — जिसमें सार्थक इकाइयों से पठन शुरू होता है, और साथ ही अक्षरों-शब्दों पर भी ज़रूरत के अनुसार ध्यान केंद्रित करवाया जाता है।"
+  },
+  {
+    title: "पठन के विकास के संसाधन — पुस्तकों से लेकर पठन-कोने तक",
+    text: "पठन के विकास के लिए हमारे आस-पास कई तरह के संसाधन मौजूद हैं। बाल-साहित्य, बाल-पत्रिकाएँ, कक्षा में पठन-कोना, चित्र, समाचारपत्र, अक्षर-शब्द-वाक्य कार्ड, पोस्टर, और जादुई पिटारा जैसे साधन बहुत उपयोगी हैं। कक्षा में एक ऐसा पठन-कोना ज़रूर होना चाहिए जहाँ हमेशा बच्चों की पसंद की किताबें, पत्र-पत्रिकाएँ रखी हों, जिन्हें बच्चे अपनी पसंद से चुनकर उठा सकें। बुलेटिन-बोर्ड पर कक्षा में पढ़ी गई किताबों की सूची, बच्चों द्वारा बोली गई बातें, या उनके परिवेश से जुड़ी जानकारी लगाई जा सकती है। 'आज की बात' जैसी एक नियमित गतिविधि भी बहुत कारगर है, जिसमें बच्चों से रोज़ाना की बातचीत को श्यामपट पर लिखा जाता है, जिससे उन्हें अपने बोले गए शब्दों के लिखित रूप की पहचान होती जाती है। एन.सी.ई.आर.टी. की 'फिरकी बच्चों की' पत्रिका और 'जादुई पिटारा' जैसी सामग्री भी सीखने-सिखाने में बहुत मदद करती है।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो चलिए, आज जो सीखा उसे संक्षेप में दोहराते हैं। पहला — पढ़ना या पठन का मतलब सिर्फ़ लिखित सामग्री को उच्चरित करना नहीं, बल्कि उसमें छिपे अर्थ को समझना है। दूसरा — पढ़ना एक स्वाभाविक प्रक्रिया है, लेकिन इसमें अनेक उप-कौशल शामिल होते हैं जो एक-दूसरे पर निर्भर करते हैं। तीसरा — पठन के कई प्रकार हैं, जैसे सस्वर वाचन, मौन पठन, गहन पठन, साझा पठन और निर्देशित पठन — इन सभी का अपना ख़ास महत्व है, और शिक्षक को यह समझना ज़रूरी है कि किस मौक़े पर किसका इस्तेमाल करना है। चौथा — पढ़ना अर्थ बुनने की एक प्रक्रिया है, इसलिए पढ़ना सिखाते समय हमें अपने नज़रिए को बार-बार जाँचना होगा। और पाँचवाँ — रोचक कहानियों, कविताओं और चित्रों पर बच्चों से बातचीत करके, सकारात्मक नज़रिया रखकर और उनकी सराहना करके हम पढ़ना सीखने की पूरी प्रक्रिया को आनंददायी बना सकते हैं। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
