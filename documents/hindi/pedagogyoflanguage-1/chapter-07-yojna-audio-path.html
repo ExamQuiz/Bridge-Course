@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>इकाई-योजना एवं पाठ-योजना का निर्माण — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+    --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+  --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif; line-height: 1.7; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+header { text-align: center; margin-bottom: 1.25rem; }
+header h1 { font-size: 1.25rem; margin: 0 0 0.25rem; font-weight: 700; }
+header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+.player { position: sticky; top: env(safe-area-inset-top, 0px); background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 10; }
+.now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
+.controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+button { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 0.55rem 0.8rem; font-size: 0.95rem; cursor: pointer; min-height: 44px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
+button:active { transform: scale(0.97); }
+.speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
+select { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; padding: 0.3rem 0.4rem; min-height: 36px; }
+.voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
+.sections { display: flex; flex-direction: column; gap: 0.7rem; }
+.section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; cursor: pointer; transition: background 0.2s; }
+.section.active { background: var(--active-bg); border-color: var(--accent); }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.section-title { font-weight: 600; font-size: 1rem; }
+.section-num { font-size: 0.78rem; color: var(--accent); background: var(--accent-bg); border-radius: 999px; padding: 0.1rem 0.55rem; white-space: nowrap; }
+.section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
+.section.active .section-text { display: block; color: var(--text); }
+.play-icon { font-size: 0.8rem; color: var(--accent); }
+footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>इकाई-योजना एवं पाठ-योजना का निर्माण</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — योजना है शिक्षण की नींव",
+    text: "आज हम पढ़ेंगे — इकाई-योजना एवं पाठ-योजना का निर्माण। हम सब जानते हैं कि शिक्षा एक सुनियोजित, उद्देश्यपरक और निरंतर चलने वाली प्रक्रिया है। इसे प्रभावी ढंग से चलाने के लिए शिक्षक को केवल विषयवस्तु का ज्ञान होना काफ़ी नहीं है, उसे यह भी पता होना चाहिए कि वह क्या पढ़ा रहा है, क्यों पढ़ा रहा है और किस परिणाम की अपेक्षा कर रहा है। शिक्षण की पूरी योजना चार मुख्य स्तंभों पर टिकी होती है — पाठ्यचर्या-लक्ष्य, सीखने के प्रतिफल, इकाई-योजना और पाठ-योजना। आज हम इन्हीं चारों को एक-एक करके समझेंगे, ताकि हम एक सशक्त शिक्षण-योजनाकार बन सकें।"
+  },
+  {
+    title: "सीखने के प्रतिफल",
+    text: "इस पाठ को पढ़ने के बाद आप पाठ्यचर्या-लक्ष्य को परिभाषित कर पाएँगे, सीखने के प्रतिफल की व्याख्या कर पाएँगे, और किसी भी पाठ के लिए सीखने के प्रतिफल तय कर पाएँगे। साथ ही आप इकाई-योजना और पाठ-योजना को परिभाषित करते हुए इन्हें खुद बना भी पाएँगे।"
+  },
+  {
+    title: "पाठ्यचर्या-लक्ष्य — दिशा तय करने वाला कथन",
+    text: "पाठ्यचर्या दो शब्दों से बनी है — विषयवस्तु और गतिविधियाँ जो बच्चों को दी जाती हैं, और लक्ष्य यानी वे स्पष्ट उद्देश्य जो प्राप्त करने हैं। पाठ्यचर्या-लक्ष्य वे कथन हैं जो शिक्षा-प्रणाली को दिशा देते हैं — यह तय करते हैं कि शिक्षक किस उद्देश्य से पढ़ा रहा है, विद्यार्थी क्या सीखेंगे, और मूल्यांकन किस आधार पर होगा। ब्लूम के अनुसार, पाठ्यचर्या-लक्ष्य वे स्पष्ट रूपरेखाएँ हैं जिनसे यह तय होता है कि शिक्षण-प्रक्रिया से विद्यार्थियों में क्या परिवर्तन लाया जाना है। डॉ. यशपाल ने इसे शिक्षा को जीवन से जोड़ने का माध्यम बताया, जिसका उद्देश्य विद्यार्थियों में सोचने-समझने और उत्तरदायित्व से कार्य करने की क्षमता विकसित करना है।"
+  },
+  {
+    title: "सीखने के प्रतिफल — तीन ज़रूरी सवाल",
+    text: "सीखने के प्रतिफल का सीधा मतलब है — विद्यार्थी ने क्या सीखा, इसकी स्पष्ट कसौटी। स्पैडी के अनुसार, ये शिक्षण-अधिगम प्रक्रिया के बाद विद्यार्थी में दिखने वाले स्पष्ट और प्रेक्षणीय व्यवहार या प्रदर्शन होते हैं। उदाहरण के लिए, अगर किसी पाठ के अंत में विद्यार्थी यह बता सके कि 'पानी की तीन अवस्थाएँ कौन-सी हैं और वे कैसे एक-दूसरे में बदलती हैं', तो यह उस पाठ का सीखने का प्रतिफल हुआ। सीखने के प्रतिफल के तीन मुख्य तत्व हैं — क्या सीखा जाना है, कैसे सीखा जाना है, और कैसे मापा जाएगा कि सीखा गया या नहीं। इन्हीं तीनों की अभिव्यक्ति ही सीखने के प्रतिफल हैं।"
+  },
+  {
+    title: "इकाई-योजना — शिक्षण की पूर्व-तैयारी",
+    text: "इकाई-योजना शिक्षण के दीर्घकालिक नियोजन का माध्यम है, जिसमें किसी विषय की एक संपूर्ण इकाई से जुड़े पाठों, गतिविधियों और मूल्यांकन-विधियों की समेकित योजना होती है। यह पाठ-योजना से व्यापक होती है — डॉ. एस.के. कोचर के अनुसार, इकाई-योजना किसी निर्धारित अवधि में पढ़ाई जाने वाली विषय-वस्तु का एक क्रमबद्ध ढाँचा है, जो स्पष्ट उद्देश्यों, उपयुक्त शिक्षण-विधियों तथा मूल्यांकन-तकनीकों के आधार पर बनाया जाता है। सरल शब्दों में कहें तो, इकाई-योजना एक उद्देश्यपरक, समयबद्ध और मूल्यांकन-समर्थ शिक्षण-योजना है, जो शिक्षक को संगठित और परिणामोन्मुख ढंग से शिक्षण-कार्य करने में मदद करती है।"
+  },
+  {
+    title: "इकाई-योजना कैसे बनती है",
+    text: "इकाई-योजना बनाने की प्रक्रिया दस चरणों में समझी जा सकती है। पहले इकाई का शीर्षक तय होता है, फिर विषय-वस्तु का संक्षिप्त विवरण यानी प्रस्तावना लिखी जाती है। इसके बाद शिक्षण के अधिगम-उद्देश्य तय किए जाते हैं — यही इकाई-योजना का सबसे महत्वपूर्ण चरण है। फिर विषय-वस्तु का चयन और संगठन होता है, शिक्षण-विधियों का निर्धारण होता है, शिक्षण-सहायक-सामग्री चुनी जाती है, अधिगम-गतिविधियों की योजना बनती है, मूल्यांकन-विधियाँ तय होती हैं, समय-निर्धारण किया जाता है, और अंत में पूरी योजना को लिखित रूप में दर्ज करके उसकी समीक्षा की जाती है। यह पूरी प्रक्रिया एक चिंतनशील और व्यवस्थित प्रक्रिया है, जो शिक्षक को पाठ्यक्रम को ढंग से प्रस्तुत करने में सक्षम बनाती है।"
+  },
+  {
+    title: "इकाई-योजना का उदाहरण — बीरबल की खिचड़ी",
+    text: "इसे एक उदाहरण से समझते हैं। एन.सी.ई.आर.टी की कक्षा-तीन की किताब 'वीणा' में शामिल 'बीरबल की खिचड़ी' कहानी पर पाँच कालखंडों की इकाई-योजना बनाई गई है — हर कालखंड पैंतीस मिनट का। पहले कालखंड में कहानी का प्रारंभ और पात्रों का परिचय चित्र दिखाकर कराया जाता है। दूसरे में कहानी का मुख्य प्रसंग पढ़ाया जाता है। तीसरे में संवाद-शैली और नैतिक संदेश पर भूमिका-निर्वहन कराया जाता है। चौथे में पुनरावृत्ति और मूल्यांकन होता है, और पाँचवें में पाठ की भाषाई संरचना पर चर्चा होती है। इकाई के उद्देश्य साफ़ हैं — बच्चे कहानी की घटनाओं का क्रमबद्ध विवरण दे सकें, बीरबल की चतुराई का मूल्यांकन कर सकें, और न्याय व सहानुभूति जैसे मूल्यों को आत्मसात कर सकें।"
+  },
+  {
+    title: "पाठ-योजना — शिक्षण का ब्लूप्रिंट",
+    text: "अब बात करते हैं पाठ-योजना की। जब शिक्षक कक्षा में एक कालखंड में पढ़ाए जाने वाले पाठ के लिए योजना बनाता है, तो उसे पाठ-योजना कहते हैं। किलपैट्रिक के अनुसार, पाठ-योजना एक क्रियात्मक योजना है, जिसमें विषय-वस्तु और शिक्षण-विधियों का तार्किक व व्यवस्थित संगठन होता है। इसे शिक्षण का ब्लूप्रिंट भी कहा जा सकता है — यह शिक्षक को आत्मविश्वास, स्पष्टता और उद्देश्य के साथ शिक्षण करने में मदद करती है। यह सिर्फ़ एक रूपरेखा नहीं, बल्कि शिक्षक की रणनीति, शिक्षण-दृष्टिकोण और विद्यार्थियों के अधिगम को लक्षित करने वाला यंत्र भी है।"
+  },
+  {
+    title: "पाठ-योजना बनाने के चरण",
+    text: "पाठ-योजना बनाने में भी कई चरण होते हैं — सबसे पहले पाठ का चयन, फिर सीखने के प्रतिफलों का निर्धारण, पाठ-विश्लेषण यानी पाठ को छोटे-छोटे भागों में बाँटकर प्रमुख बिंदु और कठिन शब्द चिह्नित करना, पूर्व-ज्ञान की जाँच, शिक्षण-विधियों और सहायक सामग्री का चयन। फिर पाठ-प्रस्तुति की योजना बनती है, जो तीन भागों में होती है — प्रारंभिक गतिविधि, मुख्य प्रस्तुति, और संचय एवं पुनरावृत्ति। इसके बाद मूल्यांकन की योजना, गृहकार्य, और अंत में स्व-मूल्यांकन — यानी शिक्षक खुद देखता है कि उसकी पाठ-योजना कितनी प्रभावकारी रही और कहाँ सुधार की ज़रूरत है।"
+  },
+  {
+    title: "पाठ-योजना का सोदाहरण प्रारूप",
+    text: "बीरबल की खिचड़ी इकाई पर आधारित एक पाठ-योजना का नमूना देखें — कक्षा तीन, विषय हिंदी, अवधि पैंतीस मिनट, पाठ है 'कहानी-विश्लेषण एवं शब्दार्थ'। इसके उद्देश्य ज्ञानात्मक, अवबोधात्मक और कौशलात्मक — तीन स्तरों पर बाँटे गए हैं। शिक्षक पहले पूर्व-ज्ञान जाँचने के लिए पूछता है कि क्या तुमने कभी खिचड़ी खाई है, फिर नाटकीय अंदाज़ में कहानी सुनाता है, कठिन शब्दों पर चर्चा करता है, और मौखिक प्रश्नों से समझ जाँचता है — जैसे बीरबल ने आदमी को ठंड में तालाब में क्यों खड़ा किया, या बीरबल ने खिचड़ी क्यों बनाई। अंत में श्यामपट्ट पर सारांश लिखा जाता है और शिक्षक अपनी टिप्पणी में यह नोट करता है कि अगली बार क्या सुधार किया जाए।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो चलिए, संक्षेप में दोहराते हैं। पाठ्यचर्या-लक्ष्य शिक्षक को अंतिम उद्देश्य का बोध कराते हैं, सीखने के प्रतिफल शिक्षण को मूल्यांकन से जोड़ते हैं, और इकाई-योजना व पाठ-योजना शिक्षण को क्रमबद्ध व उद्देश्यपरक बनाते हैं। इन चारों तत्वों के मेल से ही एक शिक्षक तय कर पाता है कि 'क्या पढ़ाना है', 'कैसे पढ़ाना है', 'कब पढ़ाना है', 'क्यों पढ़ाना है' और 'कितना सीख पाया गया है'। यही चार तत्व मिलकर एक शिक्षक को सशक्त योजनाकार बनाते हैं। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

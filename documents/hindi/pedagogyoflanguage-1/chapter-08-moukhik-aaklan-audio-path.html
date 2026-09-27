@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>मौखिक भाषा का आकलन — विभिन्न आकलन युक्तियाँ — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8; --card: #ffffff; --text: #202824; --text-secondary: #5f6b64;
+  --accent: #1a7a5e; --accent-bg: #dcf0e8; --border: #dbe7e0; --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+    --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+  --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif; line-height: 1.7; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+header { text-align: center; margin-bottom: 1.25rem; }
+header h1 { font-size: 1.2rem; margin: 0 0 0.25rem; font-weight: 700; }
+header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+.player { position: sticky; top: env(safe-area-inset-top, 0px); background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 10; }
+.now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
+.controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+button { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 0.55rem 0.8rem; font-size: 0.95rem; cursor: pointer; min-height: 44px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
+button:active { transform: scale(0.97); }
+.speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
+select { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; padding: 0.3rem 0.4rem; min-height: 36px; }
+.voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
+.sections { display: flex; flex-direction: column; gap: 0.7rem; }
+.section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; cursor: pointer; transition: background 0.2s; }
+.section.active { background: var(--active-bg); border-color: var(--accent); }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.section-title { font-weight: 600; font-size: 1rem; }
+.section-num { font-size: 0.78rem; color: var(--accent); background: var(--accent-bg); border-radius: 999px; padding: 0.1rem 0.55rem; white-space: nowrap; }
+.section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
+.section.active .section-text { display: block; color: var(--text); }
+.play-icon { font-size: 0.8rem; color: var(--accent); }
+footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>मौखिक भाषा का आकलन — विभिन्न आकलन युक्तियाँ</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — जन्म से शुरू होती है भाषा की यात्रा",
+    text: "आज हम पढ़ेंगे — मौखिक भाषा का आकलन, यानी विभिन्न आकलन युक्तियाँ। बच्चे जन्म लेने के बाद से ही सीखना शुरू कर देते हैं — पहले माँ को छूना, ध्वनियों को सुनना, फिर धीरे-धीरे माँ या परिवार द्वारा बोले गए शब्दों की नकल करना। यहीं से उनका औपचारिक भाषाई विकास शुरू होता है। यह इकाई बुनियादी चरण की राष्ट्रीय पाठ्यचर्या की रूपरेखा 2022 और विद्यालयी शिक्षा की राष्ट्रीय पाठ्यचर्या की रूपरेखा 2023 पर आधारित है, जो भाषा-शिक्षा के आयाम — भाषा एवं साक्षरता-विकास — को आधार बनाती है। आज हम जानेंगे कि मौखिक भाषा का आकलन कैसे किया जाए, किन उपकरणों का प्रयोग हो, और हिंदी भाषा सीखने में आने वाली चुनौतियों का समाधान कैसे करें।"
+  },
+  {
+    title: "सीखने के प्रतिफल",
+    text: "इस पाठ को पढ़ने के बाद आप शिक्षा के लक्ष्य, पाठ्यचर्या-लक्ष्य, दक्षताओं और सीखने के प्रतिफलों का वर्गीकरण कर पाएँगे। आप भाषा सीखने-सिखाने के चार स्तंभ उपागम का प्रभावी प्रयोग कर पाएँगे, आकलन का महत्व समझ पाएँगे, रचनात्मक और योगात्मक आकलन में फ़र्क़ जान पाएँगे, और समग्र प्रगति-पत्र का उपयोग करते हुए हिंदी भाषा सीखने की चुनौतियों का समाधान भी कर पाएँगे।"
+  },
+  {
+    title: "शिक्षा के लक्ष्य से सीखने के प्रतिफल तक",
+    text: "भाषा शिक्षण के लिए सबसे पहले शिक्षक को शिक्षा के लक्ष्यों की समझ होनी चाहिए। राष्ट्रीय शिक्षा नीति 2020 कहती है कि शिक्षा-प्रणाली का लक्ष्य मानवीय यानी अच्छे मनुष्यों का विकास करना है, जो तर्कसंगत विचार करें और करुणा, साहस, वैज्ञानिक दृष्टिकोण के साथ काम करें। इन्हीं लक्ष्यों से पाठ्यचर्या-लक्ष्य निकलते हैं, जैसे बुनियादी चरण के लिए एक लक्ष्य है — 'बच्चे दो भाषाओं में दिन-प्रतिदिन की बातचीत के लिए प्रभावी संप्रेषण-कौशल विकसित करते हैं'। इसे प्राप्त करने के लिए दक्षताएँ तय होती हैं, जैसे 'धाराप्रवाह और अर्थपूर्ण बातचीत कर सकती है' — और इन्हीं दक्षताओं तक पहुँचने के छोटे-छोटे मील के पत्थर हैं सीखने के प्रतिफल।"
+  },
+  {
+    title: "भाषा एवं साक्षरता-विकास के पाठ्यचर्या-लक्ष्य",
+    text: "बुनियादी चरण की राष्ट्रीय पाठ्यचर्या की रूपरेखा में भाषा एवं साक्षरता-विकास के लिए खास पाठ्यचर्या-लक्ष्य तय किए गए हैं। जैसे लक्ष्य नौ — बच्चे दो भाषाओं में दिन-प्रतिदिन की बातचीत के लिए प्रभावी संप्रेषण-कौशल विकसित करते हैं, जिसमें सरल गीत सुनना-गाना, धाराप्रवाह बातचीत, और नई शब्दावली का अनुमान लगाना शामिल है। लक्ष्य दस कहता है कि बच्चे भाषा-एक यानी अपनी पहली भाषा में पढ़ने और लिखने का प्रवाह विकसित करते हैं — जिसमें ध्वन्यात्मक जागरुकता, वर्णमाला की पहचान, और समझ के साथ पढ़ना शामिल है। लक्ष्य ग्यारह बताता है कि बच्चे दूसरी भाषा में पढ़ना-लिखना शुरू करते हैं। इन्हीं लक्ष्यों के आधार पर एन.सी.ई.आर.टी की 'सारंगी' और 'वीणा' किताबें बनाई गई हैं।"
+  },
+  {
+    title: "भाषा सीखने-सिखाने के चार स्तंभ",
+    text: "भाषा और साक्षरता सिखाने के लिए चार स्तंभ यानी चार ब्लॉक का उपागम दिया गया है — मौखिक भाषा का विकास, शब्द-पहचान, पढ़ना और लिखना। मौखिक भाषा-विकास के अंतर्गत चित्र और बातचीत, अनुभव साझा करना, कहानी सुनाना, और नाटक व पात्र-अभिनय जैसी गतिविधियाँ आती हैं। इन चारों स्तंभों पर काम एक साथ, एकीकृत तरीक़े से किया जाना चाहिए — जब बच्चे डिकोडिंग सीख रहे हों, तब भी उन्हें कहानी की किताबों से जोड़े रखना ज़रूरी है, ताकि पढ़ना-लिखना एक जीवंत अनुभव बने, न कि केवल यांत्रिक अभ्यास।"
+  },
+  {
+    title: "सीखने-सिखाने की प्रक्रिया में आकलन का स्थान",
+    text: "आकलन का दक्षता-आधारित पाठ्यचर्या में महत्वपूर्ण स्थान है। यह सिर्फ़ यह नहीं बताता कि बच्चों ने क्या और कितना सीखा, बल्कि यह भी बताता है कि उन्होंने तथ्यों और अवधारणाओं को कितनी गहराई से समझा है। सीखना एक सतत प्रक्रिया है, और आकलन इसका अभिन्न अंग है। बुनियादी और आरंभिक चरण में शिक्षक आकलन के ज़रिए बच्चों की अधिगम-संबंधी ज़रूरतों, प्राथमिकताओं और रुचियों की पहचान करते हैं, और उसी आधार पर आगे की शिक्षण-गतिविधियाँ तय करते हैं।"
+  },
+  {
+    title: "रचनात्मक और योगात्मक आकलन — दो अलग मक़सद",
+    text: "आकलन के दो प्रमुख उद्देश्य हैं — पहला, शिक्षार्थी की भाषा सीखने की उपलब्धि मापना, और दूसरा, कक्षा-प्रक्रियाओं व शिक्षण-सामग्री की प्रभावशीलता जाँचना। रचनात्मक आकलन निरंतर और सतत होता है — यह बच्चों के सीखने पर नज़र रखकर लगातार फ़ीडबैक देने के लिए होता है, जैसे कक्षा में विद्यार्थियों के व्यवहार का अवलोकन करना, या उनसे अवधारणा-मानचित्र बनवाना। योगात्मक आकलन किसी पाठ के अंत में या तार्किक अवधि में शिक्षार्थी के अधिगम का आकलन करता है, जैसे सत्रांत या बोर्ड परीक्षा। दोनों ही शिक्षण और अधिगम में सुधार के लिए ज़रूरी हैं।"
+  },
+  {
+    title: "मौखिक भाषा के आकलन के उपकरण",
+    text: "बुनियादी और आरंभिक चरण के लिए आकलन के कुछ प्रभावी उपकरण हैं। पहला है बच्चे का अवलोकन — शिक्षक बच्चे के व्यवहार, दृष्टिकोण और भाषा की प्रगति को देखकर उपाख्यानात्मक रिकॉर्ड और चेकलिस्ट के ज़रिए दर्ज करते हैं। दूसरा है कलाकृतियों का विश्लेषण — बालवाटिका में बच्चे द्वारा बनाई गई वस्तु या चित्र उसकी समझ का समृद्ध स्रोत होते हैं। तीसरा है कार्यपत्रक, जो भाषा और साक्षरता से जुड़ी दक्षताओं को स्पष्ट रूप से दिखाता है। चौथा है मौखिक परीक्षण, जिसमें ज़ोर से पढ़ना, सुनना और उत्तर देना, और सस्वर पाठ जैसी विधियाँ शामिल हैं — इनसे शिक्षक बच्चे के उच्चारण, स्वर और समझ का बारीकी से आकलन कर पाते हैं।"
+  },
+  {
+    title: "समग्र प्रगति-पत्र — घर और स्कूल के बीच की कड़ी",
+    text: "बुनियादी और आरंभिक चरण में शिक्षार्थियों की उपलब्धि का आकलन रचनात्मक और योगात्मक आकलन के कई उपकरणों से किया जाता है, और इस जानकारी को दर्ज करने के लिए विद्यालय हर बच्चे का एक फ़ोल्डर बनाता है, जिसे समग्र प्रगति-कार्ड यानी होलिस्टिक प्रोग्रेस कार्ड कहते हैं। यह विद्यालय और बच्चे के घर के बीच संप्रेषण का औपचारिक साधन है, जो अभिभावकों को बच्चे की प्रगति बताता है और बच्चे को भी स्व-मूल्यांकन का अवसर देता है। इसकी एक ख़ास बात यह है कि यह बच्चे की अपनी प्रगति पर ध्यान केंद्रित करता है, न कि उसकी दूसरे बच्चों से तुलना करता है।"
+  },
+  {
+    title: "हिंदी सीखने की चुनौतियाँ और समाधान",
+    text: "भारत जैसे बहुभाषिक समाज में हिंदी भाषा-शिक्षण की कुछ आम चुनौतियाँ हैं। कई बार बच्चे के घर की भाषा हिंदी से अलग होती है — इसका समाधान यह है कि शिक्षक बच्चों को अपने घर की भाषा में बोलने के अवसर दें और खुद भी कुछ शब्द सीखकर कक्षा में प्रयोग करें। घर में लिखित सामग्री की कमी भी एक चुनौती है — शिक्षक अभिभावकों को घर में चित्र-कैलेंडर या लेबल लगाने के सुझाव दे सकते हैं। बाल-साहित्य की कमी और उत्साहवर्धक परिवेश की कमी जैसी चुनौतियों का हल है — कक्षा में कहानी, गीत, पहेलियाँ और खेल-गतिविधियों से भरा रोचक माहौल बनाना, और हिंदी को हमेशा बच्चे के जीवन और परिवेश से जोड़कर पढ़ाना।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो चलिए, संक्षेप में दोहराते हैं। पहला — शिक्षकों को बच्चों में मौखिक भाषा और साक्षरता विकसित करने के लिए विभिन्न आकलन युक्तियों में दक्षता चाहिए। दूसरा — भाषा और साक्षरता विकास के पाठ्यचर्या-लक्ष्य, दक्षताएँ और चार स्तंभ उपागम शिक्षकों को स्पष्ट मार्गदर्शन देते हैं। तीसरा — आकलन रचनात्मक और योगात्मक, दोनों रूपों में ज़रूरी है, और इसके लिए अवलोकन, कलाकृति-विश्लेषण, कार्यपत्रक और मौखिक परीक्षण जैसे उपकरण उपयोग होते हैं। चौथा — समग्र प्रगति-पत्र बच्चे की सीखने की प्रगति का बहुआयामी दस्तावेज़ है। और पाँचवाँ — बहुभाषी परिवेश में हिंदी सीखने की चुनौतियों को समझकर, शिक्षक बच्चे के घर की भाषा का सम्मान करते हुए रोचक तरीक़ों से हिंदी सिखा सकते हैं। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

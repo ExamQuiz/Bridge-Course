@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>लेखन को समझना और लेखन कौशल का विकास — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>लेखन को समझना और लेखन कौशल का विकास</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — लेखन, भाषा का चौथा साथी",
+    text: "आज हम पढ़ेंगे — लेखन को समझना और लेखन कौशल का विकास। अब तक हमने चार ब्लॉक मॉडल के तीन घटकों — मौखिक भाषा-विकास, शब्द-पहचान और पढ़ना — के बारे में विस्तार से जाना। आज हम इसी मॉडल के चौथे और आख़िरी घटक 'लिखना' के बारे में जानेंगे। ध्यान देने वाली बात यह है कि भाषा के इन चारों कौशलों की चर्चा हमेशा साथ-साथ होती है, क्योंकि ये एक-दूसरे से गहराई से जुड़े हुए हैं। इस पाठ में हम जानेंगे कि लेखन का सही मायने में क्या अर्थ है, कक्षा में लेखन किस रूप में हो रहा है, इसमें क्या त्रुटियाँ हैं, और एक शिक्षक कक्षा में उद्देश्यपूर्ण और सार्थक लेखन के लिए कैसे अवसर बना सकता है।"
+  },
+  {
+    title: "सीखने के प्रतिफल",
+    text: "इस पाठ को पढ़ने के बाद आप लेखन को एकरेखीय प्रक्रिया के बजाय एक रचनात्मक और विकासात्मक प्रक्रिया के रूप में समझ पाएँगे। आप चार ब्लॉक मॉडल के अंतर्गत 'लिखना' नामक घटक की अवधारणा को स्पष्ट कर पाएँगे, और लेखन-कौशल के विभिन्न रूपों की व्याख्या कर पाएँगे। इसके साथ ही आप कक्षा में बच्चों के लेखन-कौशल के विकास के लिए विभिन्न रणनीतियों को क्रियान्वित कर पाएँगे, और पढ़ने-लिखने के कोने तथा रोज़मर्रा की गतिविधियों के ज़रिए बच्चों को सार्थक लेखन के अवसर दे पाएँगे।"
+  },
+  {
+    title: "लेखन की अवधारणा — सिर्फ़ अक्षर बनाना नहीं",
+    text: "लेखन एक बुनियादी साक्षरता-कौशल है, लेकिन 'निपुण भारत' दस्तावेज़ स्पष्ट कहता है कि बच्चों को लेखन सिखाना केवल अक्षर बनाने तक सीमित नहीं है — यह एक सोचने, समझने और अभिव्यक्ति की प्रक्रिया है। राष्ट्रीय पाठ्यचर्या रूपरेखा, 2023 भी इसी बात को दोहराती है कि लेखन एक रचनात्मक, संवादात्मक और विकासात्मक प्रक्रिया है। बुनियादी स्तर की राष्ट्रीय पाठ्यचर्या की रूपरेखा 2022 बताती है कि बच्चे का पहला क़दम चित्र बनाना होता है, फिर वह अपने चित्र का नाम लिखता है, फिर स्व-वर्तनी का इस्तेमाल करता है, और अंततः पूरे वाक्यों की ओर बढ़ता है। जब हम लिखते हैं, तो असल में हम अपने विचारों से बात कर रहे होते हैं — यही कारण है कि लेखन एक सृजनात्मक, संवादात्मक और विकासात्मक प्रक्रिया बन जाता है।"
+  },
+  {
+    title: "सान्वी का उदाहरण — जब लेखन नकल बन जाता है",
+    text: "इसे एक उदाहरण से समझते हैं। सान्वी पाँचवीं कक्षा में पढ़ती है। उसने 'आदर्श विद्यार्थी' और 'पुस्तकालय — एक वरदान' जैसे विषयों पर अपनी पुस्तिका में लिखा है। लेकिन जब शिक्षक ने ध्यान से देखा, तो पाया कि सान्वी की लिखी वही बातें हूबहू उसकी सहेली शुभी की पुस्तिका में भी मिलीं — एक जैसे शब्द, एक जैसा ढाँचा। पता चला कि पूरी कक्षा ने यह लेख बोर्ड से देखकर लिखा है। यहाँ सवाल उठता है — क्या इस तरह बोर्ड से नकल करने से बच्चों का लेखन सच में विकसित हो रहा है? क्या उन्हें अपने चुने विषयों पर लिखने के मौक़े मिल रहे हैं? क्या वे अपनी बात कहना, अपने विचार लिखना सीख रहे हैं? यह उदाहरण दिखाता है कि अधिकतर कक्षाओं में लेखन केवल सुंदर और साफ़ अक्षरों में नकल करने तक सीमित रह जाता है, और इसे केवल अंतिम उत्पाद की तरह देखा जाता है।"
+  },
+  {
+    title: "लेखन के बारे में गलत धारणाएँ",
+    text: "इस तरह के लेखन-शिक्षण के पीछे शिक्षकों की कुछ आम धारणाएँ काम करती हैं। पहली — लेखन एकरेखीय और अनुक्रमिक प्रक्रिया है, यानी पहले अक्षर बनावट सीखो, फिर शब्द, फिर वाक्य — जब तक बच्चा हर अक्षर सही न लिख ले, उसे वाक्य लिखने ही नहीं देना चाहिए। दूसरी — बच्चे तभी सही लिखना सीखेंगे जब वे रोज़ सुंदर लिखावट और बोर्ड से देखकर अभ्यास करेंगे। तीसरी — अच्छा लेखन वही है जिसमें वर्तनी और व्याकरण की ग़लतियाँ न हों। इन धारणाओं का असर यह होता है कि बच्चे लेखन को बोझिल मानने लगते हैं, उन्हें लेखन से डर लगने लगता है, और वे अपनी बात आत्मविश्वास से लिख ही नहीं पाते। इसीलिए शिक्षकों को अपने नज़रिए में बदलाव लाना बेहद ज़रूरी है, ताकि कक्षा में बच्चे केवल वर्तनी सीखने वाले अनुयायी न बनें, बल्कि अपनी बात लिखने वाले ज़िम्मेदार लेखक बनें।"
+  },
+  {
+    title: "लेखन एक रचना-प्रक्रिया के रूप में",
+    text: "दुनिया भर के शिक्षाविदों ने लेखन को केवल एक उत्पाद के बजाय एक प्रक्रिया के रूप में पहचाना है। ग्रेव्स ने 1983 में इसे तीन चरणों में बाँटा — पूर्व-लेखन, लेखन और पश्चात-लेखन। टॉम्पकिन्स के अनुसार लेखन एक पुनरावृत्त प्रक्रिया है, जिसमें लेखक बार-बार अलग-अलग चरणों में लौटकर सुधार करता है। पहला चरण है पूर्व-लेखन, जिसमें विषय का चयन और जानकारी इकट्ठा करना होता है। दूसरा है प्रारूप-लेखन, जहाँ विचार पहली बार काग़ज़ पर उतरते हैं। तीसरा है संशोधन, जहाँ लेखक दूसरों से प्रतिक्रिया लेता है। चौथा है संपादन, जहाँ वर्तनी और व्याकरण सुधारे जाते हैं — और यह ध्यान देने की बात है कि शुरुआत में केवल विचार और विषयवस्तु पर ध्यान होता है, सुधार आख़िरी चरणों में ही किया जाता है। पाँचवाँ और आख़िरी चरण है प्रकाशन, जहाँ लेखन को पाठकों के सामने प्रस्तुत किया जाता है — चाहे कक्षा में पढ़कर, दीवार पर चिपकाकर, या पत्रिका में छपवाकर।"
+  },
+  {
+    title: "फीडबैक की कहानी — व्याकरण या विषयवस्तु?",
+    text: "ग्रेव्स की बात को एक उदाहरण से समझते हैं। कल्पना कीजिए दो बच्चों ने अपने मन की बात लिखी है। पहले लेख पर मिला फीडबैक सिर्फ़ यह बताता है कि कहाँ-कहाँ वर्तनी या व्याकरण की ग़लती है — लाल स्याही से हर ग़लत शब्द को घेरा गया है। दूसरे लेख पर शिक्षक ने इसके बजाय यह लिखा कि 'तुमने अपनी नानी के घर जाने की बात बड़े प्यार से लिखी है, मुझे यह हिस्सा बहुत पसंद आया।' दोनों लेखों में बच्चों ने अपने विचार और भावनाएँ साझा की थीं, लेकिन फ़र्क़ फीडबैक में था। जब शिक्षक विषयवस्तु पर ध्यान देते हैं न कि सिर्फ़ ग़लतियों पर, तो बच्चे लेखन में अपनी स्वतंत्र आवाज़ को पहचानना और विकसित करना सीखते हैं। इसीलिए बच्चों के लेखन में व्याकरण की ग़लतियों से ज़्यादा उस बात पर ध्यान देना चाहिए जो बच्चे ने कहनी चाही है।"
+  },
+  {
+    title: "लेखन एक विकासात्मक प्रक्रिया के रूप में",
+    text: "छोटे बच्चे सक्रिय अर्थ-निर्माता होते हैं। उन्हें लेखन की बुनियादी विशेषताएँ समझने के लिए औपचारिक स्कूली शिक्षा का इंतज़ार नहीं करना पड़ता। वे देखते हैं कि माता-पिता कैसे ख़रीदारी की सूची बनाते हैं, कैलेंडर पर तारीख़ें चिह्नित करते हैं, या डायरी लिखते हैं। स्कूल जाने से पहले ही बच्चे काग़ज़-पेंसिल से रेखाएँ खींचते हैं, दीवारों पर लिखने की कोशिश करते हैं, और स्व-निर्मित वर्तनी का उपयोग करते हैं — जैसे 'चूहा' के लिए 'चउह'। ग्रेव्स कहते हैं कि बच्चों का हर लेखन प्रयास अर्थपूर्ण होता है, ये बेतरतीब निशान नहीं होते। यह यात्रा चित्रांकन और रेखाचित्रण से शुरू होकर धीरे-धीरे संरचित शब्दों और वाक्यों तक पहुँचती है। भारतीय नीति दस्तावेज़ जैसे निपुण भारत और एन.सी.एफ़-एफ़.एस भी लेखन को एक विकासात्मक प्रक्रिया के रूप में मान्यता देते हैं, जो बच्चे की संज्ञानात्मक, भाषाई और मोटर कौशलों के साथ-साथ विकसित होती है।"
+  },
+  {
+    title: "पढ़ना और लिखना का संबंध",
+    text: "पढ़ना और लिखना आपस में गहराई से जुड़े हुए हैं। अच्छा पाठक एक अच्छा लेखक बन सकता है, और अच्छा लेखक एक अच्छा पाठक। दोनों एक-दूसरे का समर्थन करते हैं और परस्पर विकास को पोषित करते हैं। जब शिक्षक पढ़ने और लिखने के बीच के संबंध को स्वीकार करते हुए गतिविधियाँ बनाते हैं, तो बच्चों में शब्दावली, वाक्य-रचना का ज्ञान, वाक्य के अर्थ का ज्ञान, और प्रयोग के संदर्भ का ज्ञान — इन चारों क्षमताओं का विकास होता है। इसे मज़बूत करने के कई तरीक़े हैं — प्रिंट-समृद्ध परिवेश बनाना, कक्षा में एक पुस्तकालय रखना, बच्चों को बाल-साहित्य तक पहुँच देना, पढ़ने-लिखने का एक कोना बनाना, भाषा-अनुभव दृष्टिकोण अपनाना, जिसमें शिक्षक बच्चे के बोले हुए अनुभव को शब्दशः लिखते हैं, और प्रतिक्रिया पत्रिका रखना, जिसमें बच्चे नियमित रूप से अपनी भावनाएँ और विचार लिखते हैं।"
+  },
+  {
+    title: "प्रदर्शित और साझा लेखन — शिक्षक साथ चलता है",
+    text: "लेखन सिखाने के लिए कुछ बेहतरीन रणनीतियाँ हैं। पहली है प्रदर्शित या मॉडल लेखन, जिसमें शिक्षक बच्चों के सामने ज़ोर से सोचते हुए लिखते हैं — जैसे 'मेरा सबसे यादगार दिन' विषय पर शिक्षिका सस्वर सोचती हैं कि कौन-सा दिन उनके लिए सबसे यादगार रहा, फिर भूमिका, मुख्य भाग और निष्कर्ष कैसे लिखा जाता है, यह दिखाती हैं। दूसरी है साझा-लेखन, जिसमें शिक्षक और बच्चे मिलकर लिखते हैं — जैसे जब कक्षा के बच्चे अपनी टूटी अलमारी के बारे में प्रधानाचार्य को पत्र लिखना चाहते थे, तो शिक्षक ने बच्चों से पूछा कि पत्र में क्या-क्या बातें होनी चाहिए, और धीरे-धीरे बच्चों के विचारों को वाक्यों में बदला। इन दोनों रणनीतियों में शिक्षक बच्चों के सामने यह प्रदर्शित करते हैं कि विचारों को कैसे व्यवस्थित किया जाए और सही शब्दों का चयन कैसे किया जाए।"
+  },
+  {
+    title: "मार्गदर्शित और स्वतंत्र लेखन — धीरे-धीरे बच्चों के हाथ में क़लम",
+    text: "तीसरी रणनीति है मार्गदर्शित लेखन, जो आमतौर पर छोटे समूहों में होती है, जहाँ शिक्षक बच्चों को लेखन की योजना बनाना, मसौदा तैयार करना, संपादन करना और पुनर्लेखन जैसी रणनीतियाँ सिखाते हैं — जैसे 'मैंने अपनी गर्मी की छुट्टियाँ कैसे बिताईं' विषय पर शुरुआत, मध्य और अंत के लिए अलग-अलग कॉलम बनाकर बच्चों को क़दम-दर-क़दम मदद देना। चौथी और आख़िरी है स्वतंत्र लेखन, जहाँ बच्चे अपने आप, अपनी पसंद के विषय पर, बिना डर के लिखते हैं — जैसे कक्षा तीन की एक छात्रा अपने पालतू कुत्ते के बारे में अपनी भाषा में एक छोटी कहानी लिखती है। इसमें शिक्षक की भूमिका एक सहायक, भयमुक्त और आलोचना-मुक्त वातावरण देने की होती है, जहाँ शुरुआती प्रयासों में अत्यधिक सुधार करवाने से बचना चाहिए, क्योंकि इससे बच्चों की रचनात्मकता में बाधा आ सकती है।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो चलिए, आज जो सीखा उसे संक्षेप में दोहराते हैं। पहला — निपुण भारत, एन.सी.एफ़-एफ़.एस और एन.सी.एफ़-एस.ई जैसे नीतिगत दस्तावेज़ों में लेखन को एक उदीयमान और विकासशील प्रक्रिया माना गया है, जो भाषा के साथ सार्थक जुड़ाव से धीरे-धीरे विकसित होती है। दूसरा — लेखन को किसी अलग-थलग या यांत्रिक कौशल के रूप में देखने के बजाय, इसे सुनने, बोलने और पढ़ने से गहराई से जुड़ा हुआ समझना चाहिए। तीसरा — बचपन में लेखन चित्र बनाने, रेखाचित्रों और स्व-निर्मित वर्तनी के रूप में उभरता है, और धीरे-धीरे अधिक संरचित रूप लेता है — इसलिए इसे सुलेख तक सीमित न करके बच्चों के विचार, भावनाएँ और अनुभव व्यक्त करने का माध्यम बनाना चाहिए। चौथा — बच्चे तभी प्रभावी ढंग से लिखना सीखते हैं जब उन्हें अपने विचार व्यक्त करने की छूट हो और लेखन को एक प्रक्रिया के रूप में अनुभव करने का अवसर मिले। और पाँचवाँ — मॉडल लेखन, साझा लेखन, मार्गदर्शित लेखन और स्वतंत्र लेखन जैसी रणनीतियाँ अपनाकर शिक्षक बच्चों में लेखन के प्रति रुचि, आत्मविश्वास और क्षमता का क्रमशः विकास कर सकते हैं। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

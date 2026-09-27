@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>पठन का आकलन — विभिन्न उपकरण एवं रणनीतियाँ — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8; --card: #ffffff; --text: #202824; --text-secondary: #5f6b64;
+  --accent: #1a7a5e; --accent-bg: #dcf0e8; --border: #dbe7e0; --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+    --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+  --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif; line-height: 1.7; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+header { text-align: center; margin-bottom: 1.25rem; }
+header h1 { font-size: 1.2rem; margin: 0 0 0.25rem; font-weight: 700; }
+header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+.player { position: sticky; top: env(safe-area-inset-top, 0px); background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 10; }
+.now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
+.controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+button { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 0.55rem 0.8rem; font-size: 0.95rem; cursor: pointer; min-height: 44px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
+button:active { transform: scale(0.97); }
+.speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
+select { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; padding: 0.3rem 0.4rem; min-height: 36px; }
+.voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
+.sections { display: flex; flex-direction: column; gap: 0.7rem; }
+.section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; cursor: pointer; transition: background 0.2s; }
+.section.active { background: var(--active-bg); border-color: var(--accent); }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.section-title { font-weight: 600; font-size: 1rem; }
+.section-num { font-size: 0.78rem; color: var(--accent); background: var(--accent-bg); border-radius: 999px; padding: 0.1rem 0.55rem; white-space: nowrap; }
+.section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
+.section.active .section-text { display: block; color: var(--text); }
+.play-icon { font-size: 0.8rem; color: var(--accent); }
+footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>पठन का आकलन — विभिन्न उपकरण एवं रणनीतियाँ</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — सोचना सीखने की दिशा में पहला क़दम",
+    text: "आज हम पढ़ेंगे — पठन का आकलन, यानी इसके विभिन्न उपकरण और रणनीतियाँ। राष्ट्रीय शिक्षा-नीति 2020 का सबसे बड़ा उद्देश्य है विद्यार्थियों को रचनात्मकता और नवाचार से जोड़ना, और उन्हें गंभीरता से सोचना सिखाना। इसकी नींव बुनियादी स्तर पर ही रखी जानी है। इस पाठ को पढ़ने के बाद आप पठन के आकलन के कुछ परंपरागत और गैर-परंपरागत उपकरणों से परिचित होंगे, और 'अपसंकेतक' यानी मिसक्यू के प्रति आपकी समझ और भी गहरी होगी।"
+  },
+  {
+    title: "सीखने के प्रतिफल",
+    text: "इस पाठ को पढ़ने के बाद शिक्षार्थी पठन के वास्तविक अर्थ को समझते हुए पठन-कौशल के विकास में आकलन की आवश्यकता को रेखांकित कर पाएँगे। वे राष्ट्रीय शिक्षा नीति और राष्ट्रीय पाठ्यचर्या रूपरेखाओं के दिशा-निर्देशों के अनुरूप पठन-आकलन की गतिविधियाँ बना पाएँगे, विद्यार्थियों की त्रुटियों के भाषाई, मनोवैज्ञानिक और सामाजिक कारणों को समझ पाएँगे, और पठन-कौशल के तीन सौ साठ डिग्री आकलन के लिए बहुआयामी प्रश्नपत्र बना पाएँगे।"
+  },
+  {
+    title: "पठन का अर्थ — समझ के साथ पढ़ना",
+    text: "पठन का अर्थ केवल डिकोड या गूढ़वाचन करना नहीं है। पठन लिखे हुए शब्द के अर्थ को समझने तक भी सीमित नहीं है — जो रचनाकार कहना चाहता है, पर जिसे उसने शब्दबद्ध नहीं किया, उस अनलिखे भाग को भी लिखे गए से ढूँढ निकालना पठन का ही भाग है। कई विद्वान मानते हैं कि पठन कोई स्वाभाविक क्रिया नहीं है, जबकि सच्चाई इसके विपरीत है — मनुष्य जन्म से ही जिज्ञासु प्राणी है। यही कारण है कि अक्सर स्कूल जाने से पहले ही बच्चे कुछ-न-कुछ पढ़ने की कोशिश करते हुए दिखाई देते हैं, जैसे दीवार पर बनी लाइनों में कुछ खोजने की कोशिश करना — यह भी एक तरह का पढ़ना ही है।"
+  },
+  {
+    title: "रोहन की कहानी — 'अ' और 'आ' की उलझन",
+    text: "मिलते हैं शिविका से, जो इन दिनों काफ़ी परेशान है। कारण है उसका पाँच साल का बेटा रोहन, जिसने धाराप्रवाह हिंदी पढ़ना सीख लिया है, लेकिन वह 'अ' को हमेशा 'आ' ही उच्चरित करता है। शिविका उसे बार-बार समझाकर थक गई है, और रोहन यह समझने की कोशिश में थक रहा है कि आख़िर उससे ग़लती कहाँ हो रही है। आजकल रोहन पढ़ने से बचना चाहता है, जबकि हफ़्ते भर पहले वह पढ़ने के लिए दौड़कर आना चाहता था। यह कहानी दिखाती है कि पठन-कौशल भाषाई-कौशल का एक बुनियादी हिस्सा है, जो सुनना, बोलना और लिखना — तीनों से गहराई से जुड़ा है, और इसका आकलन बहुत संवेदनशीलता से करना ज़रूरी है।"
+  },
+  {
+    title: "पढ़ने के अलग-अलग प्रकार और उनमें दक्षता",
+    text: "पठन-प्रक्रिया में सिर्फ़ पाठ्य-सामग्री में ही नहीं, बल्कि पठन-प्रकार में भी भिन्नता होती है। कहानी पढ़ते हुए जिस कौशल का प्रयोग होता है, अनुच्छेद पढ़ते हुए उससे भिन्न कौशल चाहिए होता है। पठन के कुछ प्रमुख प्रकार हैं — द्रुत पठन, जिसमें स्केनिंग यानी किसी ख़ास जानकारी को तेज़ी से खोजना और स्किमिंग यानी पूरे पाठ का सार जल्दी से समझना शामिल है; इसके अलावा गहन पठन और विस्तारित पठन भी हैं। शिक्षकों को पाठ्यपुस्तक के अलावा अख़बार, पत्रिका, इश्तेहार जैसी विविध सामग्री का भी प्रयोग करना चाहिए, ताकि बच्चे हर तरह के पठन में दक्ष बन सकें।"
+  },
+  {
+    title: "अपसंकेतक — जब कुछ का कुछ पढ़ लिया जाता है",
+    text: "मिलते हैं रीना से, जो कक्षा चार की छात्रा है। वह अपनी छोटी बहन की किताब 'सारंगी' में अपने नाम का पाठ 'रीना का दिन' देखकर खुश हो जाती है और झट से पढ़ना शुरू करती है। पढ़ते समय वह 'हर दिन रीना सुबह जल्दी उठती है। उठकर बिस्तर को ठीक से लगाती है' को पढ़ती है 'रीना हर रोज़ सुबह-सुबह जल्दी से उठकर बिस्तर ठीक करती है' — यानी वह मूल वाक्य से थोड़ा अलग, पर अपने ही अंदाज़ में पढ़ती है। यह अंतर त्रुटि या लापरवाही नहीं, बल्कि अपसंकेतक यानी मिसक्यू कहलाता है — क्योंकि रीना कहानी के किरदार में ख़ुद को देखकर उत्साह से पढ़ रही है, और यह उसकी समझ के साथ पठन-प्रक्रिया संपादन को ही दिखाता है। रीना एक कमज़ोर नहीं, बल्कि सक्षम और कुशल पाठिका है।"
+  },
+  {
+    title: "अपसंकेतक-विश्लेषण — बच्चे के मन में झाँकने का ज़रिया",
+    text: "अपसंकेतक के आम उदाहरण हैं — शब्द-प्रतिस्थापन, शब्द-त्याग, दोहराव और स्व-सुधार। कई बार बच्चे अपने घर की भाषा से भी शब्द बदल देते हैं, जैसे चूहे की जगह 'मूस' पढ़ना। ये सभी संकेत समझ के साथ पठन-प्रक्रिया की ओर ही इशारा करते हैं। लेकिन ध्यान रखना ज़रूरी है कि कहीं अर्थ का अनर्थ तो नहीं हो रहा — संप्रेषक के मूल भाव को ग्रहण करना पहली आवश्यकता है। अपसंकेतक का विश्लेषण करते हुए हमें बहुत सजग रहना चाहिए, ताकि न तो बच्चों की कल्पना के कोमल पंखों को कुचला जाए, और न ही उन्हें बिना समझे तोड़ा-मरोड़ा जाए। सबसे ज़रूरी है विचलन की वजह ख़ुद बच्चों से सुनना, ताकि आकलन में वस्तुनिष्ठता बनी रहे।"
+  },
+  {
+    title: "आकलन — क्या और क्यों",
+    text: "बुनियादी स्तर की राष्ट्रीय पाठ्यचर्या की रूपरेखा के अनुसार, हर बच्चा अद्वितीय होता है और उसके सीखने का तरीक़ा तथा गति भिन्न है। आकलन को इस विविधता को समायोजित करने के लिए डिज़ाइन किया जाना चाहिए — इससे शिक्षक उन बच्चों की भी पहचान कर सकते हैं जिन्हें अतिरिक्त मदद चाहिए। राष्ट्रीय शिक्षा-नीति 2020 आकलन-प्रणाली को रचनात्मक बनाने और विद्यार्थियों की दक्षताओं को परखने की ओर प्रवृत्त करती है — यानी सिर्फ़ याद करने का कौशल जाँचने के बजाय बच्चों के संज्ञानात्मक और संवेदनात्मक, दोनों पक्षों का समग्र विकास देखा जाना चाहिए।"
+  },
+  {
+    title: "आकलन के प्रकार और उद्देश्य",
+    text: "आकलन मुख्यतः तीन प्रकार के होते हैं — निदानात्मक, रचनात्मक और योगात्मक। और इनका प्रयोग तीन उद्देश्यों के लिए किया जाता है — सीखते हुए आकलन, सीखने के लिए आकलन, और सीखने का आकलन। भिन्न-भिन्न पाठ्य-सामग्री का आकलन करते समय यह ध्यान रखना ज़रूरी है कि बच्चे स्केनिंग, स्किमिंग, गहन पठन और विस्तारित पठन जैसी रणनीतियों में किस स्तर पर दक्ष हैं। आकलन के मदों का निर्माण करते समय बच्चों की आयु और मानसिक स्तर को ध्यान में रखना चाहिए, लेकिन इसका मतलब यह नहीं कि उन्हें उच्च स्तरीय चिंतन वाले प्रश्न न दिए जाएँ — जैसे 'तुम्हें यह फल सबसे ज़्यादा क्यों पसंद है' जैसे 'क्यों' वाले सवाल छोटे बच्चों में भी विश्लेषण और संश्लेषण जैसी उच्च स्तरीय सोच को उभार देते हैं।"
+  },
+  {
+    title: "गतिविधियों से पठन का आकलन — जादुई पिटारा",
+    text: "बच्चे खेल और गतिविधियों के ज़रिए सीखना सबसे ज़्यादा पसंद करते हैं। मान लीजिए हमें यह जानना है कि बच्चे ध्वनि-पहचान के किस स्तर पर हैं — तो हम बच्चों से जादुई पिटारे के खिलौनों की मदद से एक कहानी बनवाते हैं, जिसमें एक 'ट्विस्ट' यह होता है कि कहानी में किसी एक ध्वनि, जैसे 'र', पर बार-बार बल देना है। कक्षा के बाकी बच्चे श्रोता की भूमिका में यह सुनते हैं और जैसे ही 'र' की ध्वनि आती है, अपना हाथ हवा में हिलाते हैं। इस तरह की मनोरंजक गतिविधियाँ आकलन को खेल में बदल देती हैं, और साथ ही स्केनिंग-स्किमिंग जैसे कौशलों की नींव भी रखती हैं।"
+  },
+  {
+    title: "कार्यपत्रक और प्रश्नपत्र बनाना — अमिता और हिना की बहस",
+    text: "अमिता और हिना दोनों एक ही स्कूल में पढ़ाती हैं। अमिता का मानना है कि प्रश्नपत्र को पारंपरिक रूप से ही बनाना चाहिए, ताकि सभी विद्यार्थियों का समान आकलन हो सके। हिना का मानना है कि गतिविधि-आधारित और नवाचारी आकलन में भी वस्तुनिष्ठता, विश्वसनीयता और वैधता जैसे गुण लाए जा सकते हैं। दोनों नज़रिए अपनी-अपनी जगह सही हो सकते हैं, लेकिन ज़रूरी यह है कि एक अच्छे प्रश्नपत्र में सरल, मध्यम और कठिन — तीनों स्तर के प्रश्न हों, भाषा स्पष्ट हो, उत्तर लिखने के लिए पर्याप्त जगह हो, और चित्रों व पहेलियों का भी उपयोग हो, ताकि प्रश्नपत्र सिर्फ़ ज्ञान नहीं, बल्कि सोचने और तर्क करने के कौशल को भी परखे।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो चलिए, संक्षेप में दोहराते हैं। पहला — पठन का अर्थ है समझ के साथ पढ़ना, सिर्फ़ डिकोड करना नहीं। दूसरा — जब पाठक पठित सामग्री को अपने पूर्वानुभव और कल्पना से जोड़ते हुए पढ़ता है, तो कई बार वह भी पढ़ लिया जाता है जो वास्तव में लिखा नहीं होता — यही मिसक्यू या अपसंकेतक कहलाता है, जो हमें पढ़ने वाले के मन में झाँकने का मौक़ा देता है। तीसरा — आकलन शिक्षण-अधिगम का सबसे महत्वपूर्ण पहलू है, और यह अध्यापकों को यह भी समझने में मदद करता है कि उनकी अध्यापन-शैली में कहाँ बदलाव चाहिए। चौथा — आकलन में बच्चे का 'लेवल' पता करना है, लेकिन उस पर कभी कोई 'लेबल' नहीं लगाना है। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
