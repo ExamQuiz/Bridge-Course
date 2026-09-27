@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>बाल्यावस्था को समझना — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #fdfbf6;
+  --card: #ffffff;
+  --text: #2b2620;
+  --text-secondary: #6b6357;
+  --accent: #b5541f;
+  --accent-bg: #fbe9dd;
+  --border: #e7e0d3;
+  --active-bg: #fff4e6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1c1a17;
+    --card: #262320;
+    --text: #f2ede4;
+    --text-secondary: #b3aa9a;
+    --accent: #e58a4e;
+    --accent-bg: #3a2a1c;
+    --border: #3a352c;
+    --active-bg: #33291b;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1c1a17;
+  --card: #262320;
+  --text: #f2ede4;
+  --text-secondary: #b3aa9a;
+  --accent: #e58a4e;
+  --accent-bg: #3a2a1c;
+  --border: #3a352c;
+  --active-bg: #33291b;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.3rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>बाल्यावस्था को समझना</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — बाल्यावस्था को समझना",
+    text: "नमस्ते बच्चों! आज हम एक बहुत दिलचस्प विषय पढ़ेंगे — बाल्यावस्था को समझना। क्या आपने कभी सोचा है कि बचपन क्या होता है? क्या बचपन हर जगह, हर समय एक जैसा होता है? हम सोचते हैं कि बचपन एक स्वाभाविक और सार्वभौमिक चीज़ है, मानो यह जीवन का एक प्राकृतिक चरण हो। लेकिन असल में ऐसा नहीं है। बाल्यावस्था की अवधारणा समाज और इतिहास द्वारा निर्मित होती है, और यह अलग-अलग संस्कृतियों, समय और सामाजिक परिस्थितियों के अनुसार बदलती रहती है। पुराने समय में, खासकर कृषि-प्रधान समाजों में, बच्चों को छोटे वयस्कों के रूप में देखा जाता था और उनसे घर के कामों में मदद की अपेक्षा की जाती थी। आइए, आज इस पूरे विषय को विस्तार से समझते हैं।"
+  },
+  {
+    title: "बाल्यावस्था की अवधारणा का निर्माण",
+    text: "अब समझते हैं कि बाल्यावस्था की अवधारणा बनी कैसे। ऐतिहासिक रूप से, पश्चिमी समाजों में बचपन को हमेशा जीवन का एक अलग चरण नहीं माना जाता था। फिलिप एरिस नाम के विद्वान ने अपनी किताब में बताया कि मध्यकालीन यूरोप में बच्चों को छोटे वयस्कों जैसा ही समझा जाता था। लेकिन सत्रहवीं और अठारहवीं शताब्दी में, प्रबोधन युग के विचारों के साथ, बचपन को एक स्वतंत्र और महत्वपूर्ण चरण के रूप में समझा जाने लगा, जिसके लिए विशेष देखभाल और शिक्षा ज़रूरी मानी गई। इसमें जॉन लॉक और रूसो का बड़ा योगदान रहा। जॉन लॉक ने कहा कि बच्चे का मन एक कोरी स्लेट की तरह होता है, जिस पर अनुभव और शिक्षा लिखते हैं। वहीं रूसो ने कहा कि बच्चों में स्वाभाविक भलाई होती है, इसलिए शिक्षा बच्चे के विकास-स्तर के अनुसार होनी चाहिए। बाद में पियाजे और एरिक्सन जैसे मनोवैज्ञानिकों ने बचपन को विकास के तय चरणों के रूप में समझाया। लेकिन आधुनिक समाजशास्त्रियों का कहना है कि बचपन सिर्फ जैविक अवस्था नहीं है, बल्कि यह एक सामाजिक संरचना है, जो संस्कृति, राजनीति और अर्थव्यवस्था से आकार लेती है। इसी सोच को 'बहुविध बाल्यावस्थाएँ' कहा गया है — यानी बचपन एक नहीं, बल्कि कई तरह का होता है। भारतीय पौराणिक परंपरा में भी बचपन से जुड़ी कई कथाएँ हैं — कृष्ण की चंचल बाल-लीलाएँ, राम का आदर्श और अनुशासित बचपन, और देवी दुर्गा का कुमारी स्वरूप। ये कथाएँ दिखाती हैं कि हमारी संस्कृति में बचपन को पवित्रता, नैतिकता और दैवीय शक्ति से भी जोड़ा गया है। और आधुनिक भारत में, दो हज़ार नौ में लागू शिक्षा का अधिकार अधिनियम यह सुनिश्चित करता है कि छह से चौदह साल तक के हर बच्चे को मुफ़्त और अनिवार्य शिक्षा मिले।"
+  },
+  {
+    title: "समकालीन बाल्यावस्थाएँ — आज का बचपन",
+    text: "अब बात करते हैं आज के बचपन की। पिछली पीढ़ियों की तुलना में, आज का बचपन बहुत बदल गया है। तकनीक, परिवार की बनावट, आर्थिक हालात और शिक्षा के तरीके — इन सबने बच्चों के बढ़ने और सीखने के तरीकों को बदल दिया है। सबसे बड़ा बदलाव है तकनीक का असर। स्मार्टफोन, टैबलेट और लैपटॉप अब स्कूल और खेल-कूद दोनों का हिस्सा बन चुके हैं। इसीलिए आज के बच्चों को 'डिजिटल नेटिव' कहा जाता है। डिजिटल उपकरण सीखने और रचनात्मकता को बढ़ावा देते हैं, लेकिन बहुत ज़्यादा स्क्रीन-समय शारीरिक गतिविधि की कमी, नींद न आना और सामाजिक अलगाव जैसी समस्याएँ भी पैदा कर सकता है। सोशल मीडिया साइबर-उत्पीड़न और मानसिक तनाव जैसी नई चुनौतियाँ भी लेकर आया है। इसके साथ ही, परिवार की बनावट भी बदल रही है — तलाक़ बढ़ने से, एकल-अभिभावक परिवारों और डे-केयर में पलने वाले बच्चों की संख्या बढ़ी है। स्कूल में भी बच्चों पर अच्छे प्रदर्शन का दबाव पहले से बहुत ज़्यादा हो गया है, जो कम उम्र में ही तनाव और चिंता पैदा कर सकता है। लेकिन साथ ही, समावेशी शिक्षा और नई शिक्षण-विधियाँ बच्चों को भविष्य के लिए बेहतर तैयार भी कर रही हैं। कुल मिलाकर, आज का बचपन अवसर और चुनौती दोनों से भरा है — इसे समझने के लिए हमें एक संतुलित नज़रिया अपनाना होगा।"
+  },
+  {
+    title: "बहुविध बाल्यावस्थाएँ — आय के आधार पर भिन्न अनुभव",
+    text: "अब एक बहुत ज़रूरी बात समझते हैं — भारत में बचपन एक जैसा नहीं है। परिवार की आर्थिक स्थिति के आधार पर बच्चों का जीवन बहुत अलग होता है। पहले बात करते हैं उच्च आय वर्ग की। संपन्न शहरी परिवारों के बच्चे अच्छे स्कूलों में पढ़ते हैं, उन्हें संगीत और खेल जैसी गतिविधियों के अवसर मिलते हैं, और वे कम उम्र में ही डिजिटल कौशल सीख लेते हैं। इनकी बाल्यावस्था अपेक्षाकृत सुरक्षित और संरक्षित होती है, हालाँकि इन बच्चों में भी पढ़ाई का दबाव और चिंता जैसी समस्याएँ देखी गई हैं। अब बात करते हैं मध्यम आय वर्ग की। इन परिवारों में पारंपरिक मूल्यों और आधुनिक सोच का मेल दिखता है। शिक्षा को नौकरी और सामाजिक तरक्की का सबसे बड़ा ज़रिया माना जाता है। अभिभावक बच्चों की पढ़ाई में बहुत सक्रिय रहते हैं, लेकिन बच्चों पर बेहतर प्रदर्शन का दबाव और सामाजिक तुलना जैसी चुनौतियाँ भी रहती हैं। अब सबसे ज़रूरी बात — निम्न आय वर्ग के परिवारों के बच्चों की। इन बच्चों को शिक्षा तक पूरी और अच्छी पहुँच नहीं मिल पाती। ऐसर की रिपोर्ट बताती है कि सरकारी स्कूलों में तीसरी कक्षा के केवल बीस प्रतिशत बच्चे ही दूसरी कक्षा का पाठ पढ़ पाते हैं। कई बच्चे कम उम्र में ही काम करने को मजबूर हो जाते हैं। कुपोषण, बीमारी और असुरक्षित रहन-सहन इनकी बाल्यावस्था को और मुश्किल बना देते हैं। एन एफ एच एस पाँच के अनुसार, भारत में पाँच साल से कम उम्र के पैंतीस प्रतिशत से ज़्यादा बच्चे कुपोषण के कारण कमज़ोर विकास का शिकार हैं। फिर भी, ये बच्चे अद्भुत दृढ़ता और अनुकूलन क्षमता दिखाते हैं। तो साफ है — भारत में बचपन एक नहीं, बल्कि कई तरह के हैं, और हर बच्चे तक समान अवसर पहुँचाना हम सबकी ज़िम्मेदारी है।"
+  },
+  {
+    title: "बाल्यावस्था और जेंडर परिप्रेक्ष्य",
+    text: "अब समझते हैं कि बचपन में लड़का होना और लड़की होना कैसे अलग अनुभव बन जाता है। भारत के कई हिस्सों में आज भी लड़कों को प्राथमिकता दी जाती है, जो कई बार जन्म से पहले ही शुरू हो जाती है। एन एफ एच एस पाँच के अनुसार, भारत में हर एक हज़ार लड़कों पर सिर्फ नौ सौ उनतीस लड़कियाँ पैदा होती हैं — यह आँकड़ा जेंडर आधारित भेदभाव की ओर इशारा करता है। पोषण और स्वास्थ्य सेवाओं में भी अंतर दिखता है — पंद्रह से उन्नीस साल की उनसठ प्रतिशत किशोरियाँ खून की कमी यानी एनीमिया से जूझ रही हैं, जबकि लड़कों में यह आंकड़ा सिर्फ इकतीस प्रतिशत है। शिक्षा में भी फ़र्क है — ग्रामीण और आर्थिक रूप से कमज़ोर इलाकों में लड़कियों के स्कूल छोड़ने की दर ज़्यादा है, जिसके पीछे आर्थिक दबाव, घरेलू ज़िम्मेदारियाँ और जल्दी शादी जैसे कारण हैं। जहाँ लड़कियों को नम्र, अनुशासित और घर-केंद्रित होने की सीख दी जाती है, वहीं लड़कों को ज़्यादा आज़ादी और आत्मविश्वासी बनने का मार्गदर्शन मिलता है। ये अलग-अलग अपेक्षाएँ बच्चों के विकास को सीमित कर सकती हैं। इन चुनौतियों को देखते हुए, भारत सरकार ने बेटी बचाओ बेटी पढ़ाओ, और कस्तूरबा गांधी बालिका विद्यालय जैसी योजनाएँ शुरू की हैं, ताकि हर बच्चा — चाहे लड़का हो या लड़की — समान अवसर और गरिमा के साथ बड़ा हो सके।"
+  },
+  {
+    title: "बाल्यावस्था और डिजिटल संसार",
+    text: "अंत में बात करते हैं डिजिटल दुनिया की, जो आज हर बच्चे के जीवन का हिस्सा बन चुकी है। मोबाइल फ़ोन और स्मार्ट उपकरण अब स्कूल, घर और समाज — हर जगह मौजूद हैं। कोविड-उन्नीस महामारी के दौरान यह बदलाव और तेज़ हो गया। डिजिटलकरण के अच्छे और बुरे, दोनों तरह के असर हैं। अच्छी बात यह है कि डिजिटल संसाधनों ने सीखने को समृद्ध बनाया है — ई-किताबें, शैक्षिक ऐप और ऑनलाइन कक्षाएँ बच्चों को रोचक और व्यक्तिगत सीखने के अवसर देती हैं। दिव्यांग बच्चों के लिए भी तकनीक बहुत सहायक साबित हुई है। लेकिन चिंता की बात यह है कि बहुत ज़्यादा स्क्रीन-समय ध्यान की कमी, नींद में बाधा और मोटापे जैसी समस्याएँ पैदा कर सकता है। सोशल मीडिया साइबर-उत्पीड़न, अवास्तविक सुंदरता के मानकों और आपस में तुलना जैसी मुश्किलें भी लाता है, जो बच्चों के मानसिक स्वास्थ्य को प्रभावित कर सकती हैं। गोपनीयता और डेटा-सुरक्षा भी एक बड़ा मुद्दा है, क्योंकि कई डिजिटल मंच बच्चों की निजी जानकारी बिना उचित सहमति के इकट्ठा कर लेते हैं। और सबसे ज़रूरी बात — ग्रामीण और कम आय वाले परिवारों के बच्चों को डिजिटल शिक्षा तक बराबर पहुँच नहीं मिल पाती, जिससे डिजिटल खाई और गहरी होती जा रही है। इसलिए ज़रूरी है कि माता-पिता, शिक्षक और नीति-निर्माता मिलकर ऐसा डिजिटल माहौल बनाएँ जो सुरक्षित हो, सबके लिए सुलभ हो, और बच्चों के स्वस्थ विकास में मददगार हो।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो बच्चों, आज हमने क्या सीखा, चलिए संक्षेप में दोहराते हैं। पहला — बाल्यावस्था कोई स्थिर या एक जैसी चीज़ नहीं है, यह समाज और इतिहास के साथ बदलती रहती है। दूसरा — जॉन लॉक और रूसो जैसे विचारकों ने बचपन को समझने की नींव रखी, और बाद के विद्वानों ने इसे एक सामाजिक संरचना के रूप में देखा। तीसरा — भारत में बचपन के कई रूप हैं, जो परिवार की आर्थिक स्थिति के अनुसार बहुत अलग होते हैं — उच्च आय, मध्यम आय और निम्न आय वर्ग के बच्चों के अनुभव एक-दूसरे से बहुत भिन्न हैं। चौथा — जेंडर बचपन को गहराई से प्रभावित करता है, और लड़कियों और लड़कों को अक्सर अलग-अलग अवसर और अपेक्षाएँ मिलती हैं। और पाँचवाँ — डिजिटल तकनीक ने बचपन को नए अवसर भी दिए हैं और नई चुनौतियाँ भी। इन सब बातों को समझकर, हम एक ऐसी पीढ़ी बनाने की दिशा में काम कर सकते हैं जो स्वस्थ, सुरक्षित और आत्मविश्वासी हो — चाहे बच्चा किसी भी पृष्ठभूमि से क्यों न आए। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
