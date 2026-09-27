@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>बाल्यावस्था और समाजीकरण — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #fdfbf6;
+  --card: #ffffff;
+  --text: #2b2620;
+  --text-secondary: #6b6357;
+  --accent: #2e6f57;
+  --accent-bg: #e2f0ea;
+  --border: #e0e6de;
+  --active-bg: #eaf5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #171a18;
+    --card: #212523;
+    --text: #eef2ee;
+    --text-secondary: #a9b3ac;
+    --accent: #5fbb96;
+    --accent-bg: #1f3a30;
+    --border: #33392f;
+    --active-bg: #1e3129;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #171a18;
+  --card: #212523;
+  --text: #eef2ee;
+  --text-secondary: #a9b3ac;
+  --accent: #5fbb96;
+  --accent-bg: #1f3a30;
+  --border: #33392f;
+  --active-bg: #1e3129;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.3rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>बाल्यावस्था और समाजीकरण</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — समाजीकरण क्या है?",
+    text: "नमस्ते बच्चों! आज हम पढ़ेंगे — बाल्यावस्था और समाजीकरण। सबसे पहले समझते हैं कि समाजीकरण होता क्या है। समाजीकरण वह प्रक्रिया है जिसके ज़रिए परिवार में रहते हुए बच्चों के व्यवहार, मूल्यों और विश्वासों का निर्माण होता है। यह माता-पिता और बच्चों के बीच होने वाली लगातार बातचीत पर आधारित है, जिसमें माता-पिता बच्चों को समाज के नियमों को समझने और खुद के बारे में एक सकारात्मक सोच बनाने में मदद करते हैं। यह सीखना बचपन से ही शुरू हो जाता है और पूरी ज़िंदगी चलता रहता है। सीधे शब्दों में कहें, तो समाजीकरण समाज में जीने की कला सीखने का नाम है — यह हमें बताता है कि समाज में कैसे व्यवहार करें, किससे कैसे बात करें, और अपने आसपास के लोगों के साथ कैसे तालमेल बिठाएँ।"
+  },
+  {
+    title: "समाजीकरण का अर्थ और परिभाषाएँ",
+    text: "अब कुछ विद्वानों ने समाजीकरण को कैसे परिभाषित किया है, यह समझते हैं। गिडेन्स कहते हैं कि समाजीकरण वह प्रक्रिया है जिसके ज़रिए एक असहाय शिशु धीरे-धीरे एक आत्म-सचेत और समझदार इंसान बनता है, और अपने समाज की संस्कृति और नियमों के अनुसार खुद को ढालता है। जॉनसन कहते हैं कि इसके ज़रिए व्यक्ति समाज में अपनी भूमिका निभाने के लिए ज़रूरी ज्ञान और कौशल सीखता है। लुंडबर्ग के अनुसार, इसमें व्यक्ति समूह में सक्रिय भागीदारी के लिए ज़रूरी आदतें, कौशल और समझ विकसित करता है। और रॉस कहते हैं कि समाजीकरण का मतलब है लोगों के बीच एकता की भावना पैदा करना, ताकि वे मिलकर सहयोग कर सकें। इस प्रक्रिया में एक पीढ़ी अपना ज्ञान, अनुभव और संस्कृति अगली पीढ़ी को सौंपती है — यही समाज को आगे बढ़ाता है।"
+  },
+  {
+    title: "समाजीकरण का महत्व",
+    text: "अब समझते हैं कि समाजीकरण इतना ज़रूरी क्यों है। समाजीकरण हर इंसान के लिए ज़रूरी है — यह हमें पूरी तरह से इंसान की तरह जीने लायक बनाता है। इसके बिना न तो समाज बन सकता है, न संस्कृति। समाजीकरण हमारे कई तरह के विकास में मदद करता है। पहला है — व्यवहार का विकास, यानी हमें सिखाता है कि घर के अंदर और बाहर कैसे बर्ताव करें, कैसे अभिवादन करें, कैसे कपड़े पहनें। दूसरा है — संज्ञानात्मक विकास, यानी हम दूसरों को देखकर और उनका अनुकरण करके नई चीज़ें सीखते हैं और सोचने-समझने की क्षमता बढ़ाते हैं। तीसरा है — भावनात्मक विकास, यानी अपनी भावनाओं को समझना, उन्हें नियंत्रित करना, और दूसरों के प्रति सहानुभूति रखना — यह परिवार से शुरू होता है। चौथा है — सामाजिक विकास, यानी संवाद करना, बात सुनना, नज़रें मिलाकर बात करना जैसे कौशल सीखना। और पाँचवाँ है — नैतिक विकास, यानी सही और गलत में फ़र्क करना सीखना, जो ईमानदारी और न्याय जैसे मूल्यों से जुड़ा है। इन सभी के अलावा, आध्यात्मिक विकास भी होता है, जो प्रार्थना और ध्यान जैसी पारिवारिक प्रथाओं से आकार लेता है।"
+  },
+  {
+    title: "समाजीकरण के प्रकार",
+    text: "अब समाजीकरण के अलग-अलग प्रकार समझते हैं। पहला है — प्राथमिक समाजीकरण। यह बचपन की शुरुआती अवस्था है, जहाँ बच्चा माता-पिता, रिश्तेदारों और आसपास के लोगों से बुनियादी मूल्य और व्यवहार सीखता है — यह घर के प्राकृतिक माहौल में, बिना किसी औपचारिक पढ़ाई के होता है। दूसरा है — द्वितीयक समाजीकरण। यह तब शुरू होता है जब बच्चा स्कूल जाना शुरू करता है, जहाँ वह परिवार के बाहर उचित व्यवहार सीखता है — यहाँ स्कूल और दोस्तों के समूह की भूमिका बहुत अहम होती है। तीसरा है — पुनःसमाजीकरण। यह तब होता है जब किसी व्यक्ति की सोच और मूल्यों में बड़ा बदलाव आता है, जैसे किसी नई और अनजानी जगह पर जाकर पुराने व्यवहार छोड़कर नए नियम सीखने पड़ते हैं — जैसे जेल जैसी संस्थाओं में। और चौथा है — प्रत्याशित समाजीकरण। इसमें व्यक्ति भविष्य में जो भूमिका निभाने वाला है, उसके लिए पहले से ही खुद को तैयार करता है — जैसे नाट्य विद्यालय का छात्र धीरे-धीरे खुद को एक अभिनेता की तरह ढालने लगता है।"
+  },
+  {
+    title: "पालन-पोषण, परिवार और बाल-पालन की भूमिका",
+    text: "अब समझते हैं कि पालन-पोषण, परिवार और बाल-पालन का इसमें क्या योगदान है। पालन-पोषण बहुत महत्वपूर्ण भूमिका निभाता है, क्योंकि बच्चा अपना ज़्यादातर समय माता-पिता के साथ बिताता है। शुरुआत में माता-पिता बच्चों को ज़िंदगी की बुनियादी बातें सिखाते हैं, और धीरे-धीरे उन्हें आत्मनिर्भर और ज़िम्मेदार नागरिक बनाने की कोशिश करते हैं। परिवार व्यक्तित्व-विकास की सबसे पहली और सबसे असरदार इकाई है — माता-पिता, भाई-बहन, दादा-दादी, सब मिलकर बच्चे के चरित्र को आकार देते हैं। बच्चा परिवार के सदस्यों को देखकर व्यवहार सीखता है, और यहीं से वह रिश्ते बनाना और निभाना सीखता है। बाल-पालन में वे तरीके और व्यवहार शामिल हैं जो बच्चों के भावनात्मक, नैतिक और सामाजिक विकास को गहराई से प्रभावित करते हैं। बाल-पालन का मक़सद यही है कि बच्चा समाज का एक सफल और सक्षम सदस्य बने।"
+  },
+  {
+    title: "समाजीकरण और शिक्षा का रिश्ता",
+    text: "अब समझते हैं कि समाजीकरण और शिक्षा का आपस में क्या संबंध है। समाजीकरण और शिक्षा एक-दूसरे से जुड़े हुए हैं, और दोनों ही व्यक्ति के पूरे विकास के लिए ज़रूरी हैं। ये दोनों व्यक्ति को अलग-अलग सामाजिक और सांस्कृतिक स्थितियों में घुलने-मिलने में मदद करते हैं, जिससे उसका सामाजिक कौशल बढ़ता है। शिक्षा समाजीकरण के महत्व को स्पष्ट करती है, जबकि समाजीकरण शिक्षा को पूरे विकास के लिए एक ज़रूरी हिस्सा बना देता है। एक बच्चा अपने पूरे जीवन में समाजीकरण के अलग-अलग चरणों से गुज़रता है, और यह प्रक्रिया खासतौर पर बचपन में उसके व्यक्तित्व को गहराई से प्रभावित करती है।"
+  },
+  {
+    title: "समाजीकरण के अभिकर्ता — सहकर्मी, स्कूल और मीडिया",
+    text: "अब जानते हैं कि समाजीकरण में मदद करने वाले मुख्य साधन कौन-कौन से हैं। इन्हें समाजीकरण के अभिकर्ता कहते हैं — यानी वे सभी लोग, समूह या संस्थाएँ, जो बच्चे के आसपास रहकर उसके व्यक्तित्व को प्रभावित करते हैं। पहला है — सहकर्मी समूह, यानी बच्चे की उम्र, रुचियों और पृष्ठभूमि से मिलते-जुलते दोस्तों का समूह। बचपन में बच्चे अपने दोस्तों के साथ काफ़ी समय बिताते हैं, और किशोरावस्था में तो यह समूह व्यक्तित्व को बहुत गहराई से प्रभावित करता है। दूसरा है — विद्यालयी संस्कृति। स्कूल समाज का एक छोटा रूप होता है, जहाँ अलग-अलग पृष्ठभूमि के बच्चे एक साथ आते हैं और पढ़ाई के साथ-साथ सामाजिक कौशल, मूल्य और व्यवहार भी सीखते हैं। तीसरा है — जनसंचार माध्यम, यानी टीवी, रेडियो, अख़बार, इंटरनेट, और सोशल मीडिया जैसे व्हाट्सऐप, फेसबुक, इंस्टाग्राम। ये लोगों की सोच और व्यवहार को गहराई से आकार देते हैं, हालाँकि इनका असर अक्सर धीरे-धीरे और परोक्ष रूप से दिखता है।"
+  },
+  {
+    title: "समाजीकरण में विद्यालयों की भूमिका",
+    text: "अब समझते हैं कि स्कूल इस पूरी प्रक्रिया में कैसे मदद करते हैं। सबसे पहले, स्कूल एक स्वस्थ माहौल बनाते हैं, जहाँ बच्चों को वो नई चीज़ें सीखने का मौका मिलता है जो घर पर संभव नहीं होतीं — जैसे खुद को अभिव्यक्त करना और दोस्ती निभाना। दूसरा, स्कूल सहानुभूति और करुणा को बढ़ावा देते हैं — बच्चे एक-दूसरे के अनुभव साझा करके दूसरों की भावनाओं को समझना सीखते हैं। तीसरा, एक अच्छा पाठ्यक्रम सामाजिक कौशलों को विकसित करता है — समूह चर्चा और परियोजनाओं के ज़रिए बच्चे मिलकर काम करना सीखते हैं। चौथा, स्कूल सही मार्गदर्शन और परामर्श देते हैं — जहाँ बच्चों को दोस्तों के दबाव, मतभेद या पारिवारिक समस्याओं से निपटने में मदद मिलती है। और पाँचवाँ, स्कूल त्योहारों का आयोजन करके अलग-अलग संस्कृतियों का सम्मान करना सिखाते हैं, जिससे बच्चों में एकता और भाईचारे की भावना मज़बूत होती है।"
+  },
+  {
+    title: "शिक्षक की भूमिका — ज्ञान के सुगमकर्ता",
+    text: "अब बात करते हैं शिक्षकों की भूमिका की, जो इस पूरी प्रक्रिया में बहुत अहम होती है। पहले शिक्षक सिर्फ़ जानकारी देने वाले माने जाते थे, लेकिन अब वे ज्ञान के सुगमकर्ता और सक्रिय निर्माता बन गए हैं — यानी वे बच्चों को खुद सवाल पूछने, खोजबीन करने और अपनी समझ बनाने के लिए प्रोत्साहित करते हैं। शिक्षक कक्षा में समूह गतिविधियों के ज़रिए सहकर्मी बातचीत को बढ़ावा देते हैं। वे बच्चों को संप्रेषण, धैर्य, सहयोग और समस्या-समाधान जैसे सामाजिक कौशल सिखाते हैं, जो पढ़ाई और असली ज़िंदगी के बीच की दूरी को पाटते हैं। एक अच्छा शिक्षक हर बच्चे के लिए समावेशी माहौल बनाता है — चाहे उसकी आर्थिक, सामाजिक या सांस्कृतिक पृष्ठभूमि कुछ भी हो। शिक्षक बच्चों में आलोचनात्मक चिंतन को भी बढ़ावा देते हैं, ताकि वे सही और ग़लत जानकारी में फ़र्क कर सकें और आत्मविश्वास के साथ अपनी राय रख सकें। इसके अलावा, नाटक, वाद-विवाद और भूमिका-अभिनय जैसी सामुदायिक गतिविधियों के ज़रिए शिक्षक बच्चों में नेतृत्व क्षमता और टीम भावना भी विकसित करते हैं।"
+  },
+  {
+    title: "बाल-श्रम, शोषण और गरीबी का प्रभाव",
+    text: "अब एक बहुत गंभीर विषय पर बात करते हैं — बाल-श्रम, शोषण और गरीबी का बच्चों के समाजीकरण पर क्या असर पड़ता है। बाल-श्रम समाज के लिए एक बड़ा अभिशाप है, और इसका सबसे बड़ा कारण गरीबी है। ज़्यादातर बाल-श्रमिक ग़रीब परिवारों से आते हैं, जहाँ परिवार बड़ा होता है और कमाई इतनी कम होती है कि सबका पेट पालना मुश्किल हो जाता है। इसी वजह से परिवार बच्चों को भी कमाने के लिए भेज देते हैं। इसका बच्चों के शारीरिक और मानसिक विकास पर बुरा असर पड़ता है, और वे शिक्षा से वंचित रह जाते हैं — जिससे बड़े होकर भी उन्हें कम कुशल और कम वेतन वाला काम ही मिलता है, और गरीबी का यह चक्र चलता रहता है। बाल-शोषण का मतलब है बच्चों की उपेक्षा करना या उनके साथ दुर्व्यवहार करना — चाहे वह शारीरिक हो, मानसिक हो या भावनात्मक। इसका बच्चों पर गहरा और लंबे समय तक चलने वाला नकारात्मक असर पड़ता है, जो आगे चलकर स्कूल में दिक्कतें या नशे की लत जैसी गंभीर समस्याएँ पैदा कर सकता है। गरीबी भी समाजीकरण को गहराई से प्रभावित करती है — ग़रीबी में रहने वाले बच्चे ज़्यादा तनाव महसूस करते हैं, उनके सामाजिक अवसर सीमित होते हैं, और उनके आत्मसम्मान पर बुरा असर पड़ता है। इसलिए बाल-श्रम को रोकने के लिए शिक्षा को सुलभ बनाना, सामाजिक सुरक्षा देना, सख़्त कानून लागू करना और जागरुकता फैलाना बहुत ज़रूरी है।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो बच्चों, आज हमने क्या सीखा, चलिए संक्षेप में दोहराते हैं। पहला — समाजीकरण एक आजीवन चलने वाली प्रक्रिया है, जो बचपन से शुरू होकर पूरी ज़िंदगी चलती रहती है, जिसके ज़रिए हम समाज के मूल्य, मान्यताएँ और व्यवहार सीखते हैं। दूसरा — यह हमारे संज्ञानात्मक, भावनात्मक, सामाजिक और नैतिक विकास में मदद करता है। तीसरा — समाजीकरण के कई प्रकार हैं — प्राथमिक, द्वितीयक, पुनःसमाजीकरण और प्रत्याशित समाजीकरण — जो अलग-अलग परिस्थितियों में होते हैं। चौथा — परिवार, सहकर्मी समूह, स्कूल और जनसंचार माध्यम — ये सब समाजीकरण के मुख्य साधन हैं, और इनमें परिवार सबसे ज़्यादा असरदार होता है। पाँचवाँ — स्कूल और शिक्षक बच्चों में सामाजिक कौशल, सहानुभूति और आलोचनात्मक सोच विकसित करने में बहुत बड़ी भूमिका निभाते हैं। और छठा — बाल-श्रम, शोषण और गरीबी जैसी चुनौतियाँ बच्चों के स्वस्थ समाजीकरण में बड़ी बाधा बनती हैं, और इनसे निपटने के लिए हम सबको मिलकर काम करना होगा। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
