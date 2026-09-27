@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>पाठ्यचर्या — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f6f8fb;
+  --card: #ffffff;
+  --text: #23262b;
+  --text-secondary: #63697a;
+  --accent: #2560c4;
+  --accent-bg: #e2ecfb;
+  --border: #dde3ec;
+  --active-bg: #eaf1fc;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171c;
+    --card: #1f232a;
+    --text: #eceef2;
+    --text-secondary: #a5adba;
+    --accent: #6ea6f5;
+    --accent-bg: #1e2c40;
+    --border: #2c313a;
+    --active-bg: #1c2836;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14171c;
+  --card: #1f232a;
+  --text: #eceef2;
+  --text-secondary: #a5adba;
+  --accent: #6ea6f5;
+  --accent-bg: #1e2c40;
+  --border: #2c313a;
+  --active-bg: #1c2836;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.3rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>पाठ्यचर्या</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — पाठ्यचर्या क्या है?",
+    text: "आज हम पढ़ेंगे — पाठ्यचर्या। यह शब्द सुनते ही अक्सर हमारे दिमाग़ में सिर्फ़ किताबें और पाठ्यक्रम आते हैं, लेकिन असल में पाठ्यचर्या इससे कहीं बड़ी चीज़ है। पाठ्यचर्या एक संरचित दस्तावेज़ भी है और एक जीवंत, बदलती हुई प्रक्रिया भी, जो शिक्षा की ज़रूरतों और समाज की अपेक्षाओं के हिसाब से लगातार विकसित होती रहती है। इसमें चार बुनियादी चीज़ें शामिल हैं — उद्देश्य यानी हम क्या हासिल करना चाहते हैं, विषय-वस्तु यानी क्या पढ़ाया जाएगा, शिक्षण-अधिगम के अनुभव यानी कैसे पढ़ाया जाएगा, और मूल्यांकन रणनीतियाँ यानी हम कैसे जानेंगे कि सीखना हुआ या नहीं। पाठ्यचर्या इसलिए ज़रूरी है क्योंकि यह बच्चों को एक व्यवस्थित, उम्र के हिसाब से सही, और सांस्कृतिक रूप से प्रासंगिक तरीके से सीखने का अनुभव देती है, जो उन्हें बदलती दुनिया के लिए तैयार करता है — चाहे वह व्यक्तिगत विकास हो, समाज में भागीदारी हो, या भविष्य का करियर।"
+  },
+  {
+    title: "पाठ्यचर्या की अवधारणा और परिभाषाएँ",
+    text: "अब समझते हैं पाठ्यचर्या का मतलब गहराई से। पाठ्यचर्या सीखने की एक पहले से बनाई गई योजना है — यह वह रास्ता है जिस पर चलते हुए शिक्षार्थी से उम्मीद की जाती है कि वह ज्ञान, कौशल और अनुभव हासिल करे। दिलचस्प बात यह है कि 'पाठ्यचर्या' शब्द लैटिन भाषा से आया है, जिसका मतलब है 'दौड़ना' या 'दौड़ने का एक रास्ता' — यानी यह हमें एक तय लक्ष्य तक पहुँचाने का मार्ग है। अब कुछ विद्वानों की बात सुनिए। जॉनसन कहते हैं कि पाठ्यचर्या चाहे गए और अपेक्षित सीखने के नतीजों की एक व्यवस्थित शृंखला है। हिल्डा टाबा कहती हैं कि यह एक लिखित दस्तावेज़ है जिसमें ऐसे तरीके और रणनीतियाँ होती हैं जिनसे शैक्षिक लक्ष्य हासिल किए जा सकें। और मुदलियार आयोग ने तो इसे और भी व्यापक ढंग से परिभाषित किया — उनके अनुसार, कक्षा, पुस्तकालय, प्रयोगशाला, खेल का मैदान, यहाँ तक कि शिक्षकों और छात्रों के बीच की अनौपचारिक बातचीत — ये सब भी पाठ्यचर्या का हिस्सा हैं। यानी पाठ्यचर्या सिर्फ़ किताब तक सीमित नहीं, बल्कि पूरा स्कूली माहौल और संस्कृति भी इसमें शामिल है।"
+  },
+  {
+    title: "पाठ्यचर्या और पाठ्यक्रम में फ़र्क",
+    text: "अब एक बहुत ज़रूरी फ़र्क समझते हैं — पाठ्यचर्या और पाठ्यक्रम का। ये दोनों शब्द अक्सर एक जैसे लगते हैं, पर हैं बिल्कुल अलग। पाठ्यचर्या एक व्यापक और लंबे समय की योजना है, जिसमें शैक्षिक लक्ष्य, विषय-वस्तु, तरीके़ और मूल्यांकन — सब कुछ शामिल होता है। यह पूरे पाठ्यक्रम या शिक्षा के किसी चरण को समग्र रूप से कवर करती है। इसे बनाती हैं राष्ट्रीय संस्थाएँ, जैसे एनसीईआरटी, सीबीएसई या राज्य बोर्ड। इसका मक़सद है शिक्षार्थी का समग्र विकास। वहीं पाठ्यक्रम, यानी सिलेबस, एक छोटी और सीमित योजना है, जिसमें विषय-वार विशिष्ट टॉपिक, उप-विषय और सीखने के नतीजे होते हैं। इसे बनाते हैं शिक्षक या संस्थाएँ, पाठ्यचर्या के आधार पर। इसका फ़ोकस होता है विषय-वस्तु में महारत हासिल करना। और हाँ, पाठ्यक्रम ज़्यादा तय और मानकीकृत होता है, जबकि पाठ्यचर्या शिक्षार्थियों की ज़रूरत के हिसाब से बदलती और विकसित होती रहती है। तो संक्षेप में — पाठ्यचर्या बड़ी तस्वीर है, और पाठ्यक्रम उसका एक छोटा हिस्सा।"
+  },
+  {
+    title: "पाठ्यचर्या के आवश्यक तत्व",
+    text: "अब समझते हैं कि पाठ्यचर्या किन-किन ज़रूरी हिस्सों से मिलकर बनती है। पहला है — अधिगम लक्ष्य और उद्देश्य। यह तय करता है कि सीखने के बाद शिक्षार्थी को क्या जानना चाहिए, क्या समझना चाहिए, और कौन-से काम किस स्तर तक कर पाना चाहिए। ये उद्देश्य साफ़, देखने-परखने लायक और मापने लायक होते हैं। दूसरा है — विषय-वस्तु, यानी वह सामग्री, टॉपिक और जानकारी जो कक्षा में पढ़ाई जाएगी। इसका चुनाव इस तरह होना चाहिए कि वह उम्र के हिसाब से सही हो और सीखने के उद्देश्यों से मेल खाता हो। हमारी भारतीय ज्ञान परंपरा भी इसमें बहुत अहम भूमिका निभाती है — भाषा से गणित तक, दर्शन से कला तक, हमारे पास ज्ञान का एक समृद्ध भंडार है, और पाठ्यचर्या को इसी भारतीय और स्थानीय संदर्भ में मज़बूती से जड़ें जमानी चाहिए। तीसरा है — शिक्षण-पद्धति, यानी वे तरीक़े और रणनीतियाँ जिनसे शिक्षक कक्षा में सिखाते हैं। और चौथा है — मूल्यांकन एवं आकलन, यानी वे तरीक़े जिनसे यह मापा जाता है कि शिक्षार्थी ने कितना सीखा। इसके अलावा, कुछ ऐसे कारक भी होते हैं जो सीधे लिखे नहीं होते पर पाठ्यचर्या को प्रभावित करते हैं — जैसे शिक्षक की क़ाबिलियत, माता-पिता और समुदाय की भागीदारी, और संसाधनों की उपलब्धता।"
+  },
+  {
+    title: "पाठ्यचर्या को प्रभावित करने वाले कारक",
+    text: "अब जानते हैं कि पाठ्यचर्या का निर्माण किन-किन चीज़ों से प्रभावित होता है। पाठ्यचर्या कोई स्थिर चीज़ नहीं, बल्कि एक गतिशील ढाँचा है जो समाज के शैक्षिक लक्ष्यों को दर्शाता है। इसे आकार देने वाले सात मुख्य कारक हैं। पहला — दार्शनिक कारक, यानी शैक्षिक विचारधाराएँ और राष्ट्रीय मूल्य, जो पाठ्यचर्या के उद्देश्यों को तय करते हैं। दूसरा — मनोवैज्ञानिक कारक, यानी शिक्षार्थियों के विकास, ज़रूरतों और रुचियों की समझ। तीसरा — समाजशास्त्रीय कारक, यानी सांस्कृतिक मूल्य, सामाजिक ज़रूरतें और बदलती सामाजिक परिस्थितियाँ। चौथा — राजनीतिक कारक, यानी सरकारी नीतियाँ और राजनीतिक फ़ैसले। पाँचवाँ — आर्थिक कारक, यानी बाज़ार की माँग और आर्थिक विकास की ज़रूरतें। छठा — प्रौद्योगिकीय कारक, यानी आई सी टी और डिजिटल शिक्षण विधियों का असर। और सातवाँ — पर्यावरणीय कारक, यानी सततता और पारिस्थितिक चिंताएँ। ये सभी कारक मिलकर पाठ्यचर्या को प्रासंगिक, समावेशी और दूरदर्शी बनाए रखते हैं।"
+  },
+  {
+    title: "पाठ्यचर्या की आवश्यकता क्यों है?",
+    text: "अब समझते हैं कि आख़िर पाठ्यचर्या ज़रूरी क्यों है। पहला कारण — यह समाज, विज्ञान और तकनीक में हो रहे बदलावों को संबोधित करती है, जैसे डिजिटल साक्षरता, कृत्रिम बुद्धिमत्ता, और पर्यावरणीय जागरूकता। दूसरा — यह शिक्षकों को स्पष्ट दिशा और स्पष्टता देती है, जिससे वे बेहतर योजना बना पाते हैं। तीसरा — यह समग्र विकास को बढ़ावा देती है — यानी सिर्फ़ किताबी ज्ञान नहीं, बल्कि भावनात्मक, सामाजिक, सांस्कृतिक और नैतिक विकास भी। चौथा — यह शिक्षा को राष्ट्रीय लक्ष्यों से जोड़ती है, जैसे भारत की राष्ट्रीय शिक्षा नीति 2020, जो आलोचनात्मक चिंतन, रचनात्मकता और नैतिक तर्क पर ज़ोर देती है। पाँचवाँ — यह समानता और समावेशन सुनिश्चित करती है, यानी चाहे बच्चा अमीर हो या गरीब, गाँव से हो या शहर से, लड़का हो या लड़की, सबको एक जैसी गुणवत्ता वाली शिक्षा मिले। छठा — यह दक्षता-आधारित शिक्षा को बढ़ावा देती है, यानी सिर्फ़ रटने पर नहीं बल्कि करके सीखने पर ज़ोर देती है। और सातवाँ — यह मूल्यांकन और आकलन को आसान बनाती है, जिससे शिक्षक और शिक्षार्थी दोनों अपनी प्रगति और सुधार के क्षेत्र पहचान सकें।"
+  },
+  {
+    title: "भारत में राष्ट्रीय पाठ्यचर्या रूपरेखा का सफ़र",
+    text: "अब बात करते हैं भारत में राष्ट्रीय पाठ्यचर्या रूपरेखा की, जिसे संक्षेप में एनसीएफ कहते हैं। यह एक राष्ट्रीय स्तर का दस्तावेज़ है, जो पाठ्यचर्या बनाने के लिए दिशा-निर्देश देता है, ताकि पूरे देश में शिक्षा में एकरूपता और तालमेल बना रहे। एनसीईआरटी ने अब तक पाँच बड़ी राष्ट्रीय पाठ्यचर्या रूपरेखाएँ बनाई हैं। पहली, सन उन्नीस सौ पचहत्तर में, जिसने राष्ट्रीय एकता और नैतिक शिक्षा पर ज़ोर दिया। दूसरी, सन उन्नीस सौ अट्ठासी में, जिसने बाल-केंद्रित शिक्षा को अपनाया। तीसरी, सन दो हज़ार में, जिसने जीवन कौशल और मूल्य शिक्षा को शामिल किया। चौथी, सन दो हज़ार पाँच में, जिसने रटने की आदत को कम करने और रचनात्मक सोच को बढ़ावा देने पर ज़ोर दिया, और 'बोझ रहित शिक्षा' की बात की। और सबसे नई है — राष्ट्रीय शिक्षा नीति 2020 पर आधारित एनसीएफ, जो दो हिस्सों में आई — आधारभूत स्तर के लिए एनसीएफ-एफएस 2022, जो तीन से आठ साल के बच्चों के लिए भारत की पहली एकीकृत पाठ्यचर्या रूपरेखा है, और विद्यालयी शिक्षा के लिए एनसीएफ-एसई 2023, जो तीन से अठारह साल तक के पूरे स्कूली सफ़र को कवर करती है, और पाँच बुनियादी स्तरों — फाउंडेशनल, प्रिपरेटरी, मिडिल और सेकेंडरी — के हिसाब से बनी है।"
+  },
+  {
+    title: "पाठ्यचर्या लक्ष्य, दक्षताएँ और सीखने के प्रतिफल",
+    text: "अब तीन बहुत ज़रूरी शब्द समझते हैं जो शिक्षा की योजना में बार-बार आते हैं — पाठ्यचर्या लक्ष्य, दक्षताएँ, और सीखने के प्रतिफल। पहला है — पाठ्यचर्या लक्ष्य, यानी बहुत साफ़ और विशिष्ट बयान, जो बताते हैं कि हम आख़िर में क्या हासिल करना चाहते हैं। ये शिक्षा के हर चरण के हिसाब से तय होते हैं — जैसे आधारभूत स्तर के लिए एक लक्ष्य हो सकता है 'दो भाषाओं में रोज़मर्रा की बातचीत में असरदार संप्रेषण कौशल विकसित करना'। दूसरा है — दक्षताएँ, यानी वे क्षमताएँ जिन्हें एक तय प्रक्रिया से देखा और मापा जा सकता है। ये सीधे पाठ्यचर्या लक्ष्यों से जुड़ी होती हैं — जैसे उसी लक्ष्य के लिए एक दक्षता हो सकती है 'रवानगी से बातचीत करना और सार्थक संवाद करना'। और तीसरा है — सीखने के प्रतिफल, यानी बीच के छोटे-छोटे पड़ाव या संकेतक, जिन्हें एक तय समय के भीतर हासिल करना होता है। ये शिक्षकों को यह आज़ादी देते हैं कि वे अपनी कक्षा के हिसाब से पढ़ाने का तरीक़ा और मूल्यांकन बना सकें, ताकि तय दक्षताएँ हासिल हो सकें। दक्षता-आधारित शिक्षा इस बात पर ज़ोर देती है कि शिक्षार्थी क्या सीखते हैं और कैसे सीखते हैं — सिर्फ़ यह नहीं कि उन्होंने कितना रट लिया।"
+  },
+  {
+    title: "इनका आपसी संबंध और एक उदाहरण",
+    text: "अब समझते हैं कि ये तीनों — लक्ष्य, दक्षताएँ, और सीखने के प्रतिफल — आपस में कैसे जुड़े हैं। सोचिए इसे एक सीढ़ी की तरह। सबसे ऊपर है पाठ्यचर्या उद्देश्य, जैसे 'शिक्षार्थियों में असरदार संप्रेषण कौशल विकसित करना, ताकि वे आलोचनात्मक रूप से सोच सकें और समस्याओं का समाधान खोज सकें'। इससे बनता है पाठ्यचर्या लक्ष्य, जैसे माध्यमिक स्तर पर 'विभिन्न तरह की सामग्री से जुड़कर तर्क और वाद-विवाद कौशल विकसित करना'। इससे निकलती है एक दक्षता, जैसे 'तर्कों के आधारों का सावधानी से मूल्यांकन करके सही तर्क के साथ वाद-विवाद करना'। और अंत में आते हैं सीखने के प्रतिफल — जैसे कक्षा नौ में 'तर्क की स्पष्टता और सबूत की विश्वसनीयता जाँचना', और कक्षा दस में 'भाषण और लेखन में आधार व निष्कर्ष के बीच तार्किक संबंध बनाना'। इस तरह, एक बड़ा शैक्षिक सपना धीरे-धीरे छोटे, मापने लायक कदमों में बदल जाता है। यही ढाँचा शिक्षकों, अभिभावकों और नीति-निर्माताओं को यह देखने में मदद करता है कि शिक्षा अपने लक्ष्य की ओर सही दिशा में बढ़ रही है या नहीं।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो चलिए, आज जो हमने सीखा उसे संक्षेप में दोहराते हैं। पहला — पाठ्यचर्या सिर्फ़ किताबों तक सीमित नहीं, बल्कि यह उद्देश्य, विषय-वस्तु, शिक्षण-पद्धति और मूल्यांकन को मिलाकर एक व्यापक और गतिशील ढाँचा है। दूसरा — पाठ्यचर्या और पाठ्यक्रम अलग-अलग चीज़ें हैं — पाठ्यचर्या बड़ी और व्यापक है, जबकि पाठ्यक्रम उसका एक छोटा, विषय-केंद्रित हिस्सा है। तीसरा — दार्शनिक, मनोवैज्ञानिक, सामाजिक, राजनीतिक, आर्थिक, तकनीकी और पर्यावरणीय — ये सात कारक पाठ्यचर्या को आकार देते हैं। चौथा — भारत में एनसीईआरटी ने अब तक पाँच राष्ट्रीय पाठ्यचर्या रूपरेखाएँ बनाई हैं, और सबसे नई है राष्ट्रीय शिक्षा नीति 2020 पर आधारित एनसीएफ-एफएस 2022 और एनसीएफ-एसई 2023, जो पाँच से तीन से तीन से चार, यानी 5+3+3+4 के ढाँचे पर बनी है। और पाँचवाँ — पाठ्यचर्या लक्ष्य, दक्षताएँ और सीखने के प्रतिफल — ये तीनों एक सीढ़ीनुमा क्रम में जुड़े हैं, जो बड़े शैक्षिक सपनों को छोटे, मापने लायक कदमों में बदलते हैं, ताकि हर बच्चे का सीखना सार्थक, समावेशी और जीवन भर काम आने वाला हो।"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
