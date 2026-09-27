@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>उदीयमान साक्षरता एवं भाषा संबंधी पाठ्यचर्या — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>उदीयमान साक्षरता एवं भाषा संबंधी पाठ्यचर्या — लक्ष्य एवं सीखने के प्रतिफल</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — भाषा और उसकी सीख",
+    text: "आज हम पढ़ेंगे — उदीयमान साक्षरता यानी इमर्जेंट लिटरेसी, और भाषा संबंधी पाठ्यचर्या के लक्ष्य एवं सीखने के प्रतिफल। हम सब अपनी-अपनी भाषाओं में आपस में बातचीत भी करते हैं और पढ़ने-लिखने का काम भी करते हैं। हम जितनी भाषाओं के परिवेश में रहते हैं, और अगर वे भाषाएँ बहुतायत में उपलब्ध हों, तो उतनी भाषाओं के प्रयोग की दक्षता धीरे-धीरे विकसित होती जाती है। राष्ट्रीय शिक्षा नीति दो हज़ार बीस भी बहुभाषिकता और शिक्षा के माध्यम के रूप में मातृभाषा के प्रयोग की सिफ़ारिश करती है, क्योंकि मातृभाषा हमारी अवधारणात्मक समझ विकसित करने में सबसे ज़्यादा मददगार होती है — आख़िर मातृभाषा को हम सबसे ज़्यादा सुनते, बोलते, पढ़ते और लिखते हैं। आज के इस पाठ में हम प्रथम भाषा यानी एल-वन की सीखने-सिखाने की प्रक्रिया को गहराई से समझेंगे, उदीयमान साक्षरता की अवधारणा को समझेंगे, और बुनियादी व प्रारंभिक स्तर — यानी कक्षा एक से पाँच तक — के लिए भाषा से जुड़े लक्ष्यों, दक्षताओं और सीखने के प्रतिफलों को भी जानेंगे।"
+  },
+  {
+    title: "सीखने के प्रतिफल — इस पाठ से क्या मिलेगा",
+    text: "इस पाठ को पढ़ने के बाद आप क्या-क्या कर पाएँगे, यह पहले ही समझ लेते हैं। पहला — आप प्रथम भाषा के संदर्भ में भाषा सीखने-सिखाने की प्रक्रिया का वर्णन कर पाएँगे। दूसरा — उदीयमान साक्षरता की अवधारणात्मक समझ और उसका महत्त्व स्पष्ट कर पाएँगे। तीसरा — उदीयमान साक्षरता की अवधारणा के अनुरूप अपनी कक्षा की प्रक्रियाओं का आयोजन कर पाएँगे। चौथा — प्रथम भाषा के संदर्भ में बुनियादी और प्रारंभिक स्तर पर भाषा-संबंधी पाठ्यचर्या के लक्ष्यों, दक्षताओं और सीखने के प्रतिफलों की व्याख्या कर पाएँगे। और पाँचवाँ — भाषा-संबंधी सीखने के प्रतिफलों को हासिल करने के लिए सही प्रक्रियाओं और रणनीतियों का निर्धारण कर पाएँगे।"
+  },
+  {
+    title: "मातृभाषा कैसे सीखी जाती है — बिना जाने ही",
+    text: "अब सोचिए, आप जो भाषा बोलते और समझते हैं, उसे आपने कैसे सीखा? आप कहेंगे कि बचपन से उस भाषा को सुनते-बोलते हम भाषा को सुनना-बोलना सीख गए। दूसरा सवाल — क्या आपने उस भाषा का व्याकरण सीखा था? शायद आपका जवाब होगा — नहीं! तीसरा सवाल — फिर यह कैसे हुआ कि आप उस भाषा को ठीक से इस्तेमाल करना सीख गए? जवाब होगा — पता नहीं! बस, भाषा को सुनते-बोलते यह सीख गए, और पता ही नहीं चला। दरअसल हम सबके पास जन्मजात रूप से एक क्षमता होती है, जिसे भाषा-अर्जन क्षमता कहा जाता है। इसी क्षमता के सहारे हम अपने परिवेश में मौजूद भाषा को अर्जित करते हैं। यह क्षमता भाषा के प्रयोगों के आधार पर एक तरह का व्याकरण बनाती है, जिसे भाषाविज्ञानी चॉम्स्की 'लघु व्याकरण' कहते हैं — और जैसे-जैसे हम अलग-अलग संदर्भों में भाषा के नए प्रयोग सुनते हैं, हम अपने इस लघु व्याकरण में बदलाव करते चलते हैं। यही वजह है कि धीरे-धीरे हमारी भाषा समृद्ध होती जाती है, और यह सब इतना सहज होता है कि पता ही नहीं चलता।"
+  },
+  {
+    title: "ऋचा की कक्षा — बच्चों की जटिल भाषिक अभिव्यक्ति",
+    text: "अब एक उदाहरण से समझते हैं। ऋचा कक्षा-दो के बच्चों के साथ एक पोस्टर पर बातचीत कर रही हैं, जिसमें बच्चे पिकनिक पर फल खा रहे हैं। ऋचा पूछती हैं कि बच्चे कौन-कौन से फल खा रहे हैं, और बच्चे एक साथ जवाब देते हैं — केला, अमरूद, संतरा, सेब, कीवी। जब ऋचा पूछती हैं कि आम क्यों नहीं है, तो नयना जवाब देती है — 'हम्म! समझ आ गया, ये सारे फल तो सर्दियों में आते हैं', और पार्वती जोड़ती है — 'और आम तो गर्मियों में आता है।' आगे बिंदी अपनी माँ की एक प्यारी सी शरारत भी बताती है — दूध वह अपने डॉगी को दे देती है, और जब माँ आती हैं तो मुँह साफ़ कर लेती है ताकि माँ को पता न चले। ऋचा इस मौक़े का इस्तेमाल करके बच्चों को सही बात बताने के महत्व की सीख भी दे देती हैं। इस पूरी बातचीत से पता चलता है कि बच्चे अपनी मातृभाषा में आत्मविश्वास के साथ, बहुत जटिल विचार और भावनाएँ व्यक्त कर सकते हैं — और दिलचस्प बात यह है कि यह भाषा की गतिविधि गणित की समझ से भी जुड़ी हुई है, जिससे पता चलता है कि कक्षा में भाषा और गणित अक्सर एकीकृत रूप में साथ चलते हैं।"
+  },
+  {
+    title: "रोशनी और कोरकू भाषा — भाषा-अर्जन क्षमता का प्रमाण",
+    text: "अब एक और सुंदर उदाहरण सुनिए। महाराष्ट्र के आदिवासी क्षेत्र चिखलधरा में रहने वाली तीन वर्षीय रोशनी अपने घर में कोरकू भाषा का प्रयोग करती है। जब उसकी माँ हाट जाने की बात करती है तो रोशनी कहती है — 'नहीं, मैं ही जाऊँगी' — और यह भी कहती है कि वह माँ का हाथ पकड़कर चलेगी। ग़ौर करने वाली बात यह है कि रोशनी अपने लिए कोरकू भाषा के 'इंज' यानी 'मैं' शब्द का सही व्याकरणिक प्रयोग करती है, जबकि उसने यह व्याकरण कहीं से सीखा नहीं है। यही भाषा-अर्जन क्षमता की ख़ासियत है, जिसके सहारे तीन साल की रोशनी ने अपने परिवेश में मौजूद भाषा को सुन-बोलकर ख़ुद ही अर्जित कर लिया है। ऋचा और रोशनी, दोनों उदाहरणों से यह साफ़ होता है कि स्कूल की औपचारिक पढ़ाई शुरू होने से पहले ही, ढाई-तीन साल के बच्चे भी अपनी भाषा में अपनी बात कहना-सुनना बख़ूबी जानते हैं — वाक्यों का व्याकरण सही होना और भाव की गहराई, ये दोनों ख़ूबियाँ पहले से ही बच्चों की भाषा में मौजूद होती हैं।"
+  },
+  {
+    title: "उदीयमान साक्षरता — क्या है यह अवधारणा",
+    text: "अब बात करते हैं उदीयमान साक्षरता की, जिसे अंग्रेज़ी में इमर्जेंट लिटरेसी कहते हैं। इस शब्द में दो हिस्से हैं — साक्षरता और उदीयमान। साक्षरता का मतलब पढ़ना-लिखना और अक्षरों से जुड़ी समझ है, जबकि उदीयमान का मतलब है स्वयं विकसित होने का भाव। इसका सीधा मतलब यह है कि अगर परिवार और परिवेश में पढ़ने-लिखने के अवसर मिलते रहें, तो बच्चा वैसे ही पढ़ना-लिखना अर्जित करने लगता है जैसे वह अपनी मातृभाषा को सुनना-बोलना सहज रूप से सीख लेता है। दरअसल उदीयमान साक्षरता, लिखित भाषा के ज्ञान और उसके इस्तेमाल के बारे में, छोटे बच्चों के पढ़ना-लिखना सीखने को लेकर एक ख़ास दृष्टिकोण है — यह मानती है कि बच्चा स्कूल जाने से बहुत पहले ही भाषा, पढ़ने और लिखने का कुछ-न-कुछ ज्ञान अर्जित कर चुका होता है, और यह सीखना जीवन में बहुत जल्दी शुरू होकर लगातार चलता रहता है।"
+  },
+  {
+    title: "अंकित की कक्षा — जब पढ़ना-लिखना यांत्रिक हो जाए",
+    text: "अब देखते हैं दो अलग-अलग शिक्षकों की कक्षाओं में क्या हो रहा है। अंकित की पहली कक्षा में सारे बच्चे वर्कशीट में सिर झुकाए बैठे हैं, पूरा पन्ना भरकर सिर्फ़ 'अ' और 'ए' लिख रहे हैं। बच्चों के चेहरों से सीखने का आनंद पूरी तरह ग़ायब हो चुका है, क्योंकि उनके लिए इन अक्षरों का कोई अर्थ ही नहीं है — यह काम सिर्फ़ अक्षरों की सुघड़ बनावट पर ज़ोर देता है, न विचार पर, न भाव पर। इसके अगले चरण में अंकित बोर्ड पर शब्द लिखते हैं और बच्चे हिज्जे कर-करके ज़ोर-ज़ोर से दोहराते हैं — 'च जमा ल बराबर चल', 'फ जमा ल बराबर फल'। बच्चों की आवाज़ में उत्साह तो है, लेकिन वे जो पढ़ रहे हैं उसे समझ भी रहे हैं या नहीं — यह कहीं नज़र नहीं आता। यहाँ सिर्फ़ अक्षरों की पहचान हो रही है, जिसे डिकोडिंग कहते हैं, लेकिन 'समझ के साथ पढ़ना' न तो अंकित की प्राथमिकता है, न बच्चों की। अंकित की कक्षा दरअसल 'पठन तत्परता' यानी पढ़ना सीखने की तैयारी वाले पुराने दृष्टिकोण से प्रभावित है, जो अर्थपूर्ण पाठ पढ़ने से पहले महीनों सिर्फ़ अक्षर-शब्द पहचानने में लगा रहता है।"
+  },
+  {
+    title: "मधु की कक्षा — जब कहानी से जुड़ता है पढ़ना-लिखना",
+    text: "अब चलते हैं मधु की कक्षा में। मधु ने बच्चों को साँप की एक कहानी सुनाई और उनसे कहा कि वे अपने मन से आगे की कहानी बनाएँ, अपनी भाषा में सुनाएँ, और फिर चित्रों के साथ कहानी लिखें। कहानी बनाना और सुनाना तो सबके लिए मज़ेदार था, लेकिन कहानी लिखना बच्चों को मुश्किल लगा। फिर भी मधु ने भरोसा दिलाया कि वे पहले ख़ुद कोशिश करें, और जो न आए वह मधु को बता दें। नतीजा यह हुआ कि सभी बच्चों ने अपनी-अपनी कहानी लिखी, कक्षा में सुनाई, और मधु ने सबकी कहानियाँ दीवार पर लगा दीं। बच्चे आते-जाते अपने दोस्तों की कहानियाँ पढ़ने और सराहने लगे — 'देखो, कितना लंबा साँप बनाया है', 'क्या साँप चिड़िया के बच्चे खा जाएगा?' — ऐसे सवाल-जवाब चलते रहे। मधु ने कहानी के पात्रों और चीज़ों के नाम भी लिखकर लेबलिंग की, और बच्चों ने ख़ुद अपने चित्रों के नीचे पूरा नाम लिखना भी सीखा। मधु की यह कक्षा उदीयमान साक्षरता की मिसाल है — यहाँ समृद्ध भाषा-परिवेश और बच्चों की मौखिक भाषा की पूँजी का भरपूर इस्तेमाल करते हुए पढ़ने-लिखने के सार्थक अवसर दिए गए, जबकि अंकित की कक्षा में यह सब यांत्रिक और निरर्थक ढंग से हो रहा था।"
+  },
+  {
+    title: "पढ़ना सीखने की तैयारी बनाम उदीयमान साक्षरता",
+    text: "यहाँ एक दिलचस्प सवाल उठता है — क्या हमने कभी सुनना-बोलना सीखने के लिए कोई अलग से 'तैयारी' की थी? जवाब है, नहीं! हम परिवेश में मौजूद भाषा को सुनते-बोलते हुए ही सुनना-बोलना सीख गए, तो फिर पढ़ना-लिखना भी वैसे ही, पढ़ते-लिखते हुए सीखा जा सकता है — इसकी अलग से तैयारी ज़रूरी नहीं। शोधकर्ताओं ने बताया है कि उन्नीस सौ अस्सी के दशक तक 'ध्वनिविज्ञान' यानी फ़ोनिक्स आधारित दृष्टिकोण हावी रहा, जिसमें माना जाता था कि पढ़ना सिखाने से पहले पढ़ने की तैयारी ज़रूरी है। बाद में इस सोच को चुनौती दी गई और उदीयमान साक्षरता की अवधारणा सामने आई, जिसने प्रारंभिक लिखित भाषा-विकास को लेकर एक वैचारिक क्रांति ला दी। यह मानती है कि साक्षरता सिर्फ़ डिकोडिंग नहीं, बल्कि पढ़ने की पूरी प्रक्रिया है जिसमें समझना भी शामिल है। बुनियादी स्तर की राष्ट्रीय पाठ्यचर्या की रूपरेखा दो हज़ार बाईस भी इसी बात पर ज़ोर देती है कि प्रिंट और पढ़ने-लिखने के पर्याप्त अवसरों के साथ बच्चे बहुत कम उम्र से ही, अक्षरों और शब्दों की पूरी पहचान होने से पहले ही, पढ़ना-लिखना सीखना शुरू कर सकते हैं।"
+  },
+  {
+    title: "पाठ्यचर्या के लक्ष्य, दक्षताएँ और सीखने के प्रतिफल",
+    text: "अब समझते हैं कि भाषा-संबंधी पाठ्यचर्या कैसे बनती है। शिक्षा के लक्ष्यों से पाठ्यचर्या के उद्देश्य निकलते हैं, उद्देश्यों से दक्षताएँ निकलती हैं, और दक्षताओं से सीखने के प्रतिफल तय होते हैं। बुनियादी स्तर यानी प्री-स्कूल से कक्षा-दो तक के लिए एक लक्ष्य है कि बच्चे भाषा-एक को पढ़ने और लिखने में धारा-प्रवाहिता विकसित करें, जबकि दूसरी भाषा में बच्चे पढ़ना-लिखना शुरू भर करते हैं — क्योंकि प्रथम भाषा ज़्यादा परिचित और परिवेश में बहुतायत में उपलब्ध होती है। वहीं प्रारंभिक स्तर यानी कक्षा तीन से पाँच तक के लक्ष्य कुछ ज़्यादा उन्नत हैं — जैसे शिक्षार्थी अमूर्त विचारों को जटिल वाक्य-संरचनाओं के ज़रिए समझें और व्यक्त करें, विविध प्रकार के पाठ पढ़ने और लिखने की समझ विकसित करें, और विभिन्न स्रोतों से व्यापक शब्द-भंडार अर्जित करें। इन लक्ष्यों के भीतर छोटी-छोटी दक्षताएँ होती हैं — जैसे वर्णमाला के सभी अक्षरों को पहचानना और उस ज्ञान का इस्तेमाल शब्द पढ़ने-लिखने में करना, या फिर अपनी समझ व्यक्त करने के लिए एक अनुच्छेद लिखना। और हर दक्षता के भीतर सीखने के प्रतिफल होते हैं, जो सीखने के छोटे-छोटे मील के पत्थर की तरह काम करते हैं — जैसे कक्षा तीन में बच्चे मौखिक प्रस्तुति की बुनियादी संरचना समझते हैं, कक्षा चार में समूह में मौखिक प्रस्तुति करते हैं, और कक्षा पाँच तक आते-आते स्वतंत्र रूप से मौखिक प्रस्तुति देना और अपना आकलन ख़ुद करना सीख जाते हैं।"
+  },
+  {
+    title: "मीतू की कक्षा — पाठ्यचर्या लक्ष्य कैसे जीवंत होते हैं",
+    text: "अब एक आख़िरी उदाहरण से इसे और साफ़ समझते हैं। मीतू की तीसरी कक्षा में कहानी-कार्डों के सहारे एक कहानी सुनाई जाती है — एक छोटी बच्ची मीनू पानी लाने तालाब जाती है और वहाँ एक मगरमच्छ उसकी तरफ़ लपकता है। कहानी सुनते हुए कुछ बच्चे डर जाते हैं, कुछ उत्सुक होते हैं कि आगे क्या होगा, और कहानी ख़त्म होते-होते सब राहत महसूस करते हैं। इसके बाद बच्चे अपनी-अपनी माँ की बहादुरी के किस्से सुनाते हैं, और मीतू सुझाव देती है कि सब मिलकर 'माँ' के बारे में कुछ लिखें — अदिति एक प्यारी सी कविता लिख देती है। फिर मीतू बच्चों के साथ मिलकर अक्षरों से नए शब्द बनवाती है, जिसमें बच्चे अपनी भाषा के साथ-साथ दूसरी भाषाओं के शब्द भी सीख लेते हैं। इस एक कक्षा में बातचीत भी हुई, कविता लिखी भी गई, कहानी और कविता पढ़ी भी गई, अक्षरों से शब्द भी बने, और साथ में बच्चों की अपनी भाषा, अपना परिवार और अपने अनुभव भी शामिल हुए। यही वह जगह है जहाँ पाठ्यचर्या-लक्ष्य, दक्षताएँ और सीखने के प्रतिफल — तीनों आपस में जुड़कर एक जीवंत, आनंददायक कक्षा बनाते हैं।"
+  },
+  {
+    title: "सारांश — आज हमने क्या सीखा",
+    text: "तो चलिए, आज जो सीखा उसे संक्षेप में दोहराते हैं। पहला — भाषा और परिवेश के बीच गहरा संबंध होता है, और परिवेश में उपलब्ध भाषाओं में सुनना, बोलना, पढ़ना और लिखना, ये सारी कुशलताएँ हम सहजता से अर्जित करते हैं। दूसरा — विद्यालय की औपचारिक पढ़ाई शुरू होने से बहुत पहले ही, ढाई-तीन साल के बच्चे भी अपनी भाषा में अपनी बात कहना-सुनना जानते हैं, जैसा ऋचा और रोशनी के उदाहरणों से साफ़ हुआ। तीसरा — उदीयमान साक्षरता, लिखित भाषा सीखने को लेकर एक ख़ास दृष्टिकोण है, जो मानती है कि बच्चा स्कूल आने से पहले ही पढ़ने-लिखने का कुछ ज्ञान अर्जित कर लेता है, और साक्षरता अब सिर्फ़ डिकोडिंग नहीं बल्कि समझ के साथ पढ़ने की पूरी प्रक्रिया है — जैसा मधु की कक्षा ने दिखाया। चौथा — पाठ्यचर्या के लक्ष्य ऐसे वक्तव्य हैं जो पाठ्यचर्या के विकास और कार्यान्वयन को दिशा देते हैं, और ये किसी एक चरण के लिए तय होते हैं। पाँचवाँ — दक्षताएँ वे उपलब्धियाँ हैं जो दिखाई देती हैं और जिनका आकलन किया जा सकता है, और छठा — सीखने के प्रतिफल इन दक्षताओं तक पहुँचने के छोटे-छोटे मील के पत्थर हैं। पाठ्यचर्या-लक्ष्य, दक्षताएँ और सीखने के प्रतिफल — ये तीनों आपस में जुड़े हुए हैं और मिलकर पूरी सीखने-सिखाने की प्रक्रिया को दिशा देते हैं। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
