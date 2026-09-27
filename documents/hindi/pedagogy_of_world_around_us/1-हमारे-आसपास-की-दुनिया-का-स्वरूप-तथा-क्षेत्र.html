@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>हमारे आसपास की दुनिया (TWAU) का स्वरूप तथा क्षेत्र — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>हमारे आसपास की दुनिया (TWAU) का स्वरूप तथा क्षेत्र</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    "title": "परिचय — TWAU किसे कहते हैं",
+    "text": "आज हम पढ़ेंगे — हमारे आसपास की दुनिया, यानी TWAU, का स्वरूप तथा क्षेत्र। यह इकाई हमें यह समझने में मदद करेगी कि छोटे बच्चे अपने आसपास की दुनिया को कैसे समझते हैं — पक्षी कैसे उड़ते हैं, पेड़ कैसे बढ़ते हैं, पानी हम तक कैसे पहुँचता है। हम जानेंगे कि हमारे आसपास की दुनिया का क्षेत्र पारंपरिक विषय-आधारित सीमाओं से परे है, और यह विज्ञान, सामाजिक अध्ययन, पर्यावरण, स्वास्थ्य तथा कल्याण की अवधारणाओं को बच्चों के वास्तविक जीवन के अनुभवों से जोड़ता है।"
+  },
+  {
+    "title": "सीखने के प्रतिफल",
+    "text": "इस अध्याय के अध्ययन के पश्चात शिक्षार्थी प्रारंभिक स्तर पर पाठ्यक्रम में हमारे आसपास की दुनिया के महत्व और क्षेत्र को स्पष्ट कर सकेंगे, राष्ट्रीय शिक्षा नीति 2020 और राष्ट्रीय पाठ्यचर्या रूपरेखा 2023 के परिप्रेक्ष्य में इसके स्वरूप पर चर्चा कर सकेंगे, TWAU के अंतर्विषयक और एकीकृत स्वरूप का वर्णन कर सकेंगे, इसके अंतःविषयों जैसे विज्ञान, सामाजिक अध्ययन, भाषा, स्वास्थ्य एवं कला शिक्षा के साथ संबंधों की पहचान कर सकेंगे, और पाठ्यचर्या लक्ष्यों, दक्षताओं तथा सीखने के प्रतिफलों को समझ और प्रस्तुत कर सकेंगे।"
+  },
+  {
+    "title": "नीति कथन — आधारभूत स्तर से प्रारंभिक स्तर तक",
+    "text": "राष्ट्रीय शिक्षा नीति 2020 के अंतर्गत प्रारंभिक स्तर में कक्षा तीन, चार और पाँच सम्मिलित हैं। इससे पहले के पाँच वर्ष — तीन वर्ष की बालवाटिका तथा कक्षा एक और दो — को मिलाकर आधारभूत स्तर कहा जाता है। आधारभूत स्तर पर राष्ट्रीय शिक्षा नीति हमारे आस-पास की दुनिया को एक अलग पाठ्यचर्या क्षेत्र के रूप में अनुशंसित नहीं करती, क्योंकि इन वर्षों में मुख्य ध्यान बच्चों के शारीरिक, सामाजिक, भावनात्मक और गतिक विकास पर केंद्रित रहता है। प्रारंभिक चरण में विषय-आधारित शिक्षण को शामिल करना आवश्यक है, जिसके लिए भाषा, गणित और हमारे आसपास की दुनिया जैसे विषयों को शामिल किया जाता है।"
+  },
+  {
+    "title": "EVS से TWAU की ओर — बदलाव का महत्व",
+    "text": "पहले कक्षा तीन से पाँच तक पर्यावरण अध्ययन यानी EVS एक मुख्य पाठ्यचर्या क्षेत्र के रूप में पढ़ाया जाता था। अब हमारे आस-पास की दुनिया के परिचय के साथ इस विषय का नामकरण और दृष्टिकोण दोनों बदल गए हैं। EVS और TWAU दोनों में कुछ समान विशेषताएँ हैं — दोनों एकीकृत, विषयगत-आधारित एवं अंतरविषयक हैं। परंतु TWAU की ओर यह परिवर्तन बच्चों की विकासात्मक आवश्यकताओं और सार्थक अधिगम की प्रकृति की एक विस्तृत और गहन समझ को दर्शाता है। TWAU बच्चों में अपने निकटवर्ती पर्यावरण के प्रति जिज्ञासा उत्पन्न करता है और धीरे-धीरे उन्हें व्यापक पर्यावरण की ओर ले जाता है।"
+  },
+  {
+    "title": "TWAU का क्षेत्र — चार घटक",
+    "text": "हमारे आसपास की दुनिया के क्षेत्र को प्रारंभिक स्तर के संदर्भ में चार घटकों के माध्यम से समझा जा सकता है। पहला, प्राकृतिक पर्यावरण — जिसमें पौधे, पशु, भू-आकृतियाँ, नदियाँ और प्राकृतिक प्रक्रियाएँ जैसे दिन-रात का बनना शामिल हैं। दूसरा, सामाजिक पर्यावरण — जिसमें संस्कृति, आर्थिक विकास, परंपराएँ और जनसंख्या में विविधता शामिल है। तीसरा, पर्यावरणीय शिक्षा — जिसके अंतर्गत वायु-जल-मृदा प्रदूषण, अपशिष्ट प्रबंधन, जलवायु परिवर्तन और वनों की कटाई जैसे मुद्दे आते हैं। और चौथा, नैतिकता तथा आचार संबंधी मुद्दे — जिसमें आदतों का निर्माण, मूल्यों का विकास और संचार, सहयोग, रचनात्मकता एवं आलोचनात्मक चिंतन जैसे वैश्विक कौशल शामिल हैं।"
+  },
+  {
+    "title": "TWAU का स्वरूप — अंतरविषयक",
+    "text": "हमारे आस-पास की दुनिया प्रारंभिक स्तर पर एक अंतरविषयक पाठ्यक्षेत्र है, जो भाषा और गणित की तरह विषयगत नहीं है। विषयगत परिप्रेक्ष्य में अवधारणाओं और प्रक्रियाओं का अन्वेषण किसी एक विशिष्ट विषय की सीमाओं के भीतर किया जाता है, जैसे भौतिकी या रसायन विज्ञान। इसके विपरीत, अंतरविषयक दृष्टिकोण में किसी विषय की अधिगम प्रक्रिया ज्ञान, विधियों और मुद्दों को प्राकृतिक विज्ञान, सामाजिक विज्ञान, अर्थशास्त्र और पर्यावरण से जोड़ती है। उदाहरण के लिए, यदि बच्चे जल का अध्ययन कर रहे हैं, तो वे केवल इसके भौतिक गुणों पर ध्यान केंद्रित नहीं करेंगे, बल्कि इसे सामाजिक और पर्यावरणीय मुद्दों से भी जोड़कर समझेंगे।"
+  },
+  {
+    "title": "TWAU का एकीकृत स्वरूप",
+    "text": "TWAU की दूसरी महत्वपूर्ण विशेषता इसका एकीकृत स्वरूप है। एकीकृत पाठ्यचर्या का अर्थ है किसी पाठ्यक्रम की यह क्षमता कि वह विभिन्न विषयों से विचारों और अंतर्दृष्टियों को लेकर अवधारणाओं, मुद्दों और कौशलों की एक समग्र समझ विकसित कर सके। उदाहरण के लिए, यदि कोई बच्चा भोजन शीर्षक का अध्ययन कर रहा है, तो इस अवधारणा को वैज्ञानिक, सामाजिक, पर्यावरणीय, भाषाई और स्वास्थ्य संबंधी — कई परिप्रेक्ष्यों से प्रस्तुत किया जाता है। यह अधिगम विषयगत भी है, न कि केवल विषयवस्तु या शीर्षक-आधारित — यानी बच्चों को उनके सीखने के अनुभवों को एकीकृत रूप में समझने के लिए प्रेरित किया जाता है।"
+  },
+  {
+    "title": "कक्षा 1-2 में समाविष्ट मॉडल और कक्षा 3-5 में अंतरविषयक मॉडल",
+    "text": "कक्षा एक और दो में हमारे आस-पास की दुनिया को एक स्वतंत्र पाठ्य क्षेत्र के रूप में नहीं पढ़ाया जाता, बल्कि इसे भाषा, गणित, कला और शारीरिक शिक्षा जैसे अन्य विषयों में एक एकीकृत घटक के रूप में समाविष्ट किया जाता है — इसे समाविष्ट या बहुविषयक मॉडल कहा जाता है। वहीं कक्षा तीन से पाँच तक हमारी अद्भुत संसार नामक मुख्य विषय के रूप में इसे स्वतंत्र पाठ्यचर्या क्षेत्र की पहचान दी गई है, जहाँ पर्यावरण से जुड़े विभिन्न विषयगत दृष्टिकोण एक ही विषय के शिक्षण-अधिगम के माध्यम से प्रस्तुत किए जाते हैं — इसे अंतरविषयक मॉडल कहते हैं।"
+  },
+  {
+    "title": "अन्य विषयों से संबंध",
+    "text": "हमारे आस-पास की दुनिया का भाषा अधिगम से गहरा संबंध है — शब्दावली में वृद्धि, बोलने-संवाद कौशल का विकास और सृजनात्मक लेखन इसी से जुड़े हैं। गणितीय अधिगम में मौखिक गणित, वस्तुओं का वर्गीकरण और आँकड़ों का संग्रह पर्यावरणीय साक्षरता को समृद्ध करता है। विज्ञान अधिगम में जल, पौधों और पशुओं से जुड़ी अवधारणाएँ दैनिक जीवन से जोड़ी जाती हैं। सामाजिक अध्ययन में परिवार में त्योहारों और भोजन की विविधता जैसे विषय शामिल हैं, तथा कला शिक्षा में पर्यावरण से जुड़ी सामग्रियों का उपयोग कर चित्र व मॉडल बनाना सिखाया जाता है।"
+  },
+  {
+    "title": "पाठ्यचर्या लक्ष्य, प्रमुख दक्षताएँ और सीखने के उद्देश्य",
+    "text": "शिक्षा के उद्देश्य नीतिगत दस्तावेज़ों से उत्पन्न होने वाले व्यापक दृष्टि-कथन हैं, जो संपूर्ण शिक्षा प्रणाली को दिशा प्रदान करते हैं। पाठ्यचर्या लक्ष्य इन्हीं उद्देश्यों से उत्पन्न होते हैं और शिक्षा के प्रत्येक चरण के लिए विशिष्ट होते हैं। मुख्य दक्षताएँ पाठ्यचर्या लक्ष्यों से उत्पन्न होती हैं और इन्हें किसी विशेष शिक्षा-स्तर के अंत तक प्राप्त कर लेना अपेक्षित होता है। इन दक्षताओं से सीखने के प्रतिफल उत्पन्न होते हैं, जो अधिगम की सूक्ष्म स्तरें या मील के पत्थर होते हैं और जिन्हें कक्षा में मापा जा सकता है।"
+  },
+  {
+    "title": "लक्ष्य-दक्षता-प्रतिफल का उदाहरण",
+    "text": "उदाहरण के लिए, पाठ्यचर्या लक्ष्य CG-1 में कहा गया है कि बच्चा अपने आस-पास के प्राकृतिक और सामाजिक परिवेश का अन्वेषण करता है तथा उसमें सक्रिय रूप से भाग लेता है। इस लक्ष्य के अंतर्गत दक्षता C-1.1 है, जिसके अनुसार बच्चा अपने आस-पास के पर्यावरण में प्राकृतिक तथा सामाजिक-सांस्कृतिक घटकों का अवलोकन करता है और उनकी पहचान करता है। इस दक्षता से जुड़े सीखने के प्रतिफल में शामिल है कि बच्चा अपने आसपास के पौधों की पहचान करता है, पेड़ों-झाड़ियों में समानता और भिन्नता बताता है, तथा पौधों के विभिन्न भागों के चित्र बनाकर उन्हें नामांकित करता है।"
+  },
+  {
+    "title": "सारांश — आज हमने क्या सीखा",
+    "text": "तो चलिए, आज जो सीखा उसे संक्षेप में दोहराते हैं। पहला — हमारे आस-पास की दुनिया कक्षा तीन से पाँच तक पढ़ाई जाने वाली एक अनिवार्य पाठ्यचर्या क्षेत्र है, जबकि कक्षा एक और दो में इसे अन्य विषयों में एकीकृत किया जाता है। दूसरा — इसका स्वरूप एकीकृत, अंतरविषयक और विषयगत है, सामयिक नहीं। तीसरा — यह चार घटकों यानी प्राकृतिक, सामाजिक, पर्यावरणीय और नैतिक पहलुओं को समेकित रूप से संबोधित करता है। चौथा — यह बच्चों में अनुभवात्मक अधिगम, जिज्ञासा और पर्यावरणीय संवेदनशीलता को बढ़ावा देता है। और पाँचवाँ — पाठ्यचर्या लक्ष्य, दक्षताएँ और सीखने के प्रतिफल एक तार्किक श्रृंखला में एक-दूसरे से जुड़े होते हैं, जो शिक्षण-अधिगम की योजना का आधार बनाते हैं। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

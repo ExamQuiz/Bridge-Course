@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>हमारे आस-पास की दुनिया में अधिगम संसाधन — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>हमारे आस-पास की दुनिया में अधिगम संसाधन</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    "title": "परिचय",
+    "text": "आज हम पढ़ेंगे — हमारे आस-पास की दुनिया में अधिगम संसाधन। राष्ट्रीय पाठ्यचर्या रूपरेखा 2023 प्रारंभिक स्तर पर गतिविधि-आधारित एवं जिज्ञासा-आधारित शिक्षण की वकालत करती है। इस संदर्भ में संसाधनों की भूमिका पारंपरिक अर्थों में केवल पाठ्यपुस्तक या ब्लैकबोर्ड तक सीमित नहीं रहती। कक्षा की खिड़की के बाहर चहचहाते पक्षियों का अवलोकन, एक फेंकी हुई प्लास्टिक की बोतल, या किसी बुजुर्ग द्वारा सुनाई गई लोककथा — हमारे आस-पास की हर वस्तु एक शक्तिशाली शिक्षण संसाधन बनने की क्षमता रखती है।"
+  },
+  {
+    "title": "सीखने के प्रतिफल",
+    "text": "इस पाठ को पूर्ण करने के पश्चात शिक्षार्थी TWAU के शिक्षण-अधिगम में संसाधनों के महत्व की व्याख्या कर सकेंगे, विभिन्न अधिगम संसाधनों का वर्णन कर सकेंगे, अधिगम संसाधन की पहचान और चयन के मानदंडों को समझकर प्रस्तुत कर सकेंगे, किसी दी गई शिक्षण-अधिगम स्थिति में सर्वाधिक उपयुक्त अधिगम संसाधन का चयन कर सकेंगे, और TWAU के शिक्षण-अधिगम के लिए वैकल्पिक संसाधनों का उपयोग कर सकेंगे।"
+  },
+  {
+    "title": "अधिगम संसाधन: अर्थ और महत्व",
+    "text": "अधिगम संसाधन, जिन्हें शिक्षण-अधिगम सामग्री भी कहा जाता है, केवल साधारण शिक्षण सहायक नहीं होते — ये कोई भी सामग्री, उपकरण, व्यक्ति या परिवेश हो सकते हैं जिनका उपयोग शिक्षक अधिगम को सरल, प्रभावी और सार्थक बनाने के लिए करते हैं। ये संसाधन ज्ञान के वाहन के रूप में कार्य करते हैं, समझ के निर्माण के ब्लॉक बनते हैं, और समग्र विकास के उपकरण के रूप में कार्य करते हैं। एक अच्छे संसाधन की मुख्य विशेषता यह है कि वह अधिगम को अर्थपूर्ण, मूर्त और आकर्षक बना देता है, जिससे बच्चे निष्क्रिय श्रोता न रहकर अपने सीखने में सक्रिय भागीदार बनते हैं।"
+  },
+  {
+    "title": "TWAU में अधिगम संसाधनों का महत्व",
+    "text": "कक्षा तीन से पाँच के बच्चे अभी संज्ञानात्मक विकास के मूर्त-क्रियात्मक चरण में होते हैं, इसलिए संसाधन अत्यंत महत्वपूर्ण हो जाते हैं। संसाधन अमूर्त विचारों को मूर्त और वास्तविक बनाते हैं, बच्चों का ध्यान आकर्षित कर उसे बनाए रखते हैं, विभिन्न अधिगम शैलियों — दृश्य, श्रव्य, क्रियात्मक और सामाजिक — को संबोधित करते हैं, सक्रिय भागीदारी और जिज्ञासा को प्रोत्साहित करते हैं, आलोचनात्मक सोच व समस्या-समाधान कौशल विकसित करते हैं, कक्षा के अधिगम को वास्तविक जीवन से जोड़ते हैं, और स्मरण शक्ति व दीर्घकालिक समझ में सहायता करते हैं।"
+  },
+  {
+    "title": "अधिगम संसाधनों की पहचान के मानदंड",
+    "text": "संभावित अधिगम संसाधनों की पहचान करते समय पाँच बातों पर ध्यान देना चाहिए। पहला, बच्चे की तात्कालिक दुनिया से प्रत्यक्ष जुड़ाव — जैसे विद्यालय या घर का बगीचा। दूसरा, व्यावहारिक खोज और गतिविधि की संभावना — यानी संसाधन बच्चों को प्रयोग करने और अवलोकन करने के लिए प्रेरित करे। तीसरा, एकीकृत अधिगम की क्षमता — जो विज्ञान, सामाजिक अध्ययन और गणित जैसे विषयों को जोड़ सके। चौथा, दृश्य आकर्षण और सहभागिता की क्षमता। और पाँचवाँ, प्रामाणिकता और सुरक्षा सुनिश्चित करना — यानी संसाधन द्वारा दी गई जानकारी सटीक हो और वह बच्चों के लिए सुरक्षित हो।"
+  },
+  {
+    "title": "संसाधनों के चयन के मानदंड",
+    "text": "संभावित संसाधनों की पहचान के बाद, चयन की प्रक्रिया में सात मानदंडों पर मूल्यांकन किया जाता है। पहला, अधिगम परिणामों और पाठ्यक्रम से सामंजस्य। दूसरा, आयु और विकासात्मक उपयुक्तता। तीसरा, जिज्ञासा, आलोचनात्मक सोच और समस्या-समाधान को प्रोत्साहन। चौथा, मूल्य, संवेदनशीलता और पर्यावरणीय जिम्मेदारी को बढ़ावा देना, तथा किसी भी प्रकार के भेदभावपूर्ण रूढ़ियों से बचना। पाँचवाँ, व्यवहार्यता और उपलब्धता। छठा, सक्रियता और प्रेरणा। और सातवाँ, मूल्यांकन की संभावना — यानी संसाधन शिक्षक को यह देखने का अवसर दे कि बच्चे अवधारणाओं को कितनी अच्छी तरह समझ रहे हैं।"
+  },
+  {
+    "title": "पर्यावरण और प्रकृति — सबसे बड़ी प्राकृतिक प्रयोगशाला",
+    "text": "समुदाय और स्थानीय पर्यावरण बच्चों के पहले शिक्षक होते हैं। विद्यालय परिसर, स्थानीय पड़ोस और प्राकृतिक तत्व जैसे पौधे, पशु, मिट्टी, जल स्रोत और मौसम की घटनाएँ — ये सभी TWAU के लिए सबसे सुलभ और प्रभावी अधिगम संसाधन हैं। प्रकृति से प्रत्यक्ष संपर्क बच्चों में सूक्ष्म अवलोकन कौशल, जैव विविधता के प्रति सराहना और पारिस्थितिक अवधारणाओं की समझ तथा पर्यावरणीय जिम्मेदारी की भावना विकसित करता है। इन पुस्तकों में सुझाई गई कई गतिविधियाँ बच्चों को पार्क, खेत और जलाशय जैसे स्थानों के अवलोकन के लिए कक्षा से बाहर ले जाती हैं।"
+  },
+  {
+    "title": "समुदाय — मूल्यवान सामाजिक संसाधन",
+    "text": "समुदाय में परिवार, पड़ोसी, सामुदायिक सहायक जैसे डॉक्टर, किसान और कारीगर, सार्वजनिक स्थल और स्थानीय आयोजन शामिल होते हैं। समुदाय से जुड़ना बच्चों को सामाजिक भूमिकाओं, पारस्परिक निर्भरता, सांस्कृतिक विविधता और नागरिक जिम्मेदारी समझने में मदद करता है। उदाहरण के लिए, किसी स्थानीय किसान को कक्षा में आमंत्रित कर यह बताया जा सकता है कि फसलें कैसे उगाई जाती हैं और भोजन थाली तक कैसे पहुँचता है, या किसी बुजुर्ग पड़ोसी से मोहल्ले के बदलते इतिहास के बारे में सुना जा सकता है। बच्चों, उनके परिवार और उनके वास्तविक जीवन के अनुभव भी महत्वपूर्ण अधिगम संसाधन हो सकते हैं।"
+  },
+  {
+    "title": "समाचार पत्र और पत्रिकाएँ",
+    "text": "समाचार पत्र और पत्रिकाएँ पाठ्यपुस्तक ज्ञान और वास्तविक दुनिया की घटनाओं के बीच पुल का काम करते हैं। समाचार-पत्र बच्चों को कक्षा के विषयों को वास्तविक घटनाओं से जोड़ने में मदद करता है, जिज्ञासा और खोज को बढ़ावा देता है, स्थानीय को वैश्विक से जोड़ता है, और समीक्षा तथा आलोचनात्मक सोच विकसित करता है। कक्षा में दिन की खबर चर्चा, विषय-आधारित कटिंग संग्रह और दृश्य विश्लेषण जैसी गतिविधियाँ करवाई जा सकती हैं। पत्रिकाएँ, समाचार पत्रों की तुलना में अधिक गहन लेख, जीवंत फोटोग्राफी और आकर्षक लेआउट प्रदान करती हैं, जो जटिल प्रक्रियाओं जैसे जल चक्र को समझने में मदद करती हैं।"
+  },
+  {
+    "title": "रेडियो और टेलीविजन",
+    "text": "रेडियो और टेलीविजन आज भी TWAU पाठ्यक्रम को समृद्ध बनाने के लिए शक्तिशाली और सुलभ संसाधन बने हुए हैं। रेडियो श्रवण संसाधन के रूप में सक्रिय सुनने के कौशल, कल्पना और स्थानीय संदर्भों से जुड़ाव की भावना विकसित करता है — जैसे कहानी सुनाना या साक्षात्कार। टेलीविजन, अपने दृश्य, श्रवण और गति के संयोजन से अत्यधिक आकर्षक अनुभव प्रदान करता है — डॉक्यूमेंट्री और शैक्षिक श्रृंखलाएँ वन्य जीवन व वैज्ञानिक अवधारणाओं की दृश्य समझ बढ़ाने में मदद करती हैं, विशेषकर उन प्रक्रियाओं के लिए जिन्हें प्रत्यक्ष रूप से देखना कठिन होता है।"
+  },
+  {
+    "title": "सूचना एवं संचार प्रौद्योगिकी और TWAU किट",
+    "text": "आईसीटी संसाधनों में कंप्यूटर, इंटरनेट, इंटरैक्टिव व्हाइटबोर्ड और वर्चुअल रियलिटी उपकरण शामिल हैं, जो विज़ुअल लर्निंग में सुधार, इंटरैक्टिव अन्वेषण और वैश्विक दृष्टिकोण जैसे लाभ प्रदान करते हैं — जैसे वर्चुअल फील्ड ट्रिप के माध्यम से दूरस्थ स्थानों की सैर करना। इसके अतिरिक्त, एक TWAU किट में आवर्धक लेंस, बीज, मिट्टी के नमूने, पौधों के नमूने और साधारण उपकरण जैसी विशेष रूप से चुनी गई व्यावहारिक सामग्री शामिल होती है, जो प्रत्यक्ष निरीक्षण, प्रयोग, वर्गीकरण और स्पर्श-आधारित अधिगम को बढ़ावा देती है तथा वैज्ञानिक जिज्ञासा कौशल को प्रोत्साहित करती है।"
+  },
+  {
+    "title": "सारांश — आज हमने क्या सीखा",
+    "text": "तो चलिए आज जो सीखा उसे संक्षेप में दोहराते हैं। पहला — अधिगम संसाधन केवल पारंपरिक कक्षा उपकरण तक सीमित नहीं हैं, बल्कि इसमें सामग्री, वातावरण, लोग और अनुभव शामिल होते हैं। दूसरा — ये संसाधन अधिगम को मूर्त, आकर्षक और प्रासंगिक बनाने में बुनियादी भूमिका निभाते हैं। तीसरा — संसाधनों की पहचान और चयन प्रासंगिकता, सटीकता, उपयुक्तता, व्यवहार्यता और जिज्ञासा को बढ़ावा देने जैसे मानदंडों पर आधारित होना चाहिए। चौथा — पर्यावरण, समुदाय, समाचार पत्र, रेडियो-टेलीविजन, आईसीटी और TWAU किट जैसे विविध संसाधनों का सोच-समझकर उपयोग कक्षा को एक गतिशील अधिगम वातावरण में बदल सकता है। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
