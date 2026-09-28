@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Indian Concept of Self — Audio Lesson</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  line-height: 1.7;
+}
+.wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+header { text-align: center; margin-bottom: 1.25rem; }
+header h1 { font-size: 1.25rem; margin: 0 0 0.25rem; font-weight: 700; }
+header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
+.controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
+button:active { transform: scale(0.97); }
+.speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
+.sections { display: flex; flex-direction: column; gap: 0.7rem; }
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active { background: var(--active-bg); border-color: var(--accent); }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.section-title { font-weight: 600; font-size: 1rem; }
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
+.section.active .section-text { display: block; color: var(--text); }
+.play-icon { font-size: 0.8rem; color: var(--accent); }
+footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>The Indian Concept of Self</h1>
+    <p>Audio lesson — listen and read along</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ Press "Play full lesson" to start listening</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ Play full lesson</span></button>
+      <button id="pauseBtn">⏸ Pause</button>
+      <button id="prevBtn">⏮ Previous</button>
+      <button id="nextBtn">⏭ Next</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">Speed:</label>
+      <select id="rateSelect">
+        <option value="0.8">Slow</option>
+        <option value="1" selected>Normal</option>
+        <option value="1.2">Fast</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>Tap any part to open it and listen to it separately</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    "title": "Introduction — Who am I?",
+    "text": "Today we study The Indian Concept of Self. The question, Who am I, is profoundly simple and infinitely complex. From early childhood we form a sense of self, first through bodily awareness, then through social interaction, language and memory. In psychology, the self is often defined through identity, personality, cognition and social roles, such as seeing oneself as a student, a daughter or a friend. Indian philosophy invites us to look beyond changing roles and ask whether there is something deeper and more constant beneath these labels. Traditions like Vedanta, Samkhya, Buddhism and Jainism explore the self as a spiritual or metaphysical reality, in consciousness, pure awareness, or even the absence of a permanent self."
+  },
+  {
+    "title": "Why it matters for education",
+    "text": "This inquiry has practical value for education and well-being. When children observe their thoughts or regulate emotions through mindfulness or yoga, they reach a part of themselves beyond mere reaction or performance, which can foster resilience, empathy and ethical grounding. The Indian view is also relational. Instead of an isolated identity as in many Western models, the self is seen as interconnected with others, nature and the cosmos. The Upanishadic idea Tat Tvam Asi, meaning Thou art That, says the individual self is a reflection of the universe, not separate from it. If we see development as a journey toward inner awareness and balance, the classroom becomes a space for self-discovery, ethical inquiry and emotional maturation, and not only for knowledge transmission."
+  },
+  {
+    "title": "Learning outcomes",
+    "text": "After this chapter, the learner will distinguish between self, identity and self-concept, and explain the roles of mind, intellect and memory. The learner will describe the five layers of Panch-koshiya Vikas and their role in holistic human development, analyse and apply the concept of self, and state the role of Indian society in the development of the self."
+  },
+  {
+    "title": "Self, identity and self-concept",
+    "text": "The questions, Who am I, or koham, and Who are you, or kastvam, have been asked for centuries in Indian philosophy. It is important to separate three related ideas. The Atman, or Self, is the eternal, unchanging reality at the core of every individual. It is pure consciousness, unaffected by body, mind or external conditions, and it is the witness of all experience. In Advaita Vedanta, realising the Atman as non-different from Brahman, the ultimate reality, is the highest goal of life, called moksha or liberation. Identity is the social and empirical labels one adopts or is assigned, such as name, gender, caste, profession and family role. Samkhya and Vedanta see these as part of the ego, or ahamkara, a false sense of self created by ignorance, and they perish with the body. Self-concept is how one perceives and evaluates oneself, with thoughts like I am capable or I am flawed. It arises from manas and buddhi, shaped by past experiences, or samskaras, and desires, or vasanas. It is more introspective than identity but still not the true self. In the table, the Atman is real, while identity and self-concept are considered illusionary."
+  },
+  {
+    "title": "Antahkarana — the inner instrument",
+    "text": "Ancient Indian thought describes the Antahkarana, the inner instrument of consciousness, with four parts. Manas is the mind. Buddhi is the intellect. Smriti is memory. And Ahamkara is ego or self-identity. Each plays a role in how children perceive, learn, reason, remember and respond, so teachers who recognise these layers can design learning that is emotionally grounded, intellectually stimulating and ethically meaningful. In Advaita Vedanta, manas deals with doubt, desire and sensory coordination, buddhi makes judgments and decisions, smriti stores impressions, and ahamkara claims ownership, as in, I am thinking. This shows that educational growth must move from external behaviour to inner transformation. Samkhya sees buddhi, ahamkara and manas as modifications of buddhi, with buddhi emerging first from Prakriti, and memory arising from impressions stored in manas and buddhi."
+  },
+  {
+    "title": "Mind — manas",
+    "text": "Manas is the receptive and processing faculty. It takes in data from the five senses, holds impressions briefly and passes them to the intellect for analysis. It is the seat of desires, doubts and initial reactions, often working quickly and reactively. In Nyaya philosophy, manas is an internal organ, distinct from the external senses but essential to cognition. It is atomic, and works with only one sense organ at a time, which explains why we can fully attend to only one sensory stream at once. It is also the starting point of imagination, desire, hesitation and simple memory, and it governs the initial emotional tone of any experience. In the primary classroom, this means creating an environment for calm, attentive minds through engaging activities and mindful transitions. As the Yoga Vasishtha suggests, just as a mirror needs polishing to reflect clearly, manas must be quieted and stabilised to receive and reflect knowledge."
+  },
+  {
+    "title": "Intellect and memory — buddhi and smriti",
+    "text": "Buddhi is the faculty that discerns, reasons, evaluates and decides. It is the seat of judgment and discrimination, or viveka, and it is subtler than manas, guiding action by reflection, not impulse. In Vedanta, it makes meaning, tells truth from falsehood, and is the beginning of conscience and moral awareness in the developing child. Children develop buddhi gradually, from curiosity and mimicry to reasoning, rule-following and moral questioning. Teachers can support it with open-ended questions, simple debates, and reflective journaling, and a teacher's questions are often more powerful than their answers. Smriti is memory, not just recalling facts but retaining experiences, forming associations and applying past learning to new situations. In Yoga and Vedanta, it is the residue of past experience, or samskaras. Indian thought includes emotional, moral and experiential memory, so teachers can use story recalls, songs, memory games, and links to learners' lived experiences, so that memory is not just mechanical but emotionally and morally integrated."
+  },
+  {
+    "title": "Panchakosha Vikas — the five sheaths",
+    "text": "The concept of Panchakosha Vikas comes from the Taittiriya Upanishad. Pancha means five, kosha means sheath or layer, and vikas means development. According to this model, a human being is made of five concentric layers, each subtler than the last. Annamaya is the physical sheath. Pranamaya is the vital-energy sheath. Manomaya is the mental-emotional sheath. Vijnanamaya is the intellectual-discriminative sheath. And Anandamaya is the bliss sheath. These koshas cover the innermost reality, the Atman. Panchakosha Vikas means developing and purifying each layer in balance, so that development is not only physical or intellectual but a holistic inner transformation, from bodily health to spiritual joy. It brings together yoga, meditation, ethical living, disciplined thinking and devotion, and nurturing all five aligns outer life with inner essence."
+  },
+  {
+    "title": "Annamaya and Pranamaya kosha",
+    "text": "Annamaya kosha is the outermost layer, the physical body formed and sustained by food. It is the foundation for all other layers, since without a healthy body no higher development is possible. Development involves healthy diet, physical activity, yoga asanas, rest and cleanliness, and in education means physical education, hygiene, posture and movement-based learning. For classroom practice, teachers can start with light stretching, teach hygiene through posters and stories, and try body scans. Pranamaya kosha is made of life-force energy, or prana. It governs breathing, circulation, digestion and metabolism, and links body and mind. Disturbances can bring fatigue, emotional instability or illness. Development involves pranayama, balanced living and harmony with natural rhythms. With young children, this means simple breathing exercises like balloon breathing, outdoor play, short mindfulness or quiet time, and activities such as nature walks, rhythmic exercises, three slow breaths, and simple pranayama like Anulom Vilom."
+  },
+  {
+    "title": "Manomaya kosha",
+    "text": "Manomaya kosha covers the mind, emotions, desires and sensory impressions. It is the seat of manas and decides how we respond emotionally and form early attitudes and mental habits. Spiritually it is still within illusion, or maya, because it keeps fluctuating and is clouded by likes and dislikes. Purification involves mindfulness, emotional regulation, mantra chanting and bhakti. In education, this layer matters because early childhood is critical for emotional intelligence, where children learn to manage feelings, handle frustration and form social connections. Teachers can use storytelling with questions like, how do you think the character feels, role-play and pretend play, and daily circle time as a safe space to express thoughts and feelings. Classroom activities include discussing how characters felt in a story, drawing or painting emotions, journaling about feelings and gratitude, and acting out emotions and problem-solving scenarios."
+  },
+  {
+    "title": "Vijnanamaya and Anandamaya kosha",
+    "text": "Vijnanamaya kosha is the sheath of intellect, reason, discernment and higher knowledge. It makes decisions, forms values and distinguishes right from wrong. It is closer to the Self and linked to self-awareness and ethics, but is still shaped by conditioning. It is purified by self-inquiry, critical reflection, ethical living and scriptural study. For young children, curiosity drives this layer, and educators can offer hands-on play such as blocks, puzzles and sorting games, open-ended questions like, what do you think will happen next, and thematic learning through songs, stories and art. Classroom ideas include ethical dilemmas, two to five minutes of silence followed by a reflection question, and student-led inquiry. Anandamaya kosha is the innermost sheath, experienced as bliss, deep joy, peace and fulfilment. It is only a reflection of the Atman's presence, touched in deep meditation, selfless service, devotion or deep sleep, and is not the ultimate Self itself. It is developed through meditation, silence, gratitude and unconditional love. In school, it means joyful learning, celebrating creativity through painting, dancing and singing, sharing gratitude, and a warm, inclusive classroom where every child feels valued, safe and loved."
+  },
+  {
+    "title": "Educational implications of Panchakosha",
+    "text": "The five koshas support each other and form a strong foundation for life. Children in the early years are like soft clay, full of potential. Traditional education often focuses only on academics and overlooks emotional development, physical health and creative expression. Integrating deeper views of the Self can help children develop inner strength in times of stress, understand that they are more than their failures or labels, practise self-awareness that supports emotional regulation, feel connected to others and the larger world, and develop a sense of purpose beyond personal success. Recognising these layers helps teachers nurture whole children, with minds that have awareness, hearts that have empathy, and spirits that have depth."
+  },
+  {
+    "title": "Development of self in Indian society",
+    "text": "Indian spiritual traditions say the waking state, or jagrat, is only one layer of consciousness, and at the core of every person lies the Atman, which transcends physical form, thoughts and social roles. To move from a limited sense of identity to this true self, two inner processes are emphasised. Viveka is discrimination, the ability to distinguish the temporary, changing outer self from the eternal inner self. Vairagya is detachment, consciously dis-identifying from material and social attachments. To support this journey, Indian society outlines the four-stage Ashrama Dharma. Brahmacharya is student life, focused on learning, self-discipline and character. Garhastya is the householder stage, with responsibilities to family, career and society. These two build the bio-psycho-social identity. Vanaprastha is gradual withdrawal from worldly life toward inner reflection. Sanyasa, renunciation, is devoted to the full inward journey of realising the true self. Not everyone follows the stages strictly, but the model gives a universal, holistic framework: fulfil worldly duties first, then move toward spiritual awakening."
+  },
+  {
+    "title": "Summary — what we learned today",
+    "text": "Let us recap. First, Indian thought distinguishes the Self, or Atman, the eternal unchanging core of consciousness, from identity and self-concept, which are shaped by external and internal experience. Second, the Antahkarana has four parts: manas, buddhi, smriti and ahamkara. Third, the Panchakosha model gives a layered view of a person: Annamaya, Pranamaya, Manomaya, Vijnanamaya and Anandamaya, and development across all five leads to inner balance and self-realisation. Fourth, nurturing all five layers in early childhood education fosters physical health, emotional intelligence, creativity, curiosity and joy. Fifth, Ashrama Dharma supports the journey through learning, ethical living, detachment and eventual spiritual awakening. Together these insights help nurture whole individuals, physically strong, mentally resilient, ethically grounded and spiritually aware. Thank you, that is all for today!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let enVoice = null;
+let playQueueActive = false;
+
+function pickEnglishVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  enVoice = voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-') === 'en-in')
+    || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en'))
+    || null;
+  if (enVoice) {
+    voiceNote.textContent = "Voice: " + enVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "No English voice found on this device — the default voice will be used.";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickEnglishVoice();
+  window.speechSynthesis.onvoiceschanged = pickEnglishVoice;
+} else {
+  voiceNote.textContent = "This browser does not support read-aloud.";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">Part ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ Listen to this part</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 Now playing: Part " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'en-IN';
+  if (enVoice) utter.voice = enVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ Lesson finished";
+      playAllLabel.textContent = "▶ Play full lesson";
+    } else {
+      nowPlayingEl.textContent = "⏹ Part " + (i + 1) + " finished";
+      playAllLabel.textContent = "▶ Play full lesson";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ Play full lesson";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 Playing...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ Paused — press Play to continue";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

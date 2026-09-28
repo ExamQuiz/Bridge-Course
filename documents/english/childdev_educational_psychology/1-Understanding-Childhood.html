@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Understanding Childhood — Audio Lesson</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  line-height: 1.7;
+}
+.wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+header { text-align: center; margin-bottom: 1.25rem; }
+header h1 { font-size: 1.25rem; margin: 0 0 0.25rem; font-weight: 700; }
+header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
+.controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
+button:active { transform: scale(0.97); }
+.speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
+.sections { display: flex; flex-direction: column; gap: 0.7rem; }
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active { background: var(--active-bg); border-color: var(--accent); }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.section-title { font-weight: 600; font-size: 1rem; }
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
+.section.active .section-text { display: block; color: var(--text); }
+.play-icon { font-size: 0.8rem; color: var(--accent); }
+footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Understanding Childhood</h1>
+    <p>Audio lesson — listen and read along</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ Press "Play full lesson" to start listening</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ Play full lesson</span></button>
+      <button id="pauseBtn">⏸ Pause</button>
+      <button id="prevBtn">⏮ Previous</button>
+      <button id="nextBtn">⏭ Next</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">Speed:</label>
+      <select id="rateSelect">
+        <option value="0.8">Slow</option>
+        <option value="1" selected>Normal</option>
+        <option value="1.2">Fast</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>Tap any part to open it and listen to it separately</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    "title": "Introduction — Is childhood universal?",
+    "text": "Today we study Understanding Childhood. We often take childhood for granted, as if it were a natural and universal stage of life. But the idea of childhood is made by society and history, and it changes across cultures, time and social settings. In the past, especially in agrarian societies, children were regarded as miniature adults who helped with chores and family duties. Over time, formal schooling, legal changes and worldwide human rights discussions helped people see childhood as a separate and protected time for learning, playing and growing. In modern India, a child's upbringing is shaped by family income, gender, culture, place of residence and access to technology. This is why we speak of many childhoods, not just one."
+  },
+  {
+    "title": "Learning outcomes",
+    "text": "After completing this chapter, the learner will be able to conceptualise the idea of childhood, and critically analyse the constituents of childhoods in contemporary times. The learner will understand that childhood experiences differ with social, economic, cultural and regional contexts in India, recognise gender as a factor that shapes childhood, and reflect on the role of digitalisation in shaping the experiences of childhood."
+  },
+  {
+    "title": "Childhood as a social construct",
+    "text": "Childhood is not fixed or universal. It is a socially and historically constructed concept that reflects the values, economic systems and philosophical beliefs of a society. The historian Philippe Ariès, in his 1962 work Centuries of Childhood, argued that in medieval Europe children were seen as small adults, with little recognition of developmental differences. It was only in the seventeenth and eighteenth centuries, with the rise of Enlightenment thinking, that childhood came to be seen as a separate and important stage of life needing care, protection and education."
+  },
+  {
+    "title": "Locke, Rousseau, Piaget and Erikson",
+    "text": "Two philosophers shaped modern views of childhood. John Locke, in 1693, portrayed the child as a blank slate, or tabula rasa, whose mind is shaped entirely by experience and education. Jean-Jacques Rousseau, in 1762, emphasised the innate goodness and natural development of children, and argued for child-centred education that fits a child's stage of growth. In the twentieth century, Jean Piaget proposed a stage-based model of cognitive development in which all children pass through a fixed sequence of phases. Erik Erikson proposed psychosocial stages that highlighted social interaction in shaping identity. These views became dominant in education, psychology and child welfare policy, and tended to treat children as passive beings who need adult guidance."
+  },
+  {
+    "title": "Critiques and multiple childhoods",
+    "text": "Sociologists and anthropologists criticised this developmental model for overlooking the diversity and agency of children's experiences. James and Prout, in 1997, argued that childhood is not merely a biological phase but a social construct shaped by cultural, political and economic contexts. This new sociology of childhood sees children as active participants in their own social worlds, and as social agents rather than passive dependents. Cross-cultural studies also show that in many societies children work, contribute to household economies and take on responsibilities early. This challenges the Western ideal of a protected, education-centred childhood. So contemporary understanding must account for what is called the multiple childhoods perspective."
+  },
+  {
+    "title": "Childhood in Indian mythology and law",
+    "text": "Indian mythology offers meaningful stories of childhood. Krishna's early life in Vrindavan, with his butter stealing and his defeat of demons, mixes joy and holiness, and suggests that childhood can be a time when the divine is fully present. Rama is shown as the ideal son, obedient, calm and responsible even as a child, showing dharma from an early age. The goddess Durga is worshipped as a child, Kumari, in rites like Kumari Puja in Bengal and Nepal, linking girlhood with strength and respect and going against patriarchal ideas. These stories have influenced naming ceremonies, children's stories and festivals. Modern law shapes childhood too. The Right to Education Act of 2009 makes free and compulsory schooling a right for all children between six and fourteen years. Yet poverty still pushes many children into work, so need often outweighs the idea of childhood as a time for learning."
+  },
+  {
+    "title": "Childhoods in contemporary times",
+    "text": "Compared with earlier generations, childhood today has changed a lot. Technology is one major force. Smartphones, tablets and laptops are part of school and play, and children are often called digital natives. Digital tools can support learning and creativity, but too much screen time is linked to less physical activity, less sleep and loneliness. It also raises concerns about cyberbullying, unrealistic body images and commercial culture. Family dynamics have changed as well, with more divorce, single parenthood and dual-income homes, so many children spend more time with caretakers. At the same time, broader ideas of family and more attention to emotional health support positive parenting. In education, pressure to perform starts early, and standardised tests and competitive schools cause stress. But modern education also brings project-based learning, digital literacy and inclusive education. Overall, childhood today is full of differences and complications, and needs a balanced approach that combines digital literacy with emotional intelligence, and fairness with opportunity."
+  },
+  {
+    "title": "Multiple childhoods — economic contexts",
+    "text": "Children's lives in India differ greatly depending on their family's income. These inequalities affect access to food, education and healthcare, and also the chances to grow, be safe and take part in society. Some children have a privileged upbringing full of safety and opportunity, while others face deprivation, work and vulnerability from a young age. Let us look at three broad groups."
+  },
+  {
+    "title": "Childhood in higher income families",
+    "text": "Children from well-off urban families often have a globalised and enriching upbringing. They attend well-resourced schools, take part in music and sports, and develop digital skills early. They enjoy quality healthcare, nutritious food and amenities such as a separate room, study table, computers and tablets. Both parents often work, so domestic help cares for the children, while grandparents supervise. But new problems arise, such as heavy academic pressure, too little time to play and too much exposure to digital media. A NIMHANS study from 2019 found that anxiety and sadness had risen a lot among middle and upper class youngsters in cities. So although these children do not worry about survival, they are at risk of psychological and developmental problems. Their childhood is protected and supervised, a stage of pampering and development under adult care."
+  },
+  {
+    "title": "Childhood in middle income families",
+    "text": "Middle-class childhood combines traditional family values with hopes for modernisation and moving forward. Education is seen as the main route to employment and social mobility, so children usually attend private or semi-private schools, and parents get involved through homework help, contact with teachers and private tutors, often aiming for careers in engineering, medicine or government service. Festivals, family reunions and religious traditions give children belonging and identity, while TV, smartphones and the internet expose them to global culture. Free time is mostly on weekends, and hobbies like music, dance or sports usually rank below academics. Play often happens in safe places like gated parks or school playgrounds. The main difficulty is pressure to do well, which can lead to emotional burnout, and social media adds to it through comparison. With proper guidance, though, these children can become strong, flexible and confident. They are caught between what others used to expect of them and what they want now, and between rigid discipline and the need for freedom."
+  },
+  {
+    "title": "Childhood in lower income families",
+    "text": "Children from lower income families face many problems. Even as enrolment rises, quality is a concern. Many government schools, especially in rural and tribal areas, have poor infrastructure, absent teachers and few learning resources. The ASER 2022 study found that only about 20 percent of third graders in government schools could read at second-grade level. Many children live in overcrowded and unsafe settings such as slums or remote villages, often without clean water, toilets, power or healthy food. NFHS-5 reports that more than 35 percent of children under five in India are stunted. Preventive healthcare like vaccination is often missed. Economic constraints push children to leave school early or balance school with work, especially in agriculture, domestic work, construction and small-scale manufacturing. There is also emotional stress from hunger, illness, violence or lack of parental attention. Girls are burdened with chores and are more likely to drop out to care for siblings or prepare for early marriage. Caste, religion and gender add further barriers, for example for Dalit and Adivasi children. Yet these children show remarkable strength and hope. Addressing their needs calls for stronger public services, targeted policies, community participation and a focus on early childhood development."
+  },
+  {
+    "title": "Childhood and gender",
+    "text": "Gender is one of the most important influences on childhood in India. Studies show how differently boys and girls are socialised. Anandalakshmy and Bajaj studied a Momin Ansari community in Varanasi where girls, some as young as four, were kept close to their homes. Ilaiah studied the Kuruma community, where boys learn sheep rearing, mostly outside work, while girls handle household tasks like husking paddy and drying chillies. Such differences appear even in educated urban settings. The preference for sons begins before birth. NFHS-5 shows 929 females for every 1,000 boys at birth, reflecting patriarchal ideas about financial security, inheritance and dowry. Nutrition also differs. NFHS-5 shows that 59.1 percent of adolescent girls aged fifteen to nineteen are anaemic, compared with 31.1 percent of boys, though this has drawn stronger policy attention."
+  },
+  {
+    "title": "Gender, education and marriage",
+    "text": "India has made remarkable progress in girls' enrolment, but dropout rates among girls are still higher in rural and disadvantaged communities. According to UDISE 2021–22, girls are more likely than boys to leave school at the secondary level, due to economic pressure, family responsibilities or early marriage. Safe schools and adequate sanitation help girls stay in school. Boys face challenges too, such as pressure to follow rigid masculine norms and, in poor households, leaving school early to earn. Even though the legal age of marriage is 21, some girls still face early marriage, and UNICEF reports that India accounts for nearly one in four child marriages globally. Girls are encouraged to be gentle and family-oriented, while boys get more freedom and are guided to be assertive. Programmes like Beti Bachao Beti Padhao and Kasturba Gandhi Balika Vidyalaya work to promote equality, but real change also needs challenging patriarchal norms and creating safe public spaces."
+  },
+  {
+    "title": "Childhood and the digital world",
+    "text": "Digitalisation is everywhere, in school, at home and in the market. Social media, online games, television and mobile phones are part of growing up, and this reached its peak during COVID-19. In urban spaces digital media can influence children even more than parents, community or school, becoming a primary agent of socialisation. The positives are many. E-books, apps and online platforms offer individualised, interactive learning. Digital learning helped continue education during the pandemic. Augmented reality and artificial intelligence make hard ideas easier to grasp. Children can explore hobbies on YouTube, and with the right guidance they can build creativity, problem-solving and critical thinking. Assistive technology such as speech-to-text apps and screen readers helps children with disabilities learn and participate."
+  },
+  {
+    "title": "Concerns about digital childhood",
+    "text": "There are also serious concerns. Too much screen time can affect attention, sleep and health, and the American Academy of Pediatrics links excessive media use to obesity, sleep problems and behavioural issues. Games and social media can be addictive and reduce physical activity and face-to-face interaction. Privacy is another issue, because platforms collect children's data, often without clear consent, which can expose them to targeted ads and online exploitation. Social media can also lead to cyberbullying, unattainable beauty standards and social comparison. So parents and teachers should build media literacy and teach children to think critically about what they see online. Because rural and low-income children have less access, the digital divide can widen existing inequalities."
+  },
+  {
+    "title": "Summary — what we learned today",
+    "text": "Let us recap. First, childhood is not fixed or universal. It is a social and historical idea that has changed over time. Second, Western ideas moved from seeing children as small adults, to Locke's blank slate, Rousseau's natural development, and then Piaget's and Erikson's stages, and these were later critiqued by the new sociology of childhood. Third, Indian mythology and laws like the Right to Education Act shape how we think about children. Fourth, technology, family relationships, the economy and schooling have all changed how children grow up. Fifth, childhood in India is diverse. Higher income children are protected but pressured, middle income children are caught between opportunity and expectation, and lower income children face hardship yet show resilience. Sixth, gender deeply shapes opportunities, expectations and life paths. Seventh, digitalisation brings benefits for learning, creativity and inclusion, but also risks to health, privacy and well-being. Thank you, that is all for today!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let enVoice = null;
+let playQueueActive = false;
+
+function pickEnglishVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  enVoice = voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-') === 'en-in')
+    || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en'))
+    || null;
+  if (enVoice) {
+    voiceNote.textContent = "Voice: " + enVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "No English voice found on this device — the default voice will be used.";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickEnglishVoice();
+  window.speechSynthesis.onvoiceschanged = pickEnglishVoice;
+} else {
+  voiceNote.textContent = "This browser does not support read-aloud.";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">Part ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ Listen to this part</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 Now playing: Part " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'en-IN';
+  if (enVoice) utter.voice = enVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ Lesson finished";
+      playAllLabel.textContent = "▶ Play full lesson";
+    } else {
+      nowPlayingEl.textContent = "⏹ Part " + (i + 1) + " finished";
+      playAllLabel.textContent = "▶ Play full lesson";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ Play full lesson";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 Playing...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ Paused — press Play to continue";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
