@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>योजना निर्माण — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>योजना निर्माण</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    "title": "परिचय — योजना का महत्व",
+    "text": "आज हम पढ़ेंगे — योजना निर्माण। कल्पना कीजिए कि आप किसी यात्रा पर निकल रहे हैं। आप सोचते हैं कि कब पहुँचना है, कौन-सा साधन लेना है और यात्रा के दौरान क्या करना है। यदि सब समय पर और योजना के अनुसार हो जाए तो यात्रा सफल मानी जाती है। इसी प्रकार किसी भी पाठ या इकाई को पढ़ाने के लिए योजना बनाना शिक्षक की व्यवस्थित तैयारी का आवश्यक हिस्सा है। पाठ्यचर्या लक्ष्यों की प्राप्ति की कुंजी योजना बनाना ही है, और मूल्यांकन इसी अधिगम परिणाम के चक्र को पूरा करता है।"
+  },
+  {
+    "title": "सीखने के प्रतिफल",
+    "text": "इस पाठ के अध्ययन के पश्चात शिक्षार्थी योजना के महत्व का वर्णन कर सकेंगे, TWAU में पाठ-योजना और इकाई-योजना के महत्व को बता सकेंगे, अधिगम परिणाम और पाठ्यचर्या लक्ष्यों को योजना के आधार के रूप में प्रस्तुत कर सकेंगे, पाठ-योजनाएँ और इकाई-योजनाएँ विकसित कर सकेंगे, अवधि-योजना या पाठ्यक्रम-योजना तैयार कर सकेंगे, और समावेशी पाठ-योजना बनाने के उपायों पर मित्रों के साथ विमर्श कर सकेंगे।"
+  },
+  {
+    "title": "योजना का महत्व — उमा मैडम का अनुभव",
+    "text": "प्राथमिक विद्यालय की अनुभवी शिक्षिका उमा मैडम मानती हैं कि यदि शिक्षक योजना बनाने में समय देता है, तो वह अपने शिक्षण का आनंद ले सकता है। योजना दैनिक तनाव कम करती है, बच्चे अधिक सक्रिय और सहभागी बनते हैं और शिक्षक का आत्मविश्वास बढ़ता है। यह सभी विद्यार्थियों की आवश्यकताओं के अनुरूप पढ़ाने में मदद करती है और नवाचार का अवसर देती है। योजना तीन स्तरों पर होती है — पाठ-योजना, इकाई-योजना, और दीर्घकालिक योजना यानी अवधि या पाठ्यक्रम योजना। पाठ और इकाई योजना अल्पकालिक कहलाती हैं।"
+  },
+  {
+    "title": "पाठ्यचर्या लक्ष्य और अधिगम परिणाम",
+    "text": "शिक्षण-योजना के मुख्य अवयव हैं — दक्षताएँ, अधिगम परिणाम और पाठ-उद्देश्य; शिक्षक-निर्देशित या शिक्षार्थी-नेतृत्व वाली गतिविधियाँ; विद्यार्थियों की पूर्व-समझ; विषय-वस्तु और संसाधन; गतिविधियों की अवधि और क्रम; कक्षा-व्यवस्था; अतिरिक्त सहायता की रणनीतियाँ; और मूल्यांकन विधियाँ। शिक्षा के उद्देश्य व्यापक मूल्य हैं, पाठ्यचर्या लक्ष्य विशिष्ट कथन हैं, दक्षताएँ आकलन योग्य उपलब्धियाँ हैं, और अधिगम परिणाम क्रमिक मील के पत्थर हैं। जैसे, शिक्षार्थी प्राकृतिक संसार का अवलोकन करते हुए पाँच इंद्रियों की पहचान और विवरण कर सकेगा।"
+  },
+  {
+    "title": "अल्पकालिक योजना — इकाई-योजना",
+    "text": "इकाई विषय-वस्तु का एक बड़ा खंड होती है, जिसमें समान विषय या विचार निहित होता है। इकाई-योजना विभिन्न पाठों के बीच सुसंगति और पारस्परिक संबंध बनाती है। कक्षा तीन की हमारा अद्भुत संसार में बारह अध्याय हैं, जिन्हें चार इकाइयों में बाँटा गया है — हमारा परिवार और समुदाय, जीवन आस-पास, प्रकृति के उपहार, और आस-पास है क्या-क्या। इकाई-योजना के छह घटक हैं — लक्ष्य और अधिगम परिणाम, शिक्षार्थी, शिक्षण-अधिगम रणनीतियाँ, विषय-वस्तु, संसाधन और सामग्री, तथा मूल्यांकन प्रणाली।"
+  },
+  {
+    "title": "इकाई-योजना का उदाहरण — जीवन आस-पास",
+    "text": "कक्षा तीन की इकाई दो, जीवन आस-पास, को उदाहरण के रूप में लिया गया है। इसके अधिगम परिणामों में समुदाय में उगने वाले वृक्षों के नाम पहचानना, वृक्ष, झाड़ियाँ, जड़ी-बूटियाँ और लताओं का अवलोकन, पत्तियों और छाल से पौधों की पहचान, मिट्टी का अवलोकन और जानवरों को उनके प्राकृतिक आवास से जोड़ना शामिल हैं। शिक्षण रणनीतियों में पार्क या नर्सरी का भ्रमण, माली से संवाद, पक्षियों की आवाज़ पहचानना और आश्रय का खेल आते हैं। मूल्यांकन के लिए पोस्टर बनाना, प्रश्नोत्तरी, चित्रण और लेखन या चर्चा जैसे तरीके अपनाए जा सकते हैं।"
+  },
+  {
+    "title": "योजना कहाँ से शुरू करें",
+    "text": "इकाई तैयार करते समय शिक्षक किसी भी घटक से शुरुआत कर सकता है — विद्यार्थी, विषय-वस्तु, सामग्री या उद्देश्य से। ज़रूरी नहीं कि योजना हमेशा लक्ष्य से रेखीय रूप में आगे बढ़े। कभी बच्चों की परिचितता से योजना चलती है, तो कभी उपलब्ध संसाधन तय करते हैं कि विषय का परिचय कैसे दिया जाएगा। सामग्री का विश्लेषण निरंतरता, अनुक्रम और एकीकरण बनाए रखने में मदद करता है और बताता है कि इकाई पूरी करने में कितने पाठ लगेंगे। प्रभावी योजना शिक्षक, शिक्षार्थी, विषय-वस्तु, अधिगम-पर्यावरण और लक्ष्य — सभी पर आधारित होती है।"
+  },
+  {
+    "title": "पाठ-योजना",
+    "text": "सफल शिक्षण की कुंजी एक उत्कृष्ट पाठ-योजना है। इसका कोई एक मानक प्रारूप नहीं है। विस्तृत पाठ-योजना नए शिक्षकों के लिए आवश्यक होती है, जबकि वर्षों के अनुभव के बाद संक्षिप्त या दैनिक योजना भी चल सकती है। TWAU पाठ-योजना में छह तत्व होने चाहिए — पाठ्यचर्या लक्ष्य और दक्षताएँ, अधिगम परिणाम, मुख्य संकल्पनाएँ और क्रिया-कौशल, सामग्री और संसाधन, शिक्षण-अधिगम गतिविधियाँ जिनमें भूमिका, प्रस्तुतीकरण और समापन शामिल हैं, और अनुदेशात्मक उद्देश्यों का आकलन। अच्छे उद्देश्य शिक्षार्थी-उन्मुख, श्रेणीय, स्पष्ट और बोधगम्य होते हैं।"
+  },
+  {
+    "title": "मूल्यांकन और समावेशन की योजना",
+    "text": "मूल्यांकन की गतिविधियाँ पाठ के हर चरण में बच्चों के सीखने का आकलन करने का अवसर देती हैं। खेल, पहेलियाँ, स्पॉट द डिफरेंस और मैच द कॉलम जैसी गतिविधियाँ अनौपचारिक ढंग से समझ दर्शाती हैं। विद्यार्थियों से तुरंत उत्तर की अपेक्षा न रखें, समय दें और आवश्यकता होने पर संकेत दें। भिन्न क्षमताओं वाले बच्चों के लिए वैकल्पिक रणनीतियाँ अपनाई जानी चाहिए। पाठ्यचर्या अनुकूलन केवल उद्देश्यों और सामग्री तक सीमित नहीं है, बल्कि सभी की पहुँच सुनिश्चित करना भी इसमें शामिल है, ताकि समावेशी शिक्षा सशक्त हो।"
+  },
+  {
+    "title": "दीर्घकालिक योजना — अवधि योजना और पाठ्यक्रम योजना",
+    "text": "जैसे एक पीरियड के लिए पाठ-योजना और इकाई के लिए इकाई-योजना बनती है, वैसे ही शैक्षणिक वर्ष की शुरुआत में पाठ्यक्रम-योजना और अवधि-योजना बनाई जाती है। किसी कक्षा और विषय के सभी शिक्षक साथ बैठकर वार्षिक कैलेंडर को ध्यान में रखते हैं, जिसमें सत्र का आरंभ, अवकाश, शैक्षणिक यात्राएँ, सतत आकलन और सत्रांत परीक्षाएँ अंकित होती हैं। विषयों को मौसम के अनुसार भी रखा जाता है, जैसे जल का विषय वर्षा ऋतु में। कक्षा तीन की योजना में अप्रैल में परिवार, भोजन और फूड फेयर, जुलाई में पेड़-पौधे, और अगस्त में पानी है अनमोल जैसे विषय रखे जा सकते हैं।"
+  },
+  {
+    "title": "सारांश — आज हमने क्या सीखा",
+    "text": "तो चलिए, आज जो सीखा उसे संक्षेप में दोहराते हैं। पहला — इकाई और पाठ योजना शिक्षण को संगठित करने के प्रभावी तरीके हैं। दूसरा — इकाई-योजना आमतौर पर आठ से दस पीरियड तक फैली होती है, जबकि पाठ-योजना दैनिक क्रियान्वयन की योजना है। तीसरा — एक इकाई-योजना कई पाठ-योजनाओं से बनती है। चौथा — उत्तम उद्देश्य छात्र-केंद्रित, श्रेणीय, स्पष्ट और बोधगम्य होता है। पाँचवाँ — TWAU शिक्षक समाचार-पत्र, पाठ्यपुस्तक, नमूने, क्षेत्र-भ्रमण, समुदाय, टेलीविजन और आईसीटी संसाधनों का उपयोग करता है। और छठा — समावेशी शिक्षा के लिए पाठ-योजना में भिन्न-क्षमताओं वाले बच्चों की पूर्ण भागीदारी के अवसर होने चाहिए। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

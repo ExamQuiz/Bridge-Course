@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>आकलन — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>आकलन</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    "title": "परिचय — आकलन का अर्थ",
+    "text": "आज हम पढ़ेंगे — आकलन। राष्ट्रीय शिक्षा नीति 2020 और राष्ट्रीय पाठ्यचर्या रूपरेखा 2023 इस बात पर ज़ोर देती हैं कि आकलन का उद्देश्य बच्चों को किसी विशिष्ट रूप से रेखांकित करना या कोई श्रेणी देना नहीं है, बल्कि उनकी सीखने की यात्रा को सहयोग और समृद्ध बनाना है। प्राथमिक स्तर पर आकलन से हमें यह समझना चाहिए कि बच्चे क्या सोच रहे हैं, किस बारे में उत्सुक हैं और उन्हें क्या कठिन लग रहा है। आकलन कोई अलग गतिविधि नहीं, बल्कि रोज़मर्रा के शिक्षण-अधिगम के ताने-बाने में बुना हुआ है।"
+  },
+  {
+    "title": "सीखने के प्रतिफल",
+    "text": "इस पाठ को पढ़ने के उपरांत शिक्षार्थी विभिन्न आकलन रणनीतियों और उपकरणों की व्यापक समझ विकसित करेंगे, बच्चों की ज़रूरत के अनुरूप उपयुक्त आकलन विधियों का चयन करेंगे, आकलन डेटा का विश्लेषण करके सीखने की लक्षित योजनाएँ बनाएँगे, कई स्रोतों के डेटा को एकीकृत करेंगे, बच्चों और अभिभावकों को प्रगति पर रचनात्मक प्रतिक्रिया देंगे, और समग्र प्रगति कार्ड की अवधारणा को समझकर उसका उपयोग करेंगे।"
+  },
+  {
+    "title": "अंक से परे — सीखने के लिए, के रूप में और का आकलन",
+    "text": "पारंपरिक आकलन सही या गलत उत्तर पर केंद्रित थे, लेकिन वास्तविक सीख इससे कहीं अधिक व्यापक है। NEP 2020 स्मृति-आधारित आकलन से दक्षता-आधारित आकलन की ओर बदलाव का आह्वान करता है। कक्षा में आकलन की तीन भूमिकाएँ हैं। पहली, सीखने के लिए आकलन, यानी रचनात्मक। दूसरी, सीखने के रूप में आकलन, जब बच्चे स्वयं अपने सीखने पर विचार करते हैं — स्व-आकलन और साथियों द्वारा आकलन। और तीसरी, सीखने का आकलन, यानी योगात्मक या समेटिव। शिक्षक केवल आकलनकर्ता नहीं, बल्कि मार्गदर्शक, पर्यवेक्षक और श्रोता भी है, और प्रतिक्रिया वर्णनात्मक रूप में देता है।"
+  },
+  {
+    "title": "आकलन के प्रकार",
+    "text": "आकलन को उद्देश्य, आँकड़ों की प्रकृति और तुलना के मानक के आधार पर बाँटा जाता है। उद्देश्य के आधार पर तीन प्रकार हैं — रचनात्मक, योगात्मक और नैदानिक आकलन। आँकड़ों की प्रकृति के आधार पर गुणात्मक और परिमाणात्मक आकलन होते हैं। तुलना के मानक के आधार पर मानदंड-संदर्भित आकलन में बच्चे की तुलना सीखने के परिणामों से होती है, जबकि मानक-संदर्भित आकलन में एक बच्चे की तुलना दूसरे बच्चों से होती है, जो प्राथमिक वर्षों के लिए कम उपयुक्त माना गया है।"
+  },
+  {
+    "title": "TWAU और आकलन का संबंध",
+    "text": "TWAU में सीखना और आकलन साथ-साथ चलते हैं। आकलन वास्तविक जीवन के संदर्भ में सीखने को दर्शाता है — जैसे अपने घर का चित्र बनाना, सामुदायिक सहायकों की पहचान करना या प्रकृति की सैर का वर्णन करना। आकलन अधिगम के बारे में बताता है, सीखने को दृश्य बनाता है, चिंतन को प्रोत्साहित करता है और सतत तथा प्रासंगिक आकलन समग्र अधिगम को बढ़ावा देता है। TWAU में सीखना अक्सर किताबों तक सीमित नहीं होता, बल्कि इस बात में दिखता है कि बच्चा कैसे पूछता है, अवलोकन की व्याख्या करता है और समूह में कैसे काम करता है।"
+  },
+  {
+    "title": "प्रारंभिक चरण में आकलन के लिए विचार",
+    "text": "आकलन से बच्चों या शिक्षक पर अतिरिक्त बोझ नहीं पड़ना चाहिए और यह तनाव-मुक्त तथा आयु-उपयुक्त होना चाहिए। यह विश्वसनीय हो और अवलोकन, जाँच-सूची तथा विद्यार्थी कार्य के नमूनों जैसे विविध और निरंतर साक्ष्यों पर आधारित हो। बच्चों को बोलकर, चित्र बनाकर, प्रदर्शन करके या लिखकर सीखना दिखाने का अवसर मिले। आकलन समावेशी और समतामूलक हो, भाषाओं, रुचियों और विकासात्मक आवश्यकताओं का सम्मान करे, और पोर्टफोलियो व सीखने की कहानियों के माध्यम से समय के साथ प्रगति का दस्तावेज़ीकरण करे।"
+  },
+  {
+    "title": "सीखने के प्रतिफल पर आधारित आकलन",
+    "text": "TWAU में आकलन को इसकी मुख्य दक्षताओं से प्राप्त अधिगम परिणामों से जोड़ा जाना चाहिए। इसमें केवल तथ्य नहीं, बल्कि यह भी शामिल है कि बच्चे अपने आस-पास की दुनिया के बारे में कैसे सोचते, महसूस करते और प्रतिक्रिया देते हैं। रचनात्मक आकलन सीखने की प्रक्रिया के दौरान होता है, जैसे प्राकृतिक और मानव-निर्मित वस्तुओं के वर्गीकरण का अवलोकन या स्वच्छता पर चर्चा के दौरान प्रतिक्रियाएँ नोट करना। योगात्मक आकलन सत्र या इकाई के अंत में होता है, जैसे पड़ोस में जल स्रोतों पर परियोजना या रेखाचित्र और मानचित्र बनाना।"
+  },
+  {
+    "title": "सतत और विद्यालय-आधारित आकलन की रणनीतियाँ",
+    "text": "सतत एवं विद्यालय-आधारित आकलन कक्षा की दैनिक गतिविधियों के दौरान सीखने का लचीला और समावेशी आकलन है। इसकी सात रणनीतियाँ हैं। शिक्षक का अवलोकन। प्रश्न और उत्तर, जैसे पौधों को सूर्य के प्रकाश की आवश्यकता क्यों होती है। शिक्षक द्वारा डिज़ाइन किया गया कार्य और परीक्षण, जैसे जल के स्रोत का चित्र बनाकर लेबल करना। कार्य नमूना या पोर्टफोलियो। परियोजना, जैसे पानी है अनमोल अध्याय में गाँव के तालाब या नदी का चित्र बनाना। उपाख्यानात्मक रिकॉर्ड। और रुब्रिक।"
+  },
+  {
+    "title": "उपाख्यानात्मक रिकॉर्ड और रुब्रिक",
+    "text": "उपाख्यानात्मक रिकॉर्ड बच्चों में देखी गई महत्वपूर्ण शिक्षण घटनाओं या व्यवहार का संक्षिप्त वर्णनात्मक विवरण होता है, जैसे रिया ने समूह गतिविधि में एक शर्मीली सहपाठी की मदद की। रुब्रिक यानी आकलन मापदंड स्पष्ट और संरचित उपकरण हैं, जिनमें PARAKH के समग्र प्रगति कार्ड दिशानिर्देश के अनुसार जागरूकता, संवेदनशीलता और रचनात्मकता जैसी दक्षताओं के तीन स्तर होते हैं — आरंभिक, कुशल और उन्नत। रुब्रिक केवल ग्रेडिंग के उपकरण नहीं, बल्कि बच्चे को जानने और उसके विकास का समर्थन करने के उपकरण हैं।"
+  },
+  {
+    "title": "रचनात्मक और योगात्मक आकलन में अंतर",
+    "text": "रचनात्मक आकलन सतत होता है और सीखने की प्रक्रिया के दौरान चलता है, उसका उद्देश्य सीखने में सहायता और सुधार करना है, प्रतिक्रिया तत्काल और विशिष्ट होती है और तनाव कम होता है। इसके उपकरणों में अवलोकन, प्रश्नोत्तर और सहपाठी या स्व-आकलन आते हैं। इसके विपरीत, योगात्मक आकलन सत्र या इकाई के अंत में होता है, उसका उद्देश्य सीखने का आकलन करना है, प्रतिक्रिया अक्सर ग्रेड या अंक के रूप में देर से मिलती है और परीक्षा, परियोजनाएँ या मानकीकृत आकलन इसके उपकरण हैं। पहला सीखने के लिए आकलन है, दूसरा सीखने का आकलन।"
+  },
+  {
+    "title": "औपचारिक और अनौपचारिक आकलन",
+    "text": "औपचारिक आकलन पूर्वनिर्धारित उपकरणों, मानदंडों और मानकों पर आधारित नियोजित और संरचित प्रक्रिया है, जैसे परीक्षण, लिखित परीक्षा और रुब्रिक। अनौपचारिक आकलन स्वतः स्फूर्त, लचीला और निरंतर होता है और दैनिक कक्षा गतिविधियों में समाया रहता है, जैसे खेल का अवलोकन करना, मौखिक चर्चा सुनना और कार्य के नमूने एकत्र करना। औपचारिक आकलन में तनाव अधिक हो सकता है और डेटा प्रायः मात्रात्मक होता है, जबकि अनौपचारिक आकलन तनाव-मुक्त और बच्चों के अनुकूल होता है, और प्रारंभिक वर्षों में इसे दृढ़ता से बढ़ावा दिया जाता है।"
+  },
+  {
+    "title": "360 डिग्री आकलन और समग्र प्रगति कार्ड",
+    "text": "360 डिग्री आकलन विद्यार्थी के सीखने और विकास की व्यापक और बहुआयामी समझ देता है। इसमें केवल शैक्षणिक उपलब्धि ही नहीं, बल्कि मूल्य, जीवन कौशल, सहपाठी संबंध, रचनात्मकता, सहभागिता और भावनात्मक कल्याण भी शामिल हैं। इसमें शिक्षकों, अभिभावकों, सहपाठियों और स्वयं बच्चे की राय ली जाती है। PARAKH का समग्र प्रगति कार्ड यानी HPC प्रगति का संरचित रिकॉर्ड है, जिसमें वर्णनात्मक संकेतक और अनुभवात्मक गतिविधियों के माध्यम से दक्षताएँ उजागर होती हैं। TWAU में यह दृष्टिकोण अत्यंत महत्वपूर्ण है, क्योंकि प्रकृति, समुदाय और मानवीय संबंध की समझ केवल शैक्षणिक कार्य से परे अवलोकन माँगती है।"
+  },
+  {
+    "title": "गुणात्मक आकलन और उसके उपकरण",
+    "text": "गुणात्मक आकलन बच्चों के सीखने का गैर-मात्रात्मक तरीका है, जो व्यवहार, रुचियों और मूल्यों के वर्णनात्मक और समग्र अवलोकन पर ज़ोर देता है। इसकी विशेषताएँ हैं — वर्णनात्मक, बाल-केंद्रित, प्रासंगिक, प्रक्रिया-उन्मुख, लचीला, चिंतनशील शिक्षण का समर्थक तथा समावेशी। TWAU के लिए इसके पाँच उपकरण हैं। साक्षात्कार, जैसे बच्चे से पूछना कि उसे पेड़ महत्वपूर्ण क्यों लगते हैं। अवलोकन। रचना और अभिव्यक्ति, जैसे ड्राइंग जर्नल। पोर्टफोलियो। और परियोजना कार्य व प्रस्तुति, जिससे संचार और सहानुभूति का आकलन होता है।"
+  },
+  {
+    "title": "सारांश — आज हमने क्या सीखा",
+    "text": "तो चलिए, आज जो सीखा उसे संक्षेप में दोहराते हैं। पहला — आकलन का उद्देश्य सीखने की यात्रा को सहयोग देना है, केवल अंक या श्रेणी देना नहीं। दूसरा — आकलन सीखने के लिए, सीखने के रूप में और सीखने का, तीनों भूमिकाएँ निभाता है। तीसरा — रचनात्मक और योगात्मक, औपचारिक और अनौपचारिक, गुणात्मक और परिमाणात्मक, ये सभी आकलन के पूरक रूप हैं। चौथा — सतत और विद्यालय-आधारित आकलन के लिए अवलोकन, प्रश्नोत्तर, पोर्टफोलियो, परियोजना, उपाख्यानात्मक रिकॉर्ड और रुब्रिक जैसी रणनीतियाँ उपयोगी हैं। पाँचवाँ — 360 डिग्री आकलन और समग्र प्रगति कार्ड बच्चे के समग्र विकास को दर्शाते हैं। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>पाठ्यपुस्तक (हमारा अद्भुत संसार) — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>पाठ्यपुस्तक (हमारा अद्भुत संसार)</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    "title": "परिचय — पाठ्यपुस्तक एक आधारभूत उपकरण",
+    "text": "आज हम पढ़ेंगे — पाठ्यपुस्तक, यानी हमारा अद्भुत संसार। पाठ्यपुस्तकें शिक्षा के आधारभूत उपकरण हैं, जो शिक्षण और अध्ययन को सहयोग देने वाले संरचनात्मक संसाधनों के रूप में काम करती हैं। कक्षा तीन से पाँच के लिए हमारा अद्भुत संसार जैसी पुस्तक प्रारंभिक वर्षों में सीखने को बढ़ावा देने के लिए पाठ्यक्रम-संरेखित सामग्री देती है। यह कठिन विचारों को आयु-उपयुक्त भाषा और उदाहरणों से सुलभ बनाती है, और मनमोहक कहानियों, चित्रों तथा गतिविधियों के माध्यम से जिज्ञासा, आलोचनात्मक सोच, सहानुभूति और स्थिरता जैसे मूल्यों को बढ़ावा देती है।"
+  },
+  {
+    "title": "सीखने के प्रतिफल",
+    "text": "इस पाठ को पूर्ण करने के पश्चात शिक्षार्थी पाठ्यपुस्तक के शैक्षणिक उद्देश्यों की पहचान करेंगे और पाठ्यपुस्तक का प्रभावी ढंग से उपयोग करेंगे। वे अध्ययन उद्देश्यों को स्पष्ट रूप से निर्धारित करेंगे, ऐसी गतिविधियों का चयन करेंगे जो सक्रिय अधिगम, आलोचनात्मक चिंतन और अंतःविषयक संबंधों को बढ़ावा दें, और पाठ्यक्रम के लक्ष्यों तथा विद्यार्थियों की आवश्यकताओं के अनुरूप सीखने के अनुभवों की पहचान करेंगे। साथ ही चयनित अनुभवों की प्रभावशीलता का मूल्यांकन करेंगे और एक विशिष्ट पाठ योजना बनाएँगे।"
+  },
+  {
+    "title": "एक पाठ्यपुस्तक को जानना",
+    "text": "पाठ्यपुस्तक एक विशिष्ट, संरचनात्मक और प्रामाणिक पुस्तक होती है, जो किसी विशिष्ट पाठ्यक्रम के अनुरूप बनाई जाती है। इसमें पाठ, चित्र, उदाहरण और अभ्यास के रूप में व्यवस्थित विषय-वस्तु होती है। इसके शैक्षणिक उद्देश्य चार हैं। पहला, व्यवस्थित ज्ञान प्रदान करना। दूसरा, सक्रिय अधिगम को बढ़ावा देना। तीसरा, विविध शिक्षार्थियों की आवश्यकताओं को पूरा करना। और चौथा, आलोचनात्मक चिंतन को प्रोत्साहित करना, ताकि बच्चे रटने से आगे बढ़कर ज्ञान को समझें, उपयोग करें, विश्लेषण करें और मूल्यांकन करें।"
+  },
+  {
+    "title": "TWAU पाठ्यपुस्तक का प्रभावी उपयोग",
+    "text": "शिक्षक को सबसे पहले पाठ्यपुस्तक की संरचना की समीक्षा करनी चाहिए — विषय-सूची, अध्याय के उद्देश्य, शब्दावली और बार-बार आने वाले विषय जैसे पर्यावरण संरक्षण और सामुदायिक भूमिकाएँ। इसके बाद चर्चा हेतु प्रश्न, अंकित गतिविधियाँ, आरेख, मानचित्र और केस स्टडी जैसी मुख्य विशेषताओं की पहचान करनी चाहिए। फिर पाठ्यपुस्तक की सामग्री को अवलोकन, वर्गीकरण और आँकड़ों के मानचित्रण जैसी विशिष्ट दक्षताओं से जोड़ना चाहिए, ताकि प्रासंगिकता सुनिश्चित हो।"
+  },
+  {
+    "title": "पाठ को दिलचस्प बनाना और भिन्नतापूर्ण निर्देश",
+    "text": "बच्चों को जोड़े रखने के लिए व्यावहारिक गतिविधियाँ शामिल करें, जैसे प्रकृति की सैर। चित्र और मीडिया जोड़ें, और पूछताछ-आधारित अधिगम को प्रोत्साहित करें, जैसे प्रदूषण पर माता-पिता से चर्चा करना। चूँकि विद्यार्थियों की सीखने की शैलियाँ और क्षमताएँ भिन्न होती हैं, इसलिए सामग्री को उनके कौशल स्तर के अनुरूप ढालें। कमज़ोर विद्यार्थियों के लिए मूल बातें समझाएँ और चित्र प्रयोग करें, जबकि सक्षम विद्यार्थियों को विस्तार गतिविधियाँ दें। पूरी कक्षा को विषम समूहों में बाँटकर समूह कार्य कराएँ और पाठ को वास्तविक दुनिया से जोड़ें।"
+  },
+  {
+    "title": "आकलन, प्रौद्योगिकी और आलोचनात्मक सोच",
+    "text": "आकलन के लिए पाठ्यपुस्तक के प्रश्नों का उपयोग रचनात्मक मूल्यांकन के रूप में करें, और स्मरण-आधारित प्रश्नों को बदलकर यदि ऐसा होता तो क्या होता जैसे प्रश्न बनाएँ। बच्चों को चिंतन के लिए प्रेरित करें और चंद्रमा के चरणों का मॉडल बनाने जैसी परियोजनाएँ दें। प्रौद्योगिकी में शैक्षिक वीडियो, एनीमेशन, इंटरैक्टिव ऐप्स और खेल, तथा गूगल अर्थ जैसे वर्चुअल फ़ील्ड ट्रिप उपयोगी हैं। आलोचनात्मक सोच के लिए पाठ्यपुस्तक को वर्तमान घटनाओं, जैसे सूखा और बाढ़, से जोड़ें, समस्या-समाधान कराएँ और अंतरविषयक अधिगम को बढ़ावा दें।"
+  },
+  {
+    "title": "अधिगम उद्देश्य विकसित करना",
+    "text": "अधिगम उद्देश्य स्पष्ट कथन होते हैं जो बताते हैं कि पाठ के अंत तक विद्यार्थियों को क्या जानना, समझना या करने में सक्षम होना चाहिए। ये विशिष्ट, मापने योग्य, प्राप्त करने योग्य, प्रासंगिक और समयबद्ध होने चाहिए। ये पाठ योजना बनाने, शिक्षण विधियों के चयन, अधिगम अनुभव और मूल्यांकन विधियों में सहायक होते हैं।"
+  },
+  {
+    "title": "अधिगम उद्देश्य बनाने के छह चरण",
+    "text": "पहला चरण, पाठ की विषय-वस्तु की पहचान करना। दूसरा, अपने विद्यार्थियों की आयु, पूर्व ज्ञान और आवश्यकताओं पर विचार करना। तीसरा, ब्लूम के वर्गीकरण के अनुसार क्रिया शब्द चुनना, जैसे याद करना, समझना, लागू करना, विश्लेषण करना, मूल्यांकन करना और सृजन करना। चौथा, पाठ्यक्रम के लक्ष्यों और दक्षताओं के साथ तालमेल बिठाना। पाँचवाँ, उद्देश्य को मापने योग्य बनाना। और छठा, कक्षा का उद्देश्य लिखना — कौन, क्या, कैसे और क्यों को मिलाकर। जैसे, पाठ के अंत तक कक्षा पाँच के विद्यार्थी समूह चर्चा में जल संरक्षण की तीन विधियों का वर्णन करने में सक्षम होंगे।"
+  },
+  {
+    "title": "अधिगम अनुभव का चयन — सिद्धांत",
+    "text": "अधिगम अनुभव का चयन शिक्षण-अधिगम प्रक्रिया के सबसे महत्वपूर्ण चरणों में से एक है। इसके लिए कुछ सिद्धांत हैं। प्रासंगिकता — गतिविधियाँ बच्चों के जीवन या स्थानीय मुद्दों से जुड़ी हों। सक्रिय सहभागिता — भूमिका निर्वाह, खेल और गतिविधियों को प्राथमिकता। भिन्नता — दृश्य, श्रवण और गतिज सभी आवश्यकताएँ पूरी हों। समावेश — किसी भी विद्यार्थी को अलग न किया जाए। अंतःविषयक संबंध — भाषा, विज्ञान, गणित, कला जैसे विषय जुड़ें। मूल्यांकन संरेखण, और सामाजिक व सहयोगात्मक मूल्य भी इनमें शामिल हैं।"
+  },
+  {
+    "title": "अधिगम अनुभव के चयन के चरण और मूल्यांकन",
+    "text": "उपयुक्त अनुभव चुनने के लिए पहले सीखने की दक्षताओं की पहचान करें, फिर छात्रों की आवश्यकताओं का आकलन करें। इसके बाद विषय-वस्तु के अनुसार गतिविधियाँ मिलाएँ, समावेशिता की योजना बनाएँ, व्यावहारिक संभाव्यता यानी संसाधन, समय और स्थान जाँचें, और मूल्यांकन योजना बनाएँ। अनुभवों की प्रभावशीलता को छात्र सहभागिता, सीखने के परिणाम, समावेशिता और प्रतिक्रिया के आधार पर परखा जाता है। इसके लिए चेकलिस्ट, अवलोकन और रुब्रिक जैसे उपकरण प्रयोग हो सकते हैं। शुरुआत छोटे स्तर से करें और स्थानीय संदर्भों से जोड़ें।"
+  },
+  {
+    "title": "प्रस्तावित पाठ्यचर्या लक्ष्य और दक्षताएँ",
+    "text": "NCF-SE 2023 में TWAU के लिए सात पाठ्यचर्या लक्ष्य प्रस्तावित हैं। CG-1 परिवेश में प्राकृतिक और सामाजिक-सांस्कृतिक वातावरण का अन्वेषण। CG-2 अवलोकन और अनुभव के माध्यम से परस्पर निर्भरता की समझ, यानी वसुधैव कुटुंबकम की सराहना। CG-3 विभिन्न स्थितियों में स्वयं और दूसरों की सुरक्षा। CG-4 सामाजिक और प्राकृतिक वातावरण के प्रति संवेदनशीलता। CG-5 सरल मानचित्र पढ़ना और उनकी व्याख्या करना। CG-6 विभिन्न स्रोतों से डेटा के आधार पर प्रश्नों की जाँच। और CG-7 प्राकृतिक विज्ञान और इंजीनियरिंग की बुनियादी अवधारणाओं का परिचय।"
+  },
+  {
+    "title": "आदर्श पाठ योजना के घटक",
+    "text": "एक संपूर्ण पाठ योजना में स्पष्ट अधिगम परिणाम, शुरू करने की पाँच मिनट की गतिविधि, पाठ्यपुस्तक की सामग्री पर आधारित बीस मिनट की मुख्य गतिविधि, कमज़ोर और उन्नत दोनों विद्यार्थियों के लिए एक-एक रणनीति, प्रौद्योगिकी या वास्तविक संसार से संबंध, और रचनात्मक आकलन शामिल होना चाहिए। तीस मिनट के पाठ में शुरुआती खेल या चर्चा, पाठ्यपुस्तक-आधारित गतिविधि और पारस्परिक समूह कार्य — जैसे पोस्टर डिज़ाइन — रखे जा सकते हैं।"
+  },
+  {
+    "title": "सारांश — आज हमने क्या सीखा",
+    "text": "तो चलिए, आज जो सीखा उसे संक्षेप में दोहराते हैं। पहला — हमारा अद्भुत संसार जैसी पाठ्यपुस्तकें संरचित और पाठ्यक्रम-संरेखित सामग्री देने वाले महत्वपूर्ण शैक्षणिक उपकरण हैं। दूसरा — पाठ्यपुस्तक के उद्देश्य और संरचना को समझने से प्रभावी शिक्षण, भिन्नतापूर्ण निर्देश और प्रौद्योगिकी का समावेश संभव होता है। तीसरा — स्पष्ट और मापने योग्य अधिगम उद्देश्य शिक्षण विधियों के चयन और प्रगति के आकलन के लिए ज़रूरी हैं। चौथा — अधिगम अनुभव उद्देश्यपूर्ण, आकर्षक, प्रासंगिक और समावेशी होने चाहिए, और उनका मूल्यांकन होना चाहिए। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
