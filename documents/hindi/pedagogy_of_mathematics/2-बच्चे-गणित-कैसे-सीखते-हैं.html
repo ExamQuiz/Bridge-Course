@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>बच्चे गणित कैसे सीखते हैं — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>बच्चे गणित कैसे सीखते हैं</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    "title": "परिचय — गणित समाज की रीढ़ है",
+    "text": "आज हम पढ़ेंगे — बच्चे गणित कैसे सीखते हैं। गणित समाज की रीढ़ है, और भारत ने आर्यभट्ट, ब्रह्मगुप्त, भास्कराचार्य और रामानुजन जैसे गणितज्ञ दिए हैं। दशमलव पद्धति, शून्य की खोज और अंकगणित-बीजगणित में प्रगति हमारी गणितीय समृद्धि दर्शाती है। परंतु वर्तमान स्थिति चिंताजनक है। एन.सी.ई.आर.टी. के सर्वेक्षण के अनुसार कक्षा तीन में गणित का राष्ट्रीय स्कोर चौंसठ प्रतिशत है, जो कक्षा पाँच में चौवन और कक्षा आठ में बयालीस प्रतिशत रह जाता है। असर 2023 में पाया गया कि कक्षा तीन के सत्तर प्रतिशत बच्चे सामान्य घटाव भी नहीं कर पाते। इसीलिए राष्ट्रीय शिक्षा नीति 2020 आधारभूत साक्षरता और संख्यात्मकता पर ज़ोर देती है।"
+  },
+  {
+    "title": "सीखने के प्रतिफल",
+    "text": "इस पाठ को पढ़ने के बाद आप संख्यात्मकता और आधारभूत संख्यात्मकता को परिभाषित कर पाएँगे। आप संख्या-बोध के विकासात्मक चरणों का वर्णन करेंगे, और वर्गीकरण, क्रमबद्धता, अनुक्रमण जैसी पूर्व-संख्या अवधारणाओं को समझेंगे। साथ ही बच्चों द्वारा की जाने वाली सामान्य गणितीय त्रुटियों का विश्लेषण करेंगे, उनके कारणों का आलोचनात्मक मूल्यांकन करेंगे और उन्हें कम करने की रणनीतियाँ विकसित करेंगे।"
+  },
+  {
+    "title": "संख्यात्मकता और आधारभूत संख्यात्मक ज्ञान",
+    "text": "संख्यात्मकता का अर्थ है दैनिक जीवन में संख्यात्मक अवधारणाओं को समझना, उपयोग करना और लागू करना। यह संख्याएँ जानने से आगे की बात है — इसमें गणितीय तर्क, पैटर्न की समझ, मापन, आँकड़ों की व्याख्या और स्थानिक जागरूकता शामिल है। आधारभूत संख्यात्मक ज्ञान सरल गणितीय अवधारणाओं की समझ है, जो आम तौर पर तीन से आठ वर्ष की उम्र में विकसित होती है। इसमें याद करके और समझ के साथ गिनना, तुलना करना और क्रम में रखना, अंकों को पहचानना, मात्रा और संख्या के संबंध को समझना, तथा जोड़-घटाव जैसी बुनियादी गणनाएँ शामिल हैं। यही बच्चे की आगे की शैक्षणिक सफलता का आधार है।"
+  },
+  {
+    "title": "पूर्व-संख्या अवधारणाएँ",
+    "text": "पूर्व-संख्या अवधारणाएँ वे आधारभूत कौशल हैं जो बच्चे के औपचारिक रूप से गिनती सीखने से पहले विकसित होते हैं। इनमें वर्गीकरण, मिलान, तुलना, क्रमबद्धता और पैटर्न की पहचान शामिल है। बच्चे वस्तुओं को रंग, रूप या आकार के आधार पर छाँटते हैं, समानता के आधार पर मिलाते हैं, और आकार, लंबाई या वज़न की तुलना करते हैं। जैसे वे समझ सकते हैं कि पाँच सेबों का समूह चार सेबों के समूह से अधिक है। वे वस्तुओं को सबसे छोटे से सबसे बड़े तक सजाना और पैटर्न को आगे बढ़ाना भी सीखते हैं। इस तरह ये अवधारणाएँ अवलोकन, समस्या-समाधान और तर्क शक्ति की नींव मज़बूत करती हैं।"
+  },
+  {
+    "title": "संख्या-बोध के चरण",
+    "text": "संख्या-बोध के छह चरण बताए गए हैं। पहला, याद करके गिनती, यानी मात्रा समझे बिना एक, दो, तीन बोलना। दूसरा, एकैक संगतता — हर वस्तु को एक संख्या देकर गिनना। तीसरा, संख्यात्मकता की समझ — यह जानना कि गिनती में बोली गई अंतिम संख्या कुल वस्तुओं की संख्या है। चौथा, तुरंत पहचानना — जैसे पासे पर छह बिंदु देखकर बिना गिने छह कहना। पाँचवाँ, मात्रा की स्थिरता — व्यवस्था बदलने पर भी कुल संख्या का न बदलना। छठा, स्थानीय मान की शुरुआत — यह समझना कि दस का मतलब एक दहाई और शून्य इकाई है। उम्र के अनुसार, दो-तीन वर्ष में याद करके गिनना, और छह-सात वर्ष में स्थानीय मान की समझ विकसित होती है।"
+  },
+  {
+    "title": "गलतियाँ सीखने की सीढ़ी हैं — तीन प्रकार की त्रुटियाँ",
+    "text": "हर कोई कई असफल प्रयासों के बाद ही साइकिल चलाना सीखता है, और गणित में भी गलती करना अच्छी बात है। गणित की नींव तीन 'पी' पर टिकी है — प्रैक्टिस यानी अभ्यास, पेशेंस यानी धैर्य, और परसिवियरेंस यानी लगन। शिक्षक को बच्चों को पर्याप्त गलतियाँ करने देनी चाहिए और उन्हें समझाते समय शांत रहना चाहिए। बच्चों की गणितीय त्रुटियों को तीन श्रेणियों में बाँटा जा सकता है — संकल्पनात्मक त्रुटियाँ, लापरवाही से हुई त्रुटियाँ, और गणनात्मक त्रुटियाँ। इनमें संकल्पनात्मक त्रुटि सबसे महत्वपूर्ण है, क्योंकि यदि मूल अवधारणा स्पष्ट नहीं है तो बाकी दोनों त्रुटियाँ भी इसमें जुड़कर बच्चे की प्रगति पर गहरा असर डालती हैं।"
+  },
+  {
+    "title": "संकल्पनात्मक त्रुटियाँ — जब पुराना नियम नए में धोखा दे",
+    "text": "संकल्पनात्मक त्रुटियाँ तब होती हैं जब बच्चे किसी अवधारणा के पीछे का तर्क नहीं समझ पाते। उदाहरण के लिए, कक्षा तीन तक बच्चे सीखते हैं कि अधिक अंकों वाली संख्या बड़ी होती है, पर दशमलव में यह नियम टूट जाता है। इसी तरह दस, सौ या हज़ार से गुणा करने पर 'शून्य लगा दो' वाला नियम अपनाने से दो दशमलव तीन गुणा दस को दो दशमलव तीन शून्य लिख दिया जाता है। आकृतियों में भी भ्रम होता है — यदि बच्चा त्रिभुज हमेशा एक ही आकार का देखे, तो दूसरे रूप का त्रिभुज उसे भ्रमित करता है। इसका उपाय है उदाहरण और गैर-उदाहरण, दोनों दिखाना, जैसे समचतुर्भुज के अनेक रूप और जो समचतुर्भुज नहीं हैं, वे भी।"
+  },
+  {
+    "title": "भ्रम के और स्रोत — चिह्न, स्थानीय मान, गुणा और शब्द",
+    "text": "कुछ चिह्न बच्चों को एक जैसे दिखते हैं — जैसे जोड़ और गुणा, या घटाव और भाग के चिह्न, जिससे चार गुणा सात बराबर ग्यारह जैसी गलतियाँ होती हैं। इसका समाधान है एक संक्रिया का पर्याप्त अभ्यास कराकर ही दूसरी पर जाना। स्थानीय मान की कमज़ोरी से बच्चे चार सौ आठ को 4008 लिख देते हैं। इसके लिए संख्याएँ खानों में लिखवाकर हर खाने के ऊपर हज़ार, सैकड़ा, दहाई, इकाई लिखना उपयोगी है। दो अंकों की गुणा में बच्चे अंक गलत स्थान पर रख देते हैं, जिसे वितरण गुणधर्म और विघटन से समझाया जा सकता है। कई शब्द जैसे कैंसल, नेट, डिग्री, बॉरोइंग गणित और रोज़मर्रा की भाषा में अलग अर्थ रखते हैं, इसलिए बॉरोइंग की जगह पुनर्समूहन शब्द अधिक उपयुक्त है।"
+  },
+  {
+    "title": "लापरवाही और गणनात्मक त्रुटियाँ",
+    "text": "लापरवाही से हुई त्रुटियाँ अक्सर जल्दबाज़ी में होती हैं, जैसे सवाल को गलत उतारना, चिह्न छोड़ देना, अंत में इकाई हटा देना, निर्देशों का पालन न करना, या जोड़ने की जगह गुणा कर देना। ध्यान और सावधानी से इनसे बचा जा सकता है। गणनात्मक त्रुटियों का मुख्य कारण कमज़ोर गणना कौशल है, यानी जोड़, घटाव, गुणा, भाग में महारत की कमी। यहाँ रामानुजन की कहानी याद रखने लायक है — कक्षा तीन में जब शिक्षक ने विभाजन पढ़ाया तो उन्होंने पूछा कि शून्य को शून्य से भाग दें तो क्या होगा, और उन्हें बैठा दिया गया। यह दिखाता है कि बच्चे की जिज्ञासा को हमेशा उचित समर्थन नहीं मिल पाता, जबकि गणित को समझना एक बेहद व्यक्तिगत अनुभव है।"
+  },
+  {
+    "title": "त्रुटि विश्लेषण — गलती के पीछे का पैटर्न",
+    "text": "त्रुटि विश्लेषण वह प्रक्रिया है जिसमें शिक्षक बच्चे के कार्य का अध्ययन करके बार-बार होने वाली गलतियों के पैटर्न पहचानता है। जैसे दो सौ सैंतीस और अट्ठावन का जोड़ 295 लिखना — यहाँ बच्चे ने इकाई के जोड़ से मिला हासिल गलत जगह जोड़ा। उपाय है जोड़ की विघटन विधि या चित्रात्मक प्रस्तुति। इसी तरह छह गुणा सात को तेरह लिखना वैचारिक त्रुटि है, क्योंकि बच्चे ने गुणा की जगह जोड़ दिया। शिक्षक समझा सकते हैं कि गुणा बार-बार जोड़ना है और छह वस्तुओं के सात समूह बनवाकर उत्तर बयालीस तक पहुँचा सकते हैं। इसके लाभ हैं वैचारिक समझ में सुधार और उच्च स्तर की सोच को प्रोत्साहन।"
+  },
+  {
+    "title": "शैक्षिक प्रभाव — गलतियों का उत्सव",
+    "text": "गलतियाँ करना अक्सर अच्छी दृष्टि से नहीं देखा जाता, विशेषकर साथियों के सामने। पर इन्हें उत्सव की तरह मनाना चाहिए ताकि साहसी वातावरण बने। मनोवैज्ञानिकों का मानना है कि गलतियाँ करते समय हमारा मस्तिष्क अधिक विकसित होता है। विकासशील मानसिकता गलतियों में अच्छाई देखती है, बच्चों को आत्म-चिंतन और मेटाकॉग्निशन की ओर ले जाती है, सहपाठियों के बीच संवाद पैदा करती है, और एक सुरक्षित शिक्षण वातावरण बनाती है जहाँ बच्चे गलती के कारण समझकर आगे की गलतियाँ कम करते हैं।"
+  },
+  {
+    "title": "सारांश — आज हमने क्या सीखा",
+    "text": "तो चलिए, आज जो सीखा उसे दोहराते हैं। पहला — गणित में नियमित अभ्यास और अवधारणाओं की स्पष्ट समझ ज़रूरी है, और इसे केवल रटकर नहीं सीखा जा सकता। दूसरा — एन.ई.पी. 2020 हर बच्चे के लिए आधारभूत संख्यात्मकता को अनिवार्य बनाती है। तीसरा — बच्चे पूर्व-संख्या अवधारणाओं से संख्या-बोध के चरणों तक क्रमशः बढ़ते हैं। चौथा — गणितीय त्रुटियाँ तीन प्रकार की होती हैं: गणनात्मक, संकल्पनात्मक और असावधानीवश। पाँचवाँ — संकल्पनात्मक त्रुटियाँ मूल अवधारणा समझकर ही सुधरती हैं, जबकि बाकी दोनों गति धीमी करके और अभ्यास से। और छठा — जब त्रुटियाँ कम होती हैं तो बच्चों की रुचि स्वतः गणित की ओर आकर्षित होती है। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>गणित की प्रकृति — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.7;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  flex: 1;
+}
+button:active { transform: scale(0.97); }
+.speed-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active {
+  background: var(--active-bg);
+  border-color: var(--accent);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  display: none;
+}
+.section.active .section-text {
+  display: block;
+  color: var(--text);
+}
+.play-icon {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>गणित की प्रकृति</h1>
+    <p>ऑडियो पाठ — शिक्षक की आवाज़ में सुनें और साथ-साथ पढ़ें</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ सुनें" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ सुनें</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>टैप करके कोई भी भाग खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    "title": "परिचय — गणित को समझने की शुरुआत",
+    "text": "आज हम पढ़ेंगे — गणित की प्रकृति। गणित मानव चिंतन का अभिन्न हिस्सा है। यह मानव के समाजीकरण और विकास की आवश्यकता से उत्पन्न हुआ है, और एक अमूर्त विषय होते हुए भी उपयोगी ज्ञान के रूप में परिपक्व हुआ है। अनेक सभ्यताओं ने इसके विकास में योगदान दिया है। उन्नीसवीं शताब्दी में अत्यधिक मानकीकृत नियमों पर आधारित पारंपरिक गणित को अधिक लचीले और व्यावहारिक आधुनिक दृष्टिकोणों ने चुनौती दी। गणित के प्रति रोचक दृष्टिकोण की नींव प्रारंभिक वर्षों में ही रखी जाती है, इसलिए गणित शिक्षकों को गणित की प्रकृति की सम्यक समझ होना अति आवश्यक है।"
+  },
+  {
+    "title": "सीखने के प्रतिफल",
+    "text": "इस पाठ को पढ़ने के बाद आप एक विषय-विज्ञान के रूप में गणित की प्रकृति और उसके घटकों के प्रति अंतर्दृष्टि विकसित कर पाएँगे। आप गणितीय अवधारणाओं, उनके गुणधर्मों और उनकी पदानुक्रमिक अवधारणात्मक संरचनाओं पर चर्चा कर सकेंगे। दैनिक अनुभवों का गणितीय समझ से विश्लेषण करना सीखेंगे, गणितीय भाषा यानी प्रतीक, संकेत और शब्दावली की व्याख्या और प्रयोग करेंगे, और बच्चों के साथ दैनिक जीवन की भाषा का उपयुक्त उपयोग करेंगे। अंत में, आप सुदृढ़ गणितीय आधार और सकारात्मक दृष्टिकोण विकसित करने के लिए शिक्षण-शास्त्रीय रणनीतियाँ बना पाएँगे।"
+  },
+  {
+    "title": "गणित क्या है — अलग-अलग नज़रिए",
+    "text": "गणित की व्याख्या विभिन्न विद्वानों ने अलग-अलग रूपों में की है। गैलीलियो का मानना था कि गणित ब्रह्मांड की भाषा है, जबकि आइंस्टीन का तर्क था कि ब्रह्मांड की सभी प्रणालियों को एक गणितीय समीकरण के रूप में व्यक्त किया जा सकता है। आम लोग गणित का उपयोग गणना और मापन के लिए करते हैं, जबकि गणितज्ञ जटिल और अमूर्त संरचनाओं के साथ काम करने में आनंद पाते हैं। इंजीनियर पुल बनाने में, आदिवासी महिला टोकरी बुनने में, और फल विक्रेता फलों की सजावट में गणित का प्रयोग करता है। गणित स्थिर तथ्यों का संग्रह नहीं, बल्कि मानवीय जिज्ञासा, नवाचार और समस्या-समाधान का परिणाम है।"
+  },
+  {
+    "title": "गणित की विषयगत प्रकृति",
+    "text": "गणित परस्पर संबंधित अवधारणाओं की एक जटिल संरचना है, जो क्षैतिज और ऊर्ध्व, दोनों दिशाओं में विकसित होती है। इसकी कुछ प्रमुख विशेषताएँ हैं। पहली, यह स्वयंसिद्धात्मक है — सभी निष्कर्ष कुछ मूल कथनों, यानी स्वयंसिद्धों पर आधारित होते हैं। दूसरी, यह सामान्यीकरण पर आधारित है। तीसरी, यह आगमनात्मक और निगमनात्मक, दोनों तर्कों का उपयोग करता है — मूर्त से अमूर्त की ओर बढ़ना आगमन है, और सावधानी से प्रमाणित करना निगमन। चौथी, इसकी जड़ें संस्कृति और समय में हैं — मिस्र, भारत और बेबीलोन जैसी सभ्यताओं ने इसे गढ़ा। पाँचवीं, यह परिवर्तनशील मानवीय सृजन है, जैसे वर्तमान अंक-प्रणाली को बनने में सदियाँ लगीं।"
+  },
+  {
+    "title": "गणित की भाषा और सृजनात्मकता",
+    "text": "औपचारिक गणित की अपनी भाषा है, जिसकी अपनी शब्दावली, संरचना, संकेतन और प्रतीक हैं। यह भाषा सटीक, परिष्कृत और प्रतीक-आधारित है, और गणित को सीखने तथा सराहने के लिए इसमें निपुणता ज़रूरी है। साथ ही गणित एक सृजनात्मक प्रयास भी है, क्योंकि यह विचारों को व्यक्त करने और उनके साथ काम करने के अनेक अवसर देता है। स्वयंसिद्ध और अभिधारणाएँ, अवधारणाएँ और प्रक्रियाएँ, अवधारणात्मक संरचना और प्रतीक, सब आपस में जुड़े हैं। प्राथमिक स्तर पर गिनती, अंकों की समझ, मापन और आकृतियों की पहचान जैसे कौशल भविष्य की आधारशिला बनते हैं, और यह यात्रा दैनिक अनुभवों के गणितीयकरण से शुरू होती है।"
+  },
+  {
+    "title": "गणितीयकरण — अनुभवों को गणित की नज़र से देखना",
+    "text": "गणितीयकरण हमारी वह योग्यता है जिससे हम अपने अनुभवों को गणितीय दृष्टिकोण से समझकर वर्णित कर सकते हैं। इसके दो स्तर हैं — दैनिक और उच्च गणितीयकरण। दैनिक गणितीयकरण तब होता है जब बच्चा मापन, मात्रांकन, समूहीकरण और क्रमबद्धता जैसी अवधारणाओं का उपयोग करता है — जैसे दो मित्रों के साथ चॉकलेट बाँटते हुए वह हर मित्र को एक तिहाई भाग देता है। इससे बच्चे आस-पास की अवधारणाओं की कल्पना कर पाते हैं, सरल समस्याएँ हल करते हैं, और निर्णय लेने में गणितीय भाषा का उपयोग करते हैं। शिक्षक 'आज ज़्यादा गर्मी है' कहने के बजाय कह सकते हैं — कल का तापमान अड़तीस डिग्री था, आज चालीस है।"
+  },
+  {
+    "title": "अमूर्त गणितीयकरण और गणितीय चिंतन",
+    "text": "अमूर्त गणितीयकरण में अमूर्त तत्वों को गणितीय समस्या में बदला जाता है। इसमें आम तौर पर समस्या की पहचान, आवश्यक जानकारी जुटाना, चर तय करना, समाधान का मॉडल बनाना, और फिर परिणामों की व्याख्या करना शामिल है। यही कौशल गणितीय मॉडलिंग की नींव है। गणितीय चिंतन की शुरुआत तर्क और अमूर्तीकरण से पैटर्न पहचानने में होती है। यहाँ तक कि गिनती में भी अमूर्त चिंतन है — जब बच्चा तीन पीली गेंदें गिनता है, तो वह हर गेंद को एक इकाई मानता है और रंग-आकार की समानता के आधार पर उन्हें एक समूह में रखता है। गणित केवल संख्याओं के साथ काम करना नहीं, बल्कि तार्किक तर्क, अमूर्त विचार और समस्या-समाधान भी है।"
+  },
+  {
+    "title": "अवधारणात्मक और प्रक्रियात्मक ज्ञान",
+    "text": "प्रभावी गणितीय अधिगम के लिए अवधारणाओं और प्रक्रियाओं, दोनों की समझ चाहिए। अवधारणात्मक ज्ञान का अर्थ है अवधारणाओं और उनके आधारभूत संबंधों की समझ, जबकि प्रक्रियात्मक ज्ञान है मानक विधियों और एल्गोरिदम को चलाने की निपुणता। उदाहरण के लिए, गुणा को बार-बार जोड़ने के रूप में समझना अवधारणात्मक समझ है, और गुणन एल्गोरिदम से तेरह को चौबीस से गुणा करना प्रक्रियात्मक ज्ञान। कक्षा में अवधारणात्मक ज्ञान पहले विकसित होना चाहिए। इसके लिए प्राथमिक स्तर पर मूर्त सामग्री, खेल और वास्तविक जीवन की गतिविधियों से पर्याप्त उदाहरण, गैर-उदाहरण और विविध संदर्भ दिए जाने चाहिए।"
+  },
+  {
+    "title": "मूर्त से चित्रात्मक और फिर अमूर्त — CPA और सामान्यीकरण",
+    "text": "गणित की यात्रा मूर्त अनुभवों से चित्रात्मक प्रस्तुतियों की ओर, और फिर अमूर्त संकेतों की ओर बढ़ती है। ब्रूनर के एनएक्टिव-आइकॉनिक-सिम्बॉलिक मॉडल पर आधारित यही मूर्त-चित्रात्मक-अमूर्त, यानी सी.पी.ए. रूपरेखा है। पहले बच्चे ब्लॉक्स जैसी वास्तविक वस्तुओं से गणना करते हैं, फिर वृत्त या आकृतियाँ बनाकर, और अंत में गणितीय प्रतीकों और समीकरणों से। सामान्यीकरण का एक उदाहरण सम और विषम संख्याएँ हैं। सीधे परिभाषा देने के बजाय बच्चे सेबों को दो-दो के समूहों में बाँटते हैं, शेष देखते हैं, और परिकल्पना बनाते हैं कि शेषफल शून्य या एक होता है। फिर शिक्षक बताते हैं कि जिनका शेषफल शून्य हो वे सम, और एक हो वे विषम संख्याएँ हैं।"
+  },
+  {
+    "title": "गणित की भाषा, संरचना और संकेतन",
+    "text": "गणित की अपनी वाक्यरचना है, जिसमें कोष्ठक, भिन्न, दशमलव, घातांक जैसे प्रतीक और संकेतन शामिल हैं, जिनका अर्थ निश्चित और असंदिग्ध होता है। जैसे तीन बटा चार किसी पूर्ण वस्तु के चार समान भागों में से तीन को दर्शाता है — चाहे वह सेब हो, रिबन हो या केले का गुच्छा। यह सटीकता गणितीय तर्क को सत्यापन योग्य बनाती है। जोड़, घटाव, गुणा, भाग, बराबर, छोटा-बड़ा जैसे चिह्न अवधारणाओं को प्रक्रियाओं से जोड़ते हैं। बच्चे तभी धाराप्रवाह और सटीक गणित कर पाते हैं जब उन्हें गणितीय शब्दावली और प्रतीकों पर पकड़ हो, इसलिए कक्षा में गणितीय चर्चा मंच बनाकर बच्चों को गणितीय भाषा में बोलने के लिए प्रोत्साहित करना चाहिए।"
+  },
+  {
+    "title": "दैनिक जीवन में गणित और प्रारंभिक वर्षों का अधिगम",
+    "text": "गणित एक सार्वभौमिक भाषा है, जिसका उपयोग हम जानते-अनजाने दैनिक जीवन में करते हैं। मापन और मात्रांकन, समय की समझ और धन का प्रबंधन इसके तीन सबसे सामान्य क्षेत्र हैं। खाना बनाना, खेलों में स्कोर गिनना, घर का बजट बनाना, सब गणित पर आधारित हैं। प्रारंभिक वर्षों में बच्चों को वर्गीकरण, क्रमबद्धता और एक-से-एक मिलान जैसी पूर्व-संख्या अवधारणाओं से परिचित कराया जाता है, फिर गिनती, संख्या रेखा और स्थानीय मान की ओर बढ़ा जाता है। जिस बच्चे में इस स्तर पर गणित के प्रति भ्रांतियाँ बन जाती हैं या रुचि घट जाती है, उसका वही दृष्टिकोण आगे भी बना रह सकता है — इसलिए शिक्षक की भूमिका निर्णायक है।"
+  },
+  {
+    "title": "सारांश — आज हमने क्या सीखा",
+    "text": "तो चलिए, आज जो सीखा उसे संक्षेप में दोहराते हैं। पहला — गणित स्वयंसिद्धों, सामान्यीकरण और आगमनात्मक-निगमनात्मक तर्क पर आधारित, संस्कृति में जड़ें रखने वाला और निरंतर विकसित होता मानवीय सृजन है। दूसरा — गणितीयकरण यानी दैनिक अनुभवों को गणित की नज़र से देखना, और गणितीय चिंतन, बच्चों के लिए आधार हैं। तीसरा — अवधारणात्मक ज्ञान पहले और प्रक्रियात्मक ज्ञान बाद में विकसित होना चाहिए, और इसके लिए मूर्त, चित्रात्मक और अमूर्त क्रम अपनाना चाहिए। चौथा — गणित की अपनी सटीक भाषा है जिसमें बच्चों को धाराप्रवाह बनाना ज़रूरी है। और पाँचवाँ — वास्तविक जीवन के संदर्भों से जोड़कर, शिक्षक बच्चों में सकारात्मक दृष्टिकोण और सुदृढ़ गणितीय आधार बना सकते हैं। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let hindiVoice = null;
+let playQueueActive = false;
+
+function pickHindiVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  hindiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('hi')) || null;
+  if (hindiVoice) {
+    voiceNote.textContent = "आवाज़: " + hindiVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिंदी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ से सुनाया जाएगा।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickHindiVoice();
+  window.speechSynthesis.onvoiceschanged = pickHindiVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र आवाज़ में पढ़ने की सुविधा सपोर्ट नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ इसे अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 सुन रहे हैं: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'hi-IN';
+  if (hindiVoice) utter.voice = hindiVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पूरा पाठ समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त";
+      playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ सुनें";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
