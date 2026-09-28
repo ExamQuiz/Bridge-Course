@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 4: Development - Audio</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#5d6678;--accent:#233f94;--hl:#fff3c4;--bd:#dfe3ee}
+@media (prefers-color-scheme:dark){:root{--bg:#12151d;--card:#1b202c;--text:#e8ebf3;--muted:#9aa3b5;--accent:#8fa8ff;--hl:#3b3512;--bd:#2c3345}}
+*{box-sizing:border-box}
+body{margin:0;font-family:Georgia,'Times New Roman',serif;background:var(--bg);color:var(--text);line-height:1.6}
+header{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--bd);padding:12px 16px;z-index:5}
+h1{font-size:1.15rem;margin:0 0 8px;color:var(--accent)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:system-ui,sans-serif;font-size:.9rem}
+button{font:inherit;padding:8px 16px;border:0;border-radius:8px;cursor:pointer;background:var(--accent);color:#fff;font-weight:600}
+button.stop{background:#b3261e}
+button.alt{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+select,input{font:inherit;max-width:100%}
+#status{width:100%;color:var(--muted);font-size:.85rem}
+main{max-width:820px;margin:0 auto;padding:16px}
+section{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+section.active{outline:2px solid var(--accent)}
+section h2{font-size:1.05rem;margin:0 0 6px;color:var(--accent);display:flex;justify-content:space-between;gap:8px;align-items:center}
+section h2 button{padding:4px 10px;font-size:.75rem}
+section p{margin:0}
+mark{background:var(--hl);color:inherit}
+</style>
+</head>
+<body>
+<header>
+  <h1>Chapter 4: Development (Unit 2 - Perspectives of Child Development)</h1>
+  <div class="bar">
+    <button id="play">▶ Play</button>
+    <button id="pause" class="alt">⏸ Pause</button>
+    <button id="stop" class="stop">■ Stop</button>
+    <label>Voice <select id="voice"></select></label>
+    <label>Speed <input id="rate" type="range" min="0.6" max="1.4" step="0.1" value="0.95"></label>
+    <div id="status">Ready. Uses your browser's built-in text-to-speech (Indian English preferred).</div>
+  </div>
+</header>
+<main id="content"></main>
+
+<script>
+const sections = [
+{t:"Introduction",x:"In Chapter 3, we explored the Indian concept of self, the relationship between mind, intellect and memory, and the holistic framework of Panchakosha Vikas. Chapter 4 now looks at how children actually grow and develop across physical, cognitive, socio-emotional, moral and language domains during the Foundational and Preparatory stages. We also examine the roles that family, peers and school play in shaping this development. This chapter will help you, as a teacher, to design learning experiences that support children in a holistic and inclusive way."},
+{t:"Learning Outcomes",x:"After completing this chapter, the learner identifies the characteristics and milestones of developmental domains in children three to eleven years of age. The learner outlines the role of different stakeholders in promoting developmentally appropriate learning. And the learner designs developmentally appropriate learning activities that promote growth across multiple domains."},
+{t:"Understanding Child Development as a Holistic Approach",x:"Let us start with a simple question. What helps a child grow into a confident, knowledgeable and compassionate individual? The answer lies in knowing that child development is not a one-dimensional process. It is dynamic and unfolds across multiple interconnected domains that together lead to holistic development. In the following sections, we reflect, observe and explore the journey of children from three to eleven years, through the lens of both modern insights and traditional wisdom."},
+{t:"4.3.1 Physical Development",x:"Physical development plays a crucial role in enhancing the overall personality. Consider two cases. Azaan, an eight-year-old in Class 3, was active and cheerful, but began to withdraw, asked for instructions to be repeated, and gave inappropriate responses, suggesting he had not understood what was said. Parampreet, a six-year-old with strong verbal and cognitive skills, started facing difficulty in walking and using playground equipment, and her movements became uncoordinated. Do these cases point to something inappropriate happening with the child? To understand this, let us study the regular pattern of physical development. Physical development between three and eleven years occurs progressively and includes milestones in movement, coordination, strength and health. The key areas are gross motor skills, such as running, jumping, climbing and balancing; fine motor skills, which need precision and control of small muscles in the hands and fingers; hand-eye coordination and spatial awareness; and sensory-motor integration, which combines input from touch, sight, sound and balance with motor responses. In early childhood, ages three to five, children show improved balance and coordination, so they can run, jump, hop and climb with greater confidence. Fine motor skills progress, allowing drawing shapes, using utensils and handling small objects. Middle childhood, ages six to eleven, brings steady growth in height and weight, increased muscle strength, and refinement of gross and fine motor skills. Children show better agility, endurance and coordination, which support sports, games, writing fluently and tying shoelaces. They also become more independent in daily activities and more aware of their bodies. Monitoring these milestones helps identify developmental delays early, so that timely interventions can be made. The NCERT Learning Outcomes Framework and the Foundational Literacy and Numeracy mission set four goals for physical development. First, develop gross and fine motor skills, through outdoor games, clay modelling, colouring and threading beads. Second, enhance bodily awareness and spatial orientation, through obstacle courses, musical chairs and dance. Third, promote health and hygiene practices, through handwashing routines, storytelling around hygiene and health charts. Fourth, build stamina and strength for learning, through rhythmic exercises and short physical tasks between lessons. Teachers should adopt developmentally appropriate pedagogy and intentionally integrate movement and play into everyday learning. In inclusive classrooms, activities can be adapted. For example, a child who is unable to jump can sort objects or use hand gestures to indicate choices. Assessment in the physical domain should be observational, continuous and child-friendly. It should focus on motor skill proficiency, participation and engagement, improvement over time, and willingness to try new physical tasks. Teachers can use anecdotal records, checklists, performance tasks and peer feedback."},
+{t:"4.3.2 Cognitive Development",x:"Cognitive development is the growth of a child's ability to think and reason. It involves perception, memory, language, attention, problem-solving and logical thinking. Between three and eleven years, children move gradually from intuitive, sensory-based thinking to more logical and organised thought, which lays the foundation for future learning. Consider Rekha, aged ten. She struggles with age-appropriate concepts in mathematics and reading comprehension, needs instructions repeated, finds multi-step directions difficult, is easily distracted, and relies heavily on peers. Her case reflects the importance of early identification and support for children who show signs of slow cognitive development. With a nurturing environment, individualised strategies and collaboration, such children can grow at their own pace and participate positively in school life. Children of three to eleven years typically fall within Piaget's Pre-Operational and Concrete Operational stages. In the Pre-Operational stage, roughly three to seven years, children show symbolic thinking, egocentrism, imaginative play and animism, limited understanding of logic and cause and effect, and difficulty with conservation. Their thoughts are still governed by perception rather than logic. In the Concrete Operational stage, roughly seven to eleven years, children begin to think more logically and concretely. They understand conservation, classification and seriation, show improved perspective-taking and a better understanding of cause and effect, but still need hands-on experiences to fully understand abstract concepts. This shift does not happen overnight. It unfolds gradually, influenced by experience, social interaction and guided learning. NEP 2020 stresses a learner-centred, competency-based curriculum. In the Foundational Stage, ages three to eight, the goals are to develop thinking and reasoning through exploration and play, enhance observation, attention and memory, foster early mathematical concepts, promote scientific thinking through observation and inquiry, and build executive function skills such as focus, planning and persistence. In the Preparatory Stage, ages eight to eleven, the goals are to strengthen conceptual understanding across subjects, support the transition from concrete to abstract thinking, develop logical, analytical and inferential reasoning, encourage interdisciplinary thinking, and enhance problem-solving and decision-making. Teachers should structure learning around attention and concentration, memory, logical reasoning, problem-solving, and language and comprehension. Effective strategies include experiential learning, use of manipulatives, open-ended questioning, collaborative learning, integration across subjects, and scaffolding that is gradually withdrawn as children gain competence. Assessment should move away from rote-based evaluation to formative, continuous, process-oriented approaches with constructive feedback, as emphasised by the National Curriculum Framework for School Education, 2023. Useful tools include concept mapping, oral questioning, observational checklists and portfolios."},
+{t:"4.3.3 Socio-Emotional Development",x:"The socio-emotional domain covers a child's ability to understand and manage emotions, build healthy relationships, show empathy, make responsible decisions and handle social situations. At these stages, children form their self-concept, learn to cooperate, and experience a wide range of emotions as they move from home-centred to peer-influenced environments. Meera, a five-year-old, bursts into tears when a classmate takes her toy and cannot explain why she is upset. Her teacher comforts her and helps her say, I am sad, or, I want to play with it too. Meera shows kindness, but her understanding of others' feelings is guided mostly by adults. Neel, in Class 5, mediates when two teammates argue about who should present, suggests fair turn-taking, notices a peer feeling left out, takes responsibility for his actions, and values praise, which shapes his self-esteem. In the Foundational Stage, ages three to eight, self-awareness begins to emerge, managing emotions is still a learning process needing adult support, attachment and trust are central, peer interaction moves from parallel play to cooperative play, and empathy starts to develop. In the Preparatory Stage, ages eight to eleven, children show greater emotional control and can express complex emotions such as jealousy, embarrassment or pride. Peer relationships grow stronger, moral development progresses, perspective-taking improves, and self-esteem becomes important. Teachers should model kindness, patience and fairness. Circle time and class meetings give children a safe space to express feelings. Storytelling and role play build empathy. Group activities promote cooperation, and emotion cards or mood charts help children name their feelings. Positive reinforcement builds self-esteem. Assessment should be supportive and focus on understanding individual needs rather than labelling or judging. Teachers can use anecdotal records, behaviour checklists, peer feedback, reflective journals or drawings, and their own reflections. A teacher must also create an inclusive, respectful classroom and address bullying, teasing or exclusion promptly, so that every child feels safe."},
+{t:"4.3.4 Moral Development",x:"Moral development is how children learn to distinguish right from wrong, develop values, and build a sense of fairness, justice, honesty, empathy and responsibility. These stages have been studied by Jean Piaget and Lawrence Kohlberg. In the Pre-Moral stage, from birth to five years, behaviour is guided by immediate desires, fear of punishment and the reactions of adults. In the Heteronomous or Pre-Conventional stage, five to nine years, children see rules as fixed and absolute, imposed by authority. Morality is based on avoiding punishment or gaining rewards, and on consequences rather than intentions. In the Autonomous or Conventional stage, nine to twelve years, children understand that rules can be flexible and are created for mutual benefit. They consider intentions and value approval from others, and morality rests on social norms, fairness and maintaining relationships. Key aspects teachers should know include understanding right and wrong, rule awareness, consequences and intentions, fairness and justice, empathy and perspective-taking, respect for rules and authority, moral reasoning, honesty, responsibility and accountability, and the role of modelling and reinforcement. By ten to eleven, children start accepting responsibility for their actions and understand the importance of making amends. NCFSE 2023 sets goals such as understanding right and wrong, promoting honesty, fostering empathy, encouraging fairness and justice, respecting rules, ethical decision-making, responsibility, and community and cooperation. To achieve these, teachers create value-rich classrooms where ethics are embedded in everyday experiences. Effective approaches include storytelling with moral questions using folk tales and fables, role play and dramatisation of dilemmas, and rotating classroom responsibilities such as line leader or plant caretaker. Most importantly, teachers must model fairness, kindness and integrity themselves. Under Continuous and Comprehensive Evaluation, moral growth is assessed through consistent observation, anecdotal records, self-assessment and peer feedback, rather than traditional grading."},
+{t:"4.3.5 Language Development",x:"Language development is central to a child's ability to communicate, think, learn and interact socially. It forms the foundation for literacy, academic achievement and cognitive growth. At ages three to five, vocabulary grows rapidly from about nine hundred to over two thousand five hundred words. Children use full sentences of four to six words, apply basic grammar with some over-generalisation, begin telling simple stories with a beginning, middle and end, and frequently ask why and how questions. At ages six to eight, vocabulary expands to over five thousand words. Children master most grammatical structures, read with increasing fluency, write complete sentences and short paragraphs, follow multi-step instructions, and retell stories in sequence. At ages nine to eleven, vocabulary reaches over ten thousand words, including academic vocabulary. Children use more advanced sentence structures, understand figurative language, main ideas and inference, write multi-paragraph compositions, begin to argue and justify opinions, adjust speech for different audiences, and understand humour and sarcasm. NEP 2020 and NCFSE 2023 emphasise a holistic approach with aims in listening, speaking, reading, writing, and vocabulary and grammar. These are supported through story listening, show-and-tell, class discussions, role play, shared reading, reading aloud, phonics games, diary writing, guided writing, word games, cloze passages and language puzzles."},
+{t:"4.4 Role of Different Stakeholders",x:"Holistic development requires the active participation of many stakeholders, including parents, teachers, educational administrators, community members and policymakers. In this section we focus on the role of family, peers and school."},
+{t:"4.4.1 Role of Family in Development",x:"While schools provide structured learning, the home environment remains central to shaping children's values, attitudes, learning behaviours and well-being. Aryan, a seven-year-old, thrives because his parents create a learning-rich home, foster his curiosity and teach him problem-solving. Ravi, aged eight, struggles because his mother works long hours and cannot guide him with homework. NEP 2020 and NCFSE 2023 emphasise that families provide the first and most crucial learning environment. Families support physical development through nutrition, routine, rest and play; cognitive development through conversation, questions and exploration; language development through rich oral language and reading aloud; socio-emotional development by modelling empathy and supporting emotional needs; and moral development by setting boundaries and modelling honesty and respect. However, not all families have equal access to resources, time or support. Some face limited literacy, economic hardship or different cultural expectations. Teachers should build respectful relationships with parents, ensure families feel heard, suggest simple home activities like reading together, go beyond academics in parent-teacher meetings, invite parents to classroom events, share resources through digital groups and activity sheets, and involve parents in assessment through home observations and work samples."},
+{t:"4.4.2 Role of Peers in Development",x:"Peers are individuals of the same age, status or ability level within a group. As children move from home to school, peers become central to their social, emotional, moral, cognitive and language development. NEP 2020 emphasises peer collaboration through peer tutoring, group projects and cooperative learning. Peers enhance cognitive understanding through explanation and group problem-solving. Peer talk supports vocabulary and language structures. Socially and emotionally, children learn to cooperate, share, resolve conflicts, and gain self-awareness through group roles and peer feedback. Morally, they develop fairness, justice, empathy and responsibility. Teachers can use pair and group work, peer tutoring, circle time, role play, and buddy systems to support inclusion, especially for new, shy or special-needs children. The teacher guides, observes and scaffolds these interactions. Peer relationships can also bring exclusion, conflict or competition, so teachers must establish clear norms for respectful behaviour."},
+{t:"4.4.3 Role of School in Development",x:"Zain, a ten-year-old in a government school, was curious but shy. His teacher noticed his interest in science, encouraged him through simple experiments and project-based learning, and involved him in group activities and role plays, slowly building his confidence. This shows how a school can influence holistic growth. NEP 2020, NCFFS 2022 and NCFSE 2023 recognise schools as nurturing spaces where children grow across all domains, with safe, engaging and flexible environments and age-appropriate pedagogies. Schools contribute through physical education and structured play; structured learning environments and the arts for cognitive growth; social settings for collaboration and empathy; storytelling, debates and reading programmes for language; values through curricular and co-curricular means; inclusive education for children with disabilities, marginalised communities and first-generation learners; bridges with families; and life skills such as first aid, digital literacy, environmental education and disaster response. Schools face challenges, including limited resources, diverse learning needs, low parental engagement, emotional and behavioural issues, curriculum and assessment pressure, socio-economic disparities, language and cultural diversity, and gaps in teacher preparedness. Strategies include investing in teacher training, reducing teacher-student ratios, strengthening home-school partnerships, providing counsellors and socio-emotional learning programmes, adopting a flexible curriculum that values play and creativity, giving nutritional and material support, embracing multilingual and culturally responsive teaching, and collaborating with NGOs, communities and government schemes."},
+{t:"4.5 Let Us Sum Up",x:"In this chapter, we explored children's development from ages three to eleven. The developmental domains are physical growth, cognitive growth, socio-emotional development, moral development and language development. The stakeholders each have a role. Teachers create learning experiences that support development across domains. Families offer emotional support and set the stage for early learning. Peers help develop social skills, empathy and collaboration. Schools provide structured learning environments that nurture overall growth."},
+{t:"4.6 End Exercises",x:"Question one. How can a teacher design a classroom activity that simultaneously supports cognitive, socio-emotional and language development for children aged three to eleven years? Explain with an example. Question two. In what ways can lack of collaboration among family, peers and school hinder a child's holistic development? Support your answer with reasoning. This is the end of the chapter."}
+];
+
+const synth = window.speechSynthesis;
+const $ = id => document.getElementById(id);
+const content = $('content'), status = $('status'), voiceSel = $('voice');
+let chunks = [], token = 0, voices = [], paused = false, cur = -1;
+
+// Build page + chunks
+sections.forEach((s, i) => {
+  const el = document.createElement('section');
+  el.id = 's' + i;
+  el.innerHTML = '<h2><span></span><button class="alt">Play from here</button></h2><p></p>';
+  el.querySelector('span').textContent = s.t;
+  el.querySelector('p').textContent = s.x;
+  el.querySelector('button').onclick = () => start(chunks.findIndex(c => c.sec === i));
+  content.appendChild(el);
+  chunks.push({sec: i, text: s.t + '.'});
+  const sents = s.x.match(/[^.!?]+[.!?]+["']?\s*/g) || [s.x];
+  let buf = '';
+  sents.forEach(st => {
+    if ((buf + st).length > 220 && buf) { chunks.push({sec: i, text: buf.trim()}); buf = ''; }
+    buf += st;
+  });
+  if (buf.trim()) chunks.push({sec: i, text: buf.trim()});
+});
+
+function loadVoices() {
+  voices = synth.getVoices();
+  if (!voices.length) return;
+  const rank = v => {
+    const l = v.lang.replace('_', '-').toLowerCase();
+    if (l === 'en-in') return 0;
+    if (/india|heera|ravi|neerja|prabhat|rishi/i.test(v.name)) return 1;
+    if (l.startsWith('en')) return 2;
+    return 3;
+  };
+  const list = voices.filter(v => v.lang.toLowerCase().startsWith('en'))
+                     .sort((a, b) => rank(a) - rank(b));
+  voiceSel.innerHTML = '';
+  list.forEach(v => {
+    const o = document.createElement('option');
+    o.value = v.name; o.textContent = v.name + ' (' + v.lang + ')';
+    voiceSel.appendChild(o);
+  });
+  if (list.length && rank(list[0]) > 1)
+    status.textContent = 'No Indian English voice found on this device; using the closest English voice. Install an English (India) voice in your OS settings for the best result.';
+}
+loadVoices();
+synth.onvoiceschanged = loadVoices;
+
+function speak(i, t) {
+  if (t !== token) return;
+  if (i >= chunks.length) { finish('Finished.'); return; }
+  cur = i;
+  const c = chunks[i];
+  document.querySelectorAll('section.active').forEach(e => e.classList.remove('active'));
+  const sec = $('s' + c.sec);
+  sec.classList.add('active');
+  if (!sec.dataset.seen || sec.dataset.seen !== '1') { sec.scrollIntoView({behavior: 'smooth', block: 'center'}); }
+  document.querySelectorAll('section').forEach(e => { if (e !== sec) delete e.dataset.seen; });
+  sec.dataset.seen = '1';
+  const u = new SpeechSynthesisUtterance(c.text);
+  u.lang = 'en-IN';
+  const v = voices.find(x => x.name === voiceSel.value);
+  if (v) { u.voice = v; u.lang = v.lang; }
+  u.rate = parseFloat($('rate').value);
+  u.onend = () => speak(i + 1, t);
+  u.onerror = e => {
+    if (t !== token) return;
+    if (e.error === 'interrupted' || e.error === 'canceled') return;
+    speak(i + 1, t);
+  };
+  synth.speak(u);
+  status.textContent = 'Playing: ' + sections[c.sec].t;
+}
+
+function start(i) {
+  if (!synth) { status.textContent = 'Text-to-speech is not supported in this browser.'; return; }
+  synth.cancel();
+  paused = false;
+  token++;
+  const t = token;
+  setTimeout(() => speak(Math.max(0, i), t), 80);
+}
+
+function finish(msg) {
+  token++;
+  synth.cancel();
+  paused = false;
+  document.querySelectorAll('section.active').forEach(e => e.classList.remove('active'));
+  status.textContent = msg;
+}
+
+$('play').onclick = () => {
+  if (synth.paused || paused) { synth.resume(); paused = false; status.textContent = 'Playing: ' + sections[chunks[cur].sec].t; }
+  else start(0);
+};
+$('pause').onclick = () => {
+  if (synth.speaking && !synth.paused) { synth.pause(); paused = true; status.textContent = 'Paused.'; }
+};
+$('stop').onclick = () => finish('Stopped.');
+window.addEventListener('beforeunload', () => synth.cancel());
+</script>
+</body>
+</html>
