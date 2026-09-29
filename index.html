@@ -6,7 +6,7 @@
   <title>MCQs & ऑडियो बुक के ज़रिए बीएड ब्रिज कोर्स की तैयारी करें, बिना किसी शुल्क के</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
-    :root { --navy:#102f36; --ink:#18343b; --muted:#718487; --cream:#f4f7f3; --white:#fff; --line:#dbe8e2; --mint:#d5f0e5; --card-bg:#d6e9df; --teal:#087f82; --teal-dark:#075e61; --coral:#ef806b; --correct:#16734b; --wrong:#b33d35; --gold:#e8b95f; --shadow:0 22px 60px rgba(16,47,54,.12); font-family:"DM Sans",sans-serif; }
+    :root { --navy:#102f36; --ink:#18343b; --muted:#718487; --cream:#f4f7f3; --white:#fff; --line:#dbe8e2; --mint:#d5f0e5; --card-bg:#f6e5d6; --card-border:#dfbea5; --card-hover:#f0d7c3; --teal:#087f82; --teal-dark:#075e61; --coral:#ef806b; --correct:#16734b; --wrong:#b33d35; --gold:#e8b95f; --shadow:0 22px 60px rgba(16,47,54,.12); font-family:"DM Sans",sans-serif; }
     * { box-sizing:border-box; }
     body { min-height:100vh; margin:0; color:var(--ink); background:radial-gradient(circle at 8% 4%,#dff2e9 0,transparent 27%),radial-gradient(circle at 94% 22%,#ffe4d8 0,transparent 22%),var(--cream); }
     button { border:0; cursor:pointer; font:600 14px "DM Sans",sans-serif; }
@@ -33,8 +33,8 @@
     .view-heading h2 { margin:0; font-size:32px; letter-spacing:-.05em; }
     .view-heading p { margin:6px 0 0; color:var(--muted); font-size:14px; }
     .subject-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-    .subject-card { display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto auto; min-height:122px; padding:22px; align-items:center; column-gap:14px; text-align:left; background:var(--card-bg); border:2px solid #aec9bb; border-radius:14px; box-shadow:0 7px 18px rgba(22,42,58,.04); transition:transform .2s,border-color .2s,box-shadow .2s; backdrop-filter:blur(10px); }
-    .subject-card:hover { border-color:var(--teal); background:#c5e2d3; box-shadow:var(--shadow); transform:translateY(-3px); }
+    .subject-card { display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto auto; min-height:122px; padding:22px; align-items:center; column-gap:14px; text-align:left; background:var(--card-bg); border:2px solid var(--card-border); border-radius:14px; box-shadow:0 7px 18px rgba(22,42,58,.04); transition:transform .2s,border-color .2s,box-shadow .2s; backdrop-filter:blur(10px); }
+    .subject-card:hover { border-color:var(--teal); background:var(--card-hover); box-shadow:var(--shadow); transform:translateY(-3px); }
     .subject-index { display:grid; grid-row:1 / span 2; width:38px; height:38px; margin:0; place-items:center; border-radius:12px; color:var(--navy); background:var(--mint); font:700 13px "Space Grotesk",sans-serif; }
     .subject-card:nth-child(3n) .subject-index { background:#ffe2d9; }
     .subject-card h3 { margin:0 0 5px; font-size:19px; letter-spacing:-.035em; }
@@ -46,8 +46,8 @@
     .chapter-title { margin:0 0 6px; font-size:32px; letter-spacing:-.05em; }
     .chapter-copy { margin:0 0 22px; color:var(--muted); font-size:14px; line-height:1.5; }
     .chapter-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-    .chapter-card { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; padding:20px; color:var(--ink); background:var(--card-bg); border:2px solid #aec9bb; border-radius:10px; box-shadow:0 6px 18px rgba(22,42,58,.035); }
-    .chapter-card:hover { border-color:var(--teal); background:#c5e2d3; }
+    .chapter-card { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; padding:20px; color:var(--ink); background:var(--card-bg); border:2px solid var(--card-border); border-radius:10px; box-shadow:0 6px 18px rgba(22,42,58,.035); }
+    .chapter-card:hover { border-color:var(--teal); background:var(--card-hover); }
     .chapter-card strong { display:block; margin-bottom:4px; font:600 16px "Space Grotesk",sans-serif; }
     .chapter-card small { color:var(--muted); font-size:12px; }
     .chapter-main { display:grid; min-width:0; flex:1 1 100%; grid-template-columns:76px minmax(0,1fr); grid-template-rows:auto auto; column-gap:12px; align-items:center; padding:11px 13px; text-align:left; color:var(--ink); background:var(--white); border:1px solid var(--line); border-radius:6px; }
@@ -68,10 +68,10 @@
     .chapter-actions a.text-audio-link::before { content:"🔊"; }
     .chapter-actions a.document-link:not(.podcast-link):not(.text-audio-link)::before { content:"📖"; }
     .text-audio-link:hover { color:var(--teal-dark); background:#c3deea; border-color:#84b7c8; }
-    .text-audio-placeholder { cursor:not-allowed; opacity:.68; }
+    .text-audio-placeholder { color:var(--teal-dark); background:var(--mint); border-color:#b9e2d0; cursor:not-allowed; opacity:.78; }
     .document-link:focus-visible,.chapter-main:focus-visible { outline:3px solid rgba(8,127,130,.28); outline-offset:3px; }
     .chapter-arrow { color:var(--teal); font-size:20px; }
-    .notice { padding:24px; background:var(--card-bg); border:2px solid #aec9bb; border-radius:8px; box-shadow:var(--shadow); font-size:15px; line-height:1.6; }
+    .notice { padding:24px; background:var(--card-bg); border:2px solid var(--card-border); border-radius:8px; box-shadow:var(--shadow); font-size:15px; line-height:1.6; }
     .error { display:flex; min-height:160px; align-items:center; color:var(--wrong); }
     .error-content { display:grid; gap:14px; width:100%; }
     .quiz-toolbar { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px; }
@@ -82,11 +82,11 @@
     .quiz-navigation { display:flex; align-items:center; justify-content:space-between; gap:16px; }
     .quiz-navigation .secondary-button { color:var(--teal-dark); background:var(--white); border-color:var(--line); }
     .progress-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px; }
-    .progress-stat { padding:18px; background:var(--card-bg); border:2px solid #aec9bb; border-radius:8px; }
+    .progress-stat { padding:18px; background:var(--card-bg); border:2px solid var(--card-border); border-radius:8px; }
     .progress-stat strong { display:block; color:var(--teal-dark); font:700 28px "Space Grotesk",sans-serif; }
     .progress-stat span { color:var(--muted); font-size:13px; }
     .progress-list { display:grid; gap:10px; }
-    .subject-progress { padding:22px; background:var(--card-bg); border:2px solid #aec9bb; border-radius:14px; box-shadow:var(--shadow); }
+    .subject-progress { padding:22px; background:var(--card-bg); border:2px solid var(--card-border); border-radius:14px; box-shadow:var(--shadow); }
     .subject-progress-header { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px; }
     .subject-progress-header strong { font:700 21px "Space Grotesk",sans-serif; letter-spacing:-.03em; }
     .subject-progress-header small { color:var(--muted); font-size:12px; }
@@ -111,7 +111,7 @@
     .footer-bottom a { color:#b7e8d3; }
     .secondary-button { padding:11px 16px; color:#d9f0e8; background:transparent; border:1px solid #55717b; border-radius:5px; text-decoration:none; }
     .secondary-button:hover { border-color:var(--white); background:#294358; }
-    .quiz-card { margin-bottom:18px; padding:clamp(24px,5vw,40px); background:var(--card-bg); border:2px solid #aec9bb; border-radius:16px; box-shadow:var(--shadow); }
+    .quiz-card { margin-bottom:18px; padding:clamp(24px,5vw,40px); background:var(--card-bg); border:2px solid var(--card-border); border-radius:16px; box-shadow:var(--shadow); }
     .question-number { color:var(--teal); font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
     .quiz-card h2 { margin:12px 0 24px; font-size:clamp(1.3rem,3vw,1.8rem); line-height:1.25; letter-spacing:-.035em; }
     .options { display:grid; gap:10px; }
