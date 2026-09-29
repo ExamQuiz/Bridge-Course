@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Learner Friendly Environment — Audio Lesson</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  line-height: 1.7;
+}
+.wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+header { text-align: center; margin-bottom: 1.25rem; }
+header h1 { font-size: 1.25rem; margin: 0 0 0.25rem; font-weight: 700; }
+header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
+.controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
+button:active { transform: scale(0.97); }
+.speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
+.sections { display: flex; flex-direction: column; gap: 0.7rem; }
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active { background: var(--active-bg); border-color: var(--accent); }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.section-title { font-weight: 600; font-size: 1rem; }
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
+.section.active .section-text { display: block; color: var(--text); }
+.play-icon { font-size: 0.8rem; color: var(--accent); }
+footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Learner Friendly Environment</h1>
+    <p>Audio lesson — listen and read along</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ Press "Play full lesson" to start listening</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ Play full lesson</span></button>
+      <button id="pauseBtn">⏸ Pause</button>
+      <button id="prevBtn">⏮ Previous</button>
+      <button id="nextBtn">⏭ Next</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">Speed:</label>
+      <select id="rateSelect">
+        <option value="0.8">Slow</option>
+        <option value="1" selected>Normal</option>
+        <option value="1.2">Fast</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>Tap any part to open it and listen to it separately</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    "title": "Introduction — building a learner-friendly environment",
+    "text": "Today we study Learner-Friendly Environment. Building on early identification of special needs and the Individualised Education Plan, this chapter looks at the physical, emotional and social needs that make up a child's holistic development. It explores positive, inclusive and motivating teaching strategies, adapts teaching methods to meet diverse needs, and identifies learning barriers faced by children with special needs along with strategies to address them, so every child can learn according to their ability and blossom their inherent potential."
+  },
+  {
+    "title": "Learning outcomes",
+    "text": "After this chapter, the learner will explain the holistic developmental needs of children, including physical, emotional, social and learning aspects, apply positive, inclusive and motivating teaching strategies, adapt teaching methods to create inclusive learning environments, and identify learning barriers faced by children with special needs while designing appropriate support strategies."
+  },
+  {
+    "title": "What is a learner-friendly environment?",
+    "text": "A learner-friendly environment is an atmosphere where learners feel comfortable, encouraged and inspired to learn, explore and continue lifelong learning. Teachers must be aware of children's psychological needs, especially those tied to their cognitive and developmental stage. Its prominent characteristics include inclusivity, welcoming all children regardless of emotional, mental or physical health; safety and support, so children can study without fear; proper use of instructional materials, technology and special education help; use of an Individualised Education Plan with specific objectives for every child; encouragement that acknowledges children's accomplishments; differentiated teaching tailored to each child's needs, whether visual, auditory or activity-based; and early intervention to identify and assist learning impairments in a timely manner."
+  },
+  {
+    "title": "Inclusive education, and how it differs from a learner-friendly environment",
+    "text": "Inclusive education is an educational approach ensuring all children, regardless of learning styles, abilities or disabilities, especially children with special needs, join the general classroom and receive education tailored to their needs. Its main features are equal opportunity for all children, early intervention for learning disabilities, and the importance of an Individualised Education Plan setting goals and modifications. While related, a learner-friendly environment and inclusive education differ: a learner-friendly environment is a component of classroom instruction, focused on providing students a welcoming, secure and engaging space to study without fear, using instructional strategies and materials suited to learning preferences. Inclusive education is a broader, complete strategy guaranteeing that all children, regardless of talents or limitations, may learn in the same classroom, seeking social equality and education for all. In short, inclusive education aims to include all students regardless of ability, while a learner-friendly environment concentrates on improving the classroom learning environment itself; inclusive education can include a learner-friendly environment, but its scope is wider."
+  },
+  {
+    "title": "Holistic development — physical and emotional needs",
+    "text": "Holistic development covers a child's all-around growth, physical, cognitive, emotional and social, to help them reach their full potential as an integrated individual, recognising that these aspects are interconnected. For instance, adequate nutrition aids cognitive brain function, and a supportive environment promotes self-esteem and social skills. Physical needs, foundational for all other development, include nutrition for cognitive advancement and immune response, sleep for development and emotional well-being, with recommended hours varying by age, physical activity for motor skills and psychological well-being, and health and safety through regular checkups and a secure environment. Emotional needs include secure attachment through caring relationships, emotional validation, a sense of belonging to family or friendship circles, autonomy through age-appropriate choices, and emotional security through stable routines, with needs varying by age, temperament and cultural context."
+  },
+  {
+    "title": "Holistic development — social and learning needs",
+    "text": "Social needs play a significant role in holistic development. These include positive relationships with family, peers and role models that foster trust and empathy, social exchanges and games that build communication and problem-solving skills, a sense of community through cultural or family events, communication skills including verbal and nonverbal expression, and secure, inclusive environments that safeguard against bullying. Learning, or cognitive, needs are crucial for a child's capacity to think, reason and solve problems, including cognitive stimulation through age-appropriate challenges like puzzles, access to quality education and resources, language growth through rich verbal exchange, critical thinking through problem-solving opportunities, and creativity through art or role-play. Across all these domains, needs differ by age, ability and socioeconomic or cultural factors, so caregivers should stimulate curiosity, support education, advance language, cultivate problem-solving, and inspire creativity."
+  },
+  {
+    "title": "Strategies for a learner-friendly environment, part one",
+    "text": "Many teaching strategies support a learner-friendly environment. Being an effective listener helps solve children's problems rather than offering sympathy or criticism. Avoiding labelling or criticising a child preserves the possibility of improvement. Handling truancy tactfully means expressing gratitude when a child returns after an absence rather than reprimanding them. Identifying children early, watching for poor attention span, negative self-image, or limited classroom expression, allows a plan of action to be developed. Tackling poor self-esteem means recognising students and planning ahead for written assignments, outlining objectives and emphasising the value of their work. The VAKT approach, Visual, Auditory, Kinaesthetic and Tactile, first presented by Grace Fernald, teaches through a child's strengths to build confidence. Using all senses simultaneously, ears, eyes, voice, fingers and muscles together, helps students who struggle to combine these skills naturally."
+  },
+  {
+    "title": "Strategies for a learner-friendly environment, part two",
+    "text": "More strategies include incorporating thinking skills lessons, such as observing a set of objects briefly then recalling details. Applying task analysis appropriately means breaking work into sequential parts, such as teaching one alphabet at a time through matching, identifying and naming in the right order. Making math teaching fun uses games and relates math to everyday experience, without assuming mental arithmetic is too hard for slow learners. Improving unacceptable behaviour requires understanding how problem behaviour is learned and managed. Peer tutoring pairs a child with a more accomplished peer, chosen carefully and trained until the relationship works well, with rewards for successful completion. Being an effective support teacher means collaborating with mainstream colleagues across classrooms. Cooperative learning divides students into small mixed-skill groups working together, building social skills alongside academics. And proper use of teaching and learning materials means introducing them step by step, from simple to complex, without overloading the child. Teachers should also stay fit, taking time for stress-relieving activities like yoga or meditation, since a teacher's well-being shapes the quality of teaching."
+  },
+  {
+    "title": "Team teaching, peer tutoring and other methods",
+    "text": "Team teaching has teachers of different subjects collaborate on one topic so students see it from multiple perspectives. Peer tutoring, where a student serves as tutor and another as tutee, follows steps including evaluating each student's performance, choosing tutors based on strength, preparing modified materials, training tutors briefly, giving clear instructions, providing a comfortable workspace, tracking progress, and getting parental consent, since both tutor and tutee learn best together. Cooperative learning has groups work together toward a shared objective. Language learning combines speaking, writing, listening and reading, drawing content from the child's own thoughts and experiences; children with locomotor disabilities may speak normally, while children with cerebral palsy or hearing impairment may need learning connected to their own experience. The multisensory approach presents knowledge through visual, auditory, kinaesthetic and tactile modalities together. Programmed breakthrough to literacy has children recount experiences, which become word and letter cards, read aloud and repeated until independent, breaking work into manageable sequenced parts. And modifying materials and activities includes vocabulary activities, graphic organisers, previewing reading, independent study skills, note-taking practice, and inquiry approaches like field visits to historical places and museums."
+  },
+  {
+    "title": "Understanding needs and educational planning",
+    "text": "Creating a learner-friendly environment starts with identifying each student's diverse needs, with parental input providing valuable insight. Needs fall into two categories: learning or academic needs, both curricular and co-curricular, and supportive needs, such as medical or assistive aids. A child with sensory loss may not communicate typically, and a child with a learning disability may need more time to acquire skills, so teachers must determine learning needs in relation to the curriculum, while supportive measures may need parents or community resource teachers. Educational planning should start from the child's strengths rather than weaknesses; a child who is slow in academic subjects may excel in sports or cultural activities. Planning should focus on curriculum objectives and learning gaps, not medical diagnosis, using the teacher's understanding of subject competencies to create a baseline and pinpoint gaps. Peer support helps a child build confidence, since children with special needs often rely on peer assistance. And it is important to pinpoint existing resources in the school and community, including government schemes, NGOs and health centres, along with facilities and adjustments to buildings and materials that support attendance and learning."
+  },
+  {
+    "title": "Barriers to inclusive education",
+    "text": "Despite large-scale efforts to include children with special needs, many challenges persist. Reliable tools for assessing understanding are scarce for mainstream teachers, who often lack the time special educators have for remedial work. Communication difficulties can lead to behaviours misaligned with peers, causing frustration, anxiety and declining self-esteem. Several specific barriers exist. Pedagogical barriers arise when teaching approaches, like lecture-only formats, don't accommodate diverse learning styles. Structural barriers are physical, like buildings lacking ramps or elevators. Attitudinal barriers come from negative stereotypes or unconscious bias, such as assuming students with disabilities cannot meet high standards. Instructional barriers involve inflexible curricula or materials in limited formats, such as text-only online courses inaccessible to students using screen readers. Physical barriers include inaccessible restrooms, narrow doors or poor lighting. Social barriers stem from broader issues like poverty and limited access to healthcare or technology. And the digital divide means unequal access to computers and reliable internet creates a digital cliff, where online learning does not provide equal conditions for all students."
+  },
+  {
+    "title": "Strategies to address the needs of children with special needs",
+    "text": "Several strategies help address these needs. Eliminating lecture monologue means using diverse teaching styles, interactive tasks, science experiments, discussions and teamwork-based projects, and promoting group discussion so students learn from each other. Ensuring learning materials are accessible means offering audiobooks, captioned videos, dyslexia-friendly fonts, text-to-speech PDFs, screen readers, and tactile diagrams or Braille materials for visual impairments. Shifting mindsets and promoting acceptance means holding workshops on unconscious bias and building a culture that celebrates diversity through literature, guest speakers and classroom projects. Reducing physical barriers means providing accessible furniture with adjustable heights, unobstructed pathways and grab bars. Overcoming the digital divide means exploring collaborations with community centres or libraries for free internet and computer access. Teaming up for achievement means open communication between teachers, parents and specialists like occupational or speech therapists through regular meetings. And celebrating differences means incorporating cultural festivities and activities into the curriculum for both online and in-person classrooms."
+  },
+  {
+    "title": "Summary — what we learned today",
+    "text": "Let us recap. First, a learner-friendly environment is one where learners feel comfortable, safe and inspired, built through inclusivity, safety, resource use, an Individualised Education Plan, encouragement, differentiated teaching and early intervention. Second, inclusive education is a broader strategy guaranteeing all children can learn together, while a learner-friendly environment focuses on the classroom experience itself. Third, holistic development covers physical, emotional, social and learning needs, all interconnected and shaping a child's overall growth. Fourth, many strategies support a learner-friendly classroom, including effective listening, avoiding labelling, the VAKT multisensory approach, task analysis, peer tutoring, team teaching, cooperative learning, and programmed literacy approaches. Fifth, educational planning should start from a child's strengths and focus on curriculum gaps rather than medical diagnosis, supported by peer assistance and community resources. Sixth, inclusive education faces pedagogical, structural, attitudinal, instructional, physical, social and digital barriers. And finally, strategies like accessible materials, reducing physical barriers, bridging the digital divide, and celebrating diversity help create truly inclusive, learner-friendly classrooms. Thank you, that is all for today!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let enVoice = null;
+let playQueueActive = false;
+
+function pickEnglishVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  enVoice = voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-') === 'en-in')
+    || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en'))
+    || null;
+  if (enVoice) {
+    voiceNote.textContent = "Voice: " + enVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "No English voice found on this device — the default voice will be used.";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickEnglishVoice();
+  window.speechSynthesis.onvoiceschanged = pickEnglishVoice;
+} else {
+  voiceNote.textContent = "This browser does not support read-aloud.";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">Part ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ Listen to this part</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 Now playing: Part " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'en-IN';
+  if (enVoice) utter.voice = enVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ Lesson finished";
+      playAllLabel.textContent = "▶ Play full lesson";
+    } else {
+      nowPlayingEl.textContent = "⏹ Part " + (i + 1) + " finished";
+      playAllLabel.textContent = "▶ Play full lesson";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ Play full lesson";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 Playing...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ Paused — press Play to continue";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
