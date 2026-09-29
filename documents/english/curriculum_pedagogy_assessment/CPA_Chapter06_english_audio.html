@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Concept Formation — Audio Lesson</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8;
+  --card: #ffffff;
+  --text: #202824;
+  --text-secondary: #5f6b64;
+  --accent: #1a7a5e;
+  --accent-bg: #dcf0e8;
+  --border: #dbe7e0;
+  --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17;
+    --card: #1c2521;
+    --text: #e9f1ec;
+    --text-secondary: #a3b3ab;
+    --accent: #4fcba0;
+    --accent-bg: #1c3a2e;
+    --border: #2c3a33;
+    --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17;
+  --card: #1c2521;
+  --text: #e9f1ec;
+  --text-secondary: #a3b3ab;
+  --accent: #4fcba0;
+  --accent-bg: #1c3a2e;
+  --border: #2c3a33;
+  --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  line-height: 1.7;
+}
+.wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+header { text-align: center; margin-bottom: 1.25rem; }
+header h1 { font-size: 1.25rem; margin: 0 0 0.25rem; font-weight: 700; }
+header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+.player {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
+.controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
+button:active { transform: scale(0.97); }
+.speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
+select {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  min-height: 36px;
+}
+.voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
+.sections { display: flex; flex-direction: column; gap: 0.7rem; }
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.section.active { background: var(--active-bg); border-color: var(--accent); }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.section-title { font-weight: 600; font-size: 1rem; }
+.section-num {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+.section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
+.section.active .section-text { display: block; color: var(--text); }
+.play-icon { font-size: 0.8rem; color: var(--accent); }
+footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Concept Formation</h1>
+    <p>Audio lesson — listen and read along</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ Press "Play full lesson" to start listening</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ Play full lesson</span></button>
+      <button id="pauseBtn">⏸ Pause</button>
+      <button id="prevBtn">⏮ Previous</button>
+      <button id="nextBtn">⏭ Next</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">Speed:</label>
+      <select id="rateSelect">
+        <option value="0.8">Slow</option>
+        <option value="1" selected>Normal</option>
+        <option value="1.2">Fast</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>Tap any part to open it and listen to it separately</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    "title": "Introduction — What is a concept?",
+    "text": "Today we study Concept Formation. Children learn and develop concepts through play, in an enjoyable manner that makes learning easy and interesting. Concept formation means organising experiences into general categories and classifying objects, and this is strongly influenced by play and games. Through play, children learn to categorise, understand and generalise the world around them, developing discovery, exploration and abstract thinking. Simply put, a concept is the main idea of understanding something, telling us what a thing is and how it works. For example, a tree is a plant that is big and has a trunk, branches and leaves. Or a family is a group where parents, siblings and other members live together and support each other. Concepts develop gradually in infants and young children through play and environmental involvement. Children begin to classify things in their early years, and by middle childhood they develop deeper conceptions, actively constructing ideas from what they already understand and connecting new knowledge with old."
+  },
+  {
+    "title": "Learning outcomes",
+    "text": "After this chapter, the learner will identify ways to use children's existing knowledge to introduce and construct new concepts, and describe how children learn concepts through different roles, daily routines and interactions at home, school and in their environment. The learner will implement the Panchapadi, or five-step, pedagogical process for meaningful concept development, and develop a graphic organiser or concept map that shows how children connect ideas from home, school and their surroundings."
+  },
+  {
+    "title": "Nature of concept",
+    "text": "A concept means grouping objects, events or ideas by common features and organising information into categories. This development starts in childhood. Children learn through their senses of taste, smell, sight, hearing and touch, and they learn about size, weight and shape by observing their surroundings, and about shapes by touching things. This process starts early in infancy and continues throughout childhood, in three parts. Sensory experiences: infants begin building concepts using their senses. Experiences and interactions: children gain knowledge about the world through interacting with others and their surroundings. Isolating features: using similar characteristics, children identify the unique features of things and events. For example, a child sees the family cat, notices it has four legs, fur and a meow, and later sees other cats with similar features, forming the concept that all cats have four legs and meow. When the child calls a dog a cat because it also has four legs and fur, a parent gently corrects this, and the child learns to differentiate and refine the concept. Ross defined a concept as the mental construction of an idea, while Boring, Langfeld and Weld defined concepts as ideas that refer to objects, events and qualities."
+  },
+  {
+    "title": "Bruner's five stages of concept formation",
+    "text": "According to Jerome Bruner, a child passes through five stages in forming a concept. Observation: the child starts forming concepts even before learning to speak, seeing many objects and forming mental images of them, for example seeing a white horse and later a black horse. Comparison: the child compares the two concepts of horse, one white and one black, and despite the colour difference, finds similarity between them. Generalisation: because of the accumulation of similar qualities, the difference in colour stops mattering, the concept of horse takes a clear form, and the child calls any horse a horse, gaining knowledge of the whole species. Definition formation: after these stages, the child forms a general concept of horse, which can be given through description or definition. And finally, abstraction: the child separates the differences, which are only due to colour, from the similarities, which come from many other features, and adds the similarities to the differences. Once a child forms a deep concept, such as bird, they can apply it to new examples and build more complex ideas like life cycles and habitats, making concept formation a gateway to broader learning."
+  },
+  {
+    "title": "Types of concepts",
+    "text": "Children develop many kinds of concepts over their lives. Concrete concepts can be directly experienced through the senses, like apple or dog, and are relatively easy to learn since they are real and tangible. Abstract concepts are ideas or qualities that cannot be directly seen or touched, like freedom or love, and need more complex mental processes. Natural concepts form from real-life experience, with boundaries that are not clear and can change with context, such as furniture. Artificial concepts are defined by particular rules or characteristics, such as geometric shapes like triangle and square, and are clear and precise. Prototypes are the best or ideal example of a concept, such as sparrow for the concept of bird, and help with classification. Schematic concepts are mental frameworks or models, like scripts for social interactions, that help us think quickly and predict outcomes. And categories divide concepts into groups or hierarchies based on common properties or functions, making information easier to organise and remember."
+  },
+  {
+    "title": "Bruner's three concept types — conjunctive, disjunctive, relational",
+    "text": "Jerome Bruner also described three types of concepts. Conjunctive concepts are where one or more features are the same across a group of objects, for example bird, cow and dog belong together because they are all animals, or chair, table and bed because they are all furniture. Disjunctive concepts are where some things share similarities but not everything is the same, for example tea and coffee are both hot drinks but differ in taste and preparation. Relational concepts are understood by comparison with something else, for example a tall building looks taller when compared to a shorter one. Chairs come in many designs, styles and shapes, yet we recognise them as chairs because we hold the concept of chair in mind, and the same is true for the concept of clothes, despite variety in dresses, shirts, jeans and shorts."
+  },
+  {
+    "title": "Theories of concept formation — Bruner's three modes",
+    "text": "Several psychologists have proposed theories explaining how children form concepts. Jerome Bruner described three modes of representation. Enactive representation, from birth to about one year, is learning through actions, where knowledge is stored as physical activities, such as a child learning to shake a rattle for sound. Iconic representation, from about one to six years, is learning through images and mental pictures, so a child recognises a mango by its picture, and visual aids like charts and diagrams help understanding. Symbolic representation, from about seven years and above, is learning through language and symbols like words and numbers, marking the beginning of logical thinking, such as understanding that five plus three equals eight. Bruner also proposed the spiral curriculum, the idea that any subject can be taught at any age if presented appropriately, with students revisiting topics repeatedly at increasing depth. And he emphasised discovery learning, where children actively participate and discover knowledge themselves, with teachers acting as guides rather than mere information providers."
+  },
+  {
+    "title": "Piaget's stages and Vygotsky's sociocultural theory",
+    "text": "Jean Piaget divided cognitive development into four stages. The sensorimotor stage, birth to two years, is learning through senses and actions, developing object permanence, the understanding that objects continue to exist even when not visible. The preoperational stage, two to seven years, involves representing things with symbols, but thinking is centred on one aspect at a time and is egocentric, meaning the child struggles to see others' perspectives. The concrete operational stage, seven to eleven years, brings understanding of logic and rules through concrete examples, and the concept of conservation, that quantity stays the same despite a change in shape, along with the ability to classify and sequence objects. The formal operational stage, twelve years and above, brings abstract and logical thinking, and problem-solving and imaginative abilities. Lev Vygotsky's sociocultural theory says a child's cognitive development is shaped by social and cultural context. Children learn through interactions with parents, teachers and peers, with language and culture playing crucial roles. The zone of proximal development is the gap between what a child can do independently and what they can achieve with assistance, and with proper guidance children can do more complex tasks. Scaffolding is the supportive process where a teacher or experienced person guides a child through difficult tasks, gradually withdrawing support as the child learns. And Vygotsky saw language not just as communication but as a tool for thinking, since internal speech helps children plan and solve problems."
+  },
+  {
+    "title": "Concept formation at home",
+    "text": "Children build and learn concepts in every context of life: home, school and the environment. At home, from birth, parents and family provide countless informal learning opportunities. Daily routines, like cooking or discussing fruits and vegetables at meals, teach science and math ideas such as amount, hot and cold, and taste, and even small rituals like saying good morning help develop concepts. Role-play, like pretending to ride a bus or act as a parent, enhances concept development through imagination. Language and communication, through listening to adults talk and joining conversations, teaches social rules, relationship values and behaviour, and rich language from caregivers aids cognitive and emotional development. And sharing responsibilities, like cleaning a room or watering plants, teaches responsibility and discipline. So home supports concept development through interaction, play and routine, with language and early numeracy built through everyday activities like cooking and shopping."
+  },
+  {
+    "title": "Concept formation at school and through the environment",
+    "text": "Schools provide structured opportunities through curriculum, lessons and interaction with teachers and peers, along with a social space for empathy and emotional management. Real-world connections help children apply knowledge practically. Critical thinking grows as children analyse information, express opinions and join discussions. Discussion and interaction with teachers and classmates enhance language and social skills, and teacher guidance helps correct mistaken concepts, for instance when children confuse similar-sounding words. Group activities and games teach cooperation and handling both winning and losing. And school routines, like prayer or lining up, teach discipline and time management. Beyond school, the environment provides real-world contexts, such as gardening, shopping or a zoo visit, that build clearer concepts than pictures alone, for instance seeing real farm animals helps children classify them better. Community programmes, museums and trips broaden exposure to different cultures and ideas. Nature and parks build ecological and conservation concepts. And environmental experiences build life skills like organising time, decision making and problem solving, while helping children connect what they learn at home and school with real life."
+  },
+  {
+    "title": "Facilitating concept development — key strategies",
+    "text": "A child begins forming concepts when they see a connection between new and past experiences and understand the meaning behind them, since prior knowledge bridges what is known and what is new. Teachers can use several strategies. Using concrete examples and comparisons, connecting new concepts to familiar ideas, such as explaining a wheel by starting from the idea of a circle. Encouraging connections and meaning-making through questions and discussion, and using comparisons like a car's engine is like its heart. Helping children recognise relationships, for example comparing village and city life to highlight differences and similarities. Using a questioning technique with open-ended questions drawn from children's experiences, such as asking about enjoying rain. Storytelling and sharing personal experiences, for example a story about a rabbit who did not brush his teeth and got cavities. Using real-life situations, such as practising addition and subtraction with toffees. Running a brainstorming session so children freely share what they know, revealing understanding and misconceptions. Encouraging group discussions and peer teaching, for example comparing family sizes in small groups. Using visuals and multimedia, such as pictures and videos of the water cycle. Gently correcting wrong beliefs, for example replacing the idea that the sun moves with the idea that the earth rotates, using a globe and torch. And finally, creating a supportive learning environment and encouraging children's natural curiosity to ask questions and explore."
+  },
+  {
+    "title": "Activities to facilitate concept development",
+    "text": "Many activities support concept development. Hands-on projects, like building with blocks or towers, or art projects, make learning fun and interactive. Outdoor games help children understand scientific concepts like weather and seasons. Cooking and baking teach math, science and nutrition in an engaging way. Simple science experiments build basic concepts in physics, chemistry and biology. Nature walks build understanding of biology and ecology. Art projects support creativity, self-expression and history. Chorus movements and dances build understanding of music, rhythm and coordination. Debate builds critical thinking and communication skills. Inquiry-based learning encourages children to ask questions and explore concepts practically. Problem-based learning starts from real-world problems to explore concepts and find solutions. Games and puzzles that involve the concept make learning fun and interactive. And role-playing lets children act out scenarios to understand different roles and perspectives."
+  },
+  {
+    "title": "Graphic organisers and concept maps",
+    "text": "Visual connectors are powerful tools for learning concepts. Graphic organisers such as charts, Venn diagrams, timelines and concept maps help children visualise concepts and the relationships between them, externalise their ideas, and let teachers assess understanding and identify misconceptions. In a concept map, concepts are shown as nodes, connected by lines or arrows showing relationships. Concept maps were first created by Joseph Novak in 1972, who found they help organise information, identify relationships between concepts, and understand how knowledge is interconnected. These tools help children through visual organisation, identification of how concepts connect, meaningful education that focuses on relationships rather than rote learning, active study since creating the map requires organising and connecting information, use as an assessment tool, and differentiation to suit different learning styles. To create a concept map: identify the main topic, brainstorm and list related concepts, organise them into groups, draw lines or arrows to connect ideas, add labels to explain the relationships, and finally review and refine the map, adding more connections as needed."
+  },
+  {
+    "title": "The Panchapadi method — five steps",
+    "text": "The Panchapadi method is a five-step pedagogical approach recommended in the National Curriculum Framework 2023 for foundational stage education, tailoring teaching to a child's interests, understanding and experiences. The first step, Introduction, or Aditi, generates curiosity and connects new knowledge to what the child already knows, for example asking children if they have seen plants at home or in a park. The second step, Conceptual understanding, or Bodha, helps children understand basic ideas through interactive, sensory-rich, hands-on activities, such as planting seeds and watching them grow to learn the parts of a plant. The third step, Practice, or Abhyasa, reinforces learning through repetition and varied activities, such as matching leaves to plant parts or singing songs about how a seed grows, helping the concept settle into long-term memory. The fourth step, Application, or Prayog, helps children transfer understanding to real-life contexts, such as caring for a school garden or sorting vegetables at home, so they realise the concept applies beyond the classroom. And the fifth step, Expansion, or Prasar, enriches knowledge by having children discuss, explain or communicate what they have learned with peers and family, such as telling a story about a plant's journey from seed to flower or making a group poster, deepening understanding through sharing."
+  },
+  {
+    "title": "Panchapadi in practice — teaching the water cycle",
+    "text": "As an example, teaching the water cycle using the Panchapadi method might look like this. For introduction, ask children what would happen if the rain stopped, and show a short video clip. For conceptual understanding, explain the water cycle by drawing a picture or telling it as a story. For practice, revise through quizzes, practice assignments or group discussions. For application, consider using rainwater harvesting as a real example. And for expansion, ask children how water vapour forms and how clouds form, encouraging them to explain it to others. This method makes learning natural and joyful, supports deep understanding, meaningful application and social sharing, and integrates thinking, action, feeling and communication, which are all essential for strong concept development, especially in children's early years."
+  },
+  {
+    "title": "Summary — what we learned today",
+    "text": "Let us recap. First, a concept is the main idea of understanding something, and concept formation means organising experiences into categories, developing gradually through sensory experience, interaction and isolating features. Second, Bruner described five stages of concept formation: observation, comparison, generalisation, definition formation and abstraction, and also described concrete, abstract, natural, artificial, prototype, schematic and category types of concepts, as well as conjunctive, disjunctive and relational concepts. Third, key theories include Bruner's three modes of representation, the spiral curriculum and discovery learning, Piaget's four stages of cognitive development, and Vygotsky's sociocultural theory with the zone of proximal development and scaffolding. Fourth, children form concepts through experiences at home, school and in the environment. Fifth, teachers can use strategies like concrete examples, questioning, storytelling, real-life situations, visuals and gentle correction of misconceptions, supported by activities like hands-on projects, science experiments, games and role-play. Sixth, graphic organisers and concept maps help children visualise relationships between ideas. And finally, the Panchapadi method offers five steps, introduction, conceptual understanding, practice, application and expansion, to build deep and joyful concept development in children. Thank you, that is all for today!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let enVoice = null;
+let playQueueActive = false;
+
+function pickEnglishVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  enVoice = voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-') === 'en-in')
+    || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en'))
+    || null;
+  if (enVoice) {
+    voiceNote.textContent = "Voice: " + enVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "No English voice found on this device — the default voice will be used.";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickEnglishVoice();
+  window.speechSynthesis.onvoiceschanged = pickEnglishVoice;
+} else {
+  voiceNote.textContent = "This browser does not support read-aloud.";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">Part ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ Listen to this part</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 Now playing: Part " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'en-IN';
+  if (enVoice) utter.voice = enVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ Lesson finished";
+      playAllLabel.textContent = "▶ Play full lesson";
+    } else {
+      nowPlayingEl.textContent = "⏹ Part " + (i + 1) + " finished";
+      playAllLabel.textContent = "▶ Play full lesson";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ Play full lesson";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 Playing...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ Paused — press Play to continue";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

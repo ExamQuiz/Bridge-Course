@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Learning Resources — Audio Lesson</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8; --card: #ffffff; --text: #202824; --text-secondary: #5f6b64;
+  --accent: #1a7a5e; --accent-bg: #dcf0e8; --border: #dbe7e0; --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+    --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+  --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.7; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+header { text-align: center; margin-bottom: 1.25rem; }
+header h1 { font-size: 1.3rem; margin: 0 0 0.25rem; font-weight: 700; }
+header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+.player { position: sticky; top: env(safe-area-inset-top, 0px); background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 10; }
+.now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
+.controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+button { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 0.55rem 0.8rem; font-size: 0.95rem; cursor: pointer; min-height: 44px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
+button:active { transform: scale(0.97); }
+.speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
+select { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; padding: 0.3rem 0.4rem; min-height: 36px; }
+.voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
+.sections { display: flex; flex-direction: column; gap: 0.7rem; }
+.section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; cursor: pointer; transition: background 0.2s; }
+.section.active { background: var(--active-bg); border-color: var(--accent); }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.section-title { font-weight: 600; font-size: 1rem; }
+.section-num { font-size: 0.78rem; color: var(--accent); background: var(--accent-bg); border-radius: 999px; padding: 0.1rem 0.55rem; white-space: nowrap; }
+.section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
+.section.active .section-text { display: block; color: var(--text); }
+.play-icon { font-size: 0.8rem; color: var(--accent); }
+footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Learning Resources</h1>
+    <p>Unit 2 · Curriculum, Pedagogy and Assessment — Audio Lesson</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ Press "Play Full Lesson" to start listening</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ Play Full Lesson</span></button>
+      <button id="pauseBtn">⏸ Pause</button>
+      <button id="prevBtn">⏮ Previous</button>
+      <button id="nextBtn">⏭ Next</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">Speed:</label>
+      <select id="rateSelect">
+        <option value="0.8">Slow</option>
+        <option value="1" selected>Normal</option>
+        <option value="1.2">Fast</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>Tap any section to open it and listen separately</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "Introduction — Two Classrooms, Two Approaches",
+    text: "Today we're looking at Learning Resources. As a teacher at the foundational or preparatory level, you do more than transmit knowledge — you shape an environment that supports exploration and curiosity, and a key part of that is choosing the right learning resources. Consider two classrooms. In Classroom A, the teacher has made a colourful alphabet chart from cardboard, updated now and then with local items like 'M for mango'. In Classroom B, the teacher gets children to bring objects from home and organise a learning corner themselves, guiding rather than directing the activity. Both teachers support learning, but their approaches differ in how resources are designed, sourced, and used. This chapter explores how to create such resources thoughtfully, and also how parents, families, and communities become vital partners in a child's learning journey."
+  },
+  {
+    title: "Learning Outcomes",
+    text: "After completing this chapter, you will be able to identify key learning resources suitable for the Foundational and Preparatory level, describe how to design and prepare age-appropriate resources, and explain the role families and communities play in supporting children's learning. You'll also be able to analyse strategies for involving parents as resources, evaluate the community's role in improving educational outcomes, and design inclusive parent-education programmes that strengthen school-family partnerships."
+  },
+  {
+    title: "What Exactly Are Learning Resources?",
+    text: "Learning resources are tools and materials — books, visual aids, digital content, hands-on activities — that support both teaching and learning. UNESCO defines them simply as any material, digital or non-digital, used to support learning and teaching. NCERT broadens this to include human and environmental resources that enhance educational experiences. And Gross and colleagues, back in 1971, described them as facilities that stimulate learning and foster desired behavioural development through interaction and engagement. In short, when resources are varied and accessible, they help meet different learning needs and produce better outcomes."
+  },
+  {
+    title: "Why Learning Resources Matter",
+    text: "Good learning resources improve conceptual clarity by giving learners visual, tactile, and experiential material for abstract ideas. Multisensory materials — visuals, audio, hands-on tools — deepen cognitive engagement and help learners retain information. Engaging resources boost motivation and curiosity, while a diverse range of materials accommodates visual, auditory, and kinesthetic learners alike. Interactive elements like group activities and digital tools turn learners into active contributors rather than passive listeners. Resources drawn from real-world or community contexts bridge the gap between theory and practice, and problem-solving materials nurture critical thinking and creativity. And when commercial resources are scarce, teachers can improvise with local or recycled materials — turning a constraint into an opportunity for innovation."
+  },
+  {
+    title: "Designing Effective Resources — Ten Guiding Principles",
+    text: "Effective learning resources follow ten guiding principles. They should be learner-centred, reflecting students' backgrounds and interests. They must align with the curriculum and expected learning outcomes. Content should be clear and logically presented, and relevant to learners' real lives. Materials must be age-appropriate in language and visuals, and should engage multiple senses — seeing, hearing, doing — to make learning dynamic. They should promote interactive, active participation, and be adaptable to different learning styles, group sizes, and classroom conditions. Resources must be inclusive, reflecting the diversity of culture, language, and ability in the classroom. And finally, they must be accessible and practical — affordable, easy to use, and realistic given a teacher's time and budget."
+  },
+  {
+    title: "Local and Culturally Relevant Materials",
+    text: "Learners never arrive at school as blank slates — they bring a wealth of experience rooted in their local environment and culture. When teaching connects to natural resources, household items, folk stories, and traditional tools that children already know, learning becomes far more meaningful. This approach enhances engagement and comprehension, promotes cultural identity and pride, and makes learning outcomes practically applicable. To implement this well, schools should involve local leaders and elders, integrate local languages and dialects, adapt stories and case studies to reflect familiar landscapes and festivals, draw on indigenous knowledge such as traditional farming methods, and train facilitators to use these materials sensitively and effectively."
+  },
+  {
+    title: "Preparing Low-Cost and No-Cost Materials — Six Practical Steps",
+    text: "Quality educational materials don't need to be expensive. The process has six steps. First, identify the learning objective clearly — say, recognising shapes. Second, assess learners' needs, considering their age and abilities — a kindergarten class needs large, colourful letters, while older students benefit from detailed diagrams. Third, survey available materials — cardboard, bottle caps, fabric scraps from classrooms, homes, or local businesses. Fourth, design the material — sketch it out, like a poster-board plant-cycle chart made from magazine clippings, and reinforce edges for durability. Fifth, construct the material, ideally involving students so they feel ownership. And sixth, test it in small groups, gather feedback, then refine and reuse — enlarging text, adding labels, and storing resources for the future."
+  },
+  {
+    title: "Weaving Resources into Daily Classroom Life",
+    text: "Resources work best when woven naturally into everyday teaching — flashcards, interactive games, maps, and visual charts that turn lessons into two-way conversations rather than one-way lectures. Simple kitchen items can power a science experiment; everyday objects can illustrate a math concept. Collaborative projects using recycled materials build teamwork and environmental awareness, while storytelling, role-play, and debate with simple props keep students actively engaged. Regularly integrating these varied resources into classroom routines also gives teachers continuous insight into each student's strengths and areas needing support."
+  },
+  {
+    title: "Adapting Resources for Every Learner — the UDL Framework",
+    text: "Not every learner takes in information the same way, and that's where Universal Design for Learning, or UDL, comes in — a research-based framework built on the idea that learner variability is the norm, not the exception. UDL rests on three principles. Multiple means of representation means offering content in text, audio, visuals, and hands-on formats, since some learners process visually while others rely on sound or touch. Multiple means of engagement means designing tasks with choice, real-world relevance, and appropriate challenge, since motivation and interest vary widely. And multiple means of action and expression means letting students show what they know through writing, speaking, models, or digital media — whichever suits them best. Importantly, the goal isn't separate materials for each learner, but flexible materials usable in multiple ways, while still preserving the intellectual depth of the content for everyone."
+  },
+  {
+    title: "Educating Parents to Support Their Children",
+    text: "Parents are a child's first and most influential teachers, and when they're well-informed, they make better decisions to support learning at home. Parent education can take the form of workshops, seminars, printed materials, or direct conversations with teachers, focusing on key areas — understanding child development and realistic milestones, creating a conducive home environment with routines and learning materials, positive parenting techniques like active listening, supporting simple learning activities and homework, and maintaining open communication with educators. Regular orientation and training sessions help parents feel confident and prepared, which in turn is linked to better academic achievement, improved behaviour, and greater motivation in children."
+  },
+  {
+    title: "Parents as Teachers, and Partners in School Life",
+    text: "Long before a child enters a classroom, home is already their first learning environment. Simple daily activities — reading together, counting objects while doing chores, storytelling, singing, cooking together — quietly build literacy, numeracy, and communication skills without needing formal lessons or expensive resources. Building parents' confidence to teach these basics matters too — reassuring them that everyday routines, not formal training, are often the most powerful teaching moments. Beyond the home, schools can invite parents into school life through open houses, cultural festivals, and parent-teacher meetings, and can draw on their professional skills and cultural knowledge — a parent working in science or the arts, for instance, might lead a guest workshop that brings real-world relevance to the curriculum."
+  },
+  {
+    title: "The Wider Community as an Educational Partner",
+    text: "Education thrives through collaboration with families, local organisations, and the broader community — not just within school walls. Community support can be tangible, like donations or infrastructure, or intangible, like volunteering and mentorship, and it also strengthens accountability and trust between schools and the people they serve. Community wisdom and indigenous knowledge can make curricula more locally relevant, especially in rural or marginalised settings. Partnerships with libraries, health services, universities, and local businesses — through outreach programmes, mentoring, or workplace visits — further connect classroom learning to real life and future careers. The success of these partnerships depends on shared vision, mutual respect, and clearly defined roles between schools and their partners."
+  },
+  {
+    title: "Building Strong School-Home Communication",
+    text: "Consider Ms. Rekha, a teacher in rural Maharashtra, whose student Raju has grown inattentive and misses homework. She learns his parents are uncomfortable with written English and unfamiliar with school apps. This is a common challenge, and the solution lies in flexible, respectful communication — regular, clear updates in accessible language, genuine two-way conversation where parents feel safe asking questions, and sensitivity to different cultural and linguistic backgrounds, including translated materials where needed. Creating an inclusive, welcoming school environment matters just as much — reflecting diverse cultures in classroom displays, learning children's preferred names, and responding firmly to any discrimination or exclusion. And ongoing collaboration — regular informal check-ins, shared goal-setting, and genuinely welcoming parent feedback — builds the mutual trust that helps every child thrive."
+  },
+  {
+    title: "Let Us Sum Up",
+    text: "So, to sum up what we've covered today. First, learning resources are far more than teaching aids — thoughtfully designed, they make lessons more engaging, inclusive, and effective. Second, ten key principles, from learner-centredness to accessibility, guide the design of resources that truly work in the classroom. Third, low-cost and locally sourced materials, prepared through a clear six-step process, can deliver quality instruction even with limited budgets. Fourth, the Universal Design for Learning framework reminds us to offer multiple ways to represent content, engage learners, and let them express what they know. And fifth, parents and communities are not peripheral to education — they are active partners whose involvement, when nurtured through good communication and genuine inclusion, strengthens learning both inside and outside the classroom. Thank you, and that's all for today!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let selectedVoice = null;
+let playQueueActive = false;
+
+function pickVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  selectedVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en')) || null;
+  if (selectedVoice) {
+    voiceNote.textContent = "Voice: " + selectedVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "No English voice found on this device — using the default voice.";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickVoice();
+  window.speechSynthesis.onvoiceschanged = pickVoice;
+} else {
+  voiceNote.textContent = "This browser does not support text-to-speech.";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">Part ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ Play this part separately</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 Now playing: Part " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'en-US';
+  if (selectedVoice) utter.voice = selectedVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ Lesson complete";
+      playAllLabel.textContent = "▶ Play Full Lesson";
+    } else {
+      nowPlayingEl.textContent = "⏹ Part " + (i + 1) + " finished";
+      playAllLabel.textContent = "▶ Play Full Lesson";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ Play Full Lesson";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 Playing...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ Paused — press play again to continue";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

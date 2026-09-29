@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Role of Teachers in Operationalising and Evaluating Curriculum — Audio Lesson</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8; --card: #ffffff; --text: #202824; --text-secondary: #5f6b64;
+  --accent: #1a7a5e; --accent-bg: #dcf0e8; --border: #dbe7e0; --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+    --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+  --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.7; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+header { text-align: center; margin-bottom: 1.25rem; }
+header h1 { font-size: 1.2rem; margin: 0 0 0.25rem; font-weight: 700; }
+header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+.player { position: sticky; top: env(safe-area-inset-top, 0px); background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 10; }
+.now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
+.controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+button { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 0.55rem 0.8rem; font-size: 0.95rem; cursor: pointer; min-height: 44px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
+button:active { transform: scale(0.97); }
+.speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
+select { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; padding: 0.3rem 0.4rem; min-height: 36px; }
+.voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
+.sections { display: flex; flex-direction: column; gap: 0.7rem; }
+.section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; cursor: pointer; transition: background 0.2s; }
+.section.active { background: var(--active-bg); border-color: var(--accent); }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.section-title { font-weight: 600; font-size: 1rem; }
+.section-num { font-size: 0.78rem; color: var(--accent); background: var(--accent-bg); border-radius: 999px; padding: 0.1rem 0.55rem; white-space: nowrap; }
+.section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
+.section.active .section-text { display: block; color: var(--text); }
+.play-icon { font-size: 0.8rem; color: var(--accent); }
+footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Role of Teachers in Operationalising and Evaluating Curriculum</h1>
+    <p>Unit 2 · Curriculum, Pedagogy and Assessment — Audio Lesson</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ Press "Play Full Lesson" to start listening</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ Play Full Lesson</span></button>
+      <button id="pauseBtn">⏸ Pause</button>
+      <button id="prevBtn">⏮ Previous</button>
+      <button id="nextBtn">⏭ Next</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">Speed:</label>
+      <select id="rateSelect">
+        <option value="0.8">Slow</option>
+        <option value="1" selected>Normal</option>
+        <option value="1.2">Fast</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>Tap any section to open it and listen separately</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "Introduction — Meena's Monday Morning",
+    text: "Today we're exploring the role of teachers in operationalising and evaluating curriculum. Picture a bright Monday morning in a small village school. Meena, a newly posted primary teacher, checks her timetable — first period, mathematics. The curriculum document simply says, 'Children will identify numbers up to 10 and count objects.' Instead of relying on textbooks alone, she pulls out colourful beads, number cards, and bottle caps. The children gather round, she sings a number rhyme, and they laugh, sort, and count with joy. By the end of class, they've learned numbers and also practised sorting and cooperation. Meena didn't just read the curriculum — she brought it to life. This chapter is about exactly that skill: turning curriculum goals into real classroom experiences, and then honestly assessing whether it's working."
+  },
+  {
+    title: "Learning Outcomes",
+    text: "After this chapter, you'll be able to identify various print and non-print resources for operationalising the curriculum at the foundational or preparatory stage. You'll integrate print and non-print resources to create engaging, multimodal classroom experiences aligned with Ministry of Education initiatives. You'll be able to select and adapt age-appropriate, inclusive, and culturally relevant teaching materials, localise content for diverse and multilingual classrooms, and reflect on your own practice to assess how effectively your resources are achieving the intended curricular outcomes."
+  },
+  {
+    title: "Why Curriculum Implementation Matters So Much Early On",
+    text: "The foundational stage, roughly ages three to eight, and the preparatory stage that follows, are critical for lifelong learning. NEP 2020 and NCF-FS 2022 both emphasise that effective implementation here should be holistic, play-based, and competency-focused. Teachers operationalise learning outcomes using a mix of print materials like textbooks and flashcards, and non-print resources like NCERT's Jaadui Pitara kit or the DIKSHA platform — creating inclusive, engaging environments that bridge theory with practice. By thoughtfully selecting, adapting, and evaluating these resources, educators translate policy into meaningful classroom experiences that build foundational literacy, numeracy, and socio-emotional skills."
+  },
+  {
+    title: "What Do 'Operationalising' and 'Evaluating' Actually Mean?",
+    text: "Operationalising the curriculum means putting it into action — planning lessons, selecting materials, designing activities, and using strategies that achieve the intended learning outcomes. Evaluating the curriculum means assessing how effectively it's being implemented, and whether learning objectives are actually being met. Consider this example: the curriculum objective is 'children should recognise letters and their sounds.' To operationalise it, a teacher might read aloud from an alphabet storybook, sing alphabet songs, set up a letter hunt, and let children shape letters with playdough. To evaluate it, she observes who can identify letters, matches objects to beginning sounds, and keeps a simple checklist — adapting lessons based on which sounds children find tricky. This turns the curriculum from a document into a living, adjustable experience."
+  },
+  {
+    title: "Print Materials — The Physical Core of Early Learning",
+    text: "Print materials are the tangible resources at the heart of foundational classrooms. Textbooks present age-appropriate content while workbooks provide practice exercises, together forming the basic framework for lessons. Teacher handbooks and guides support educators with methodologies and activity plans. Flashcards, posters, and charts simplify complex concepts visually — flashcards build vocabulary, posters display key information, and charts organise knowledge systematically. And supplementary readers and storybooks, from sources like the National Book Trust or the Children's Book Trust, expose children to diverse narratives and cultivate a lifelong reading habit."
+  },
+  {
+    title: "Non-Print Materials — Multi-Sensory and Interactive",
+    text: "Non-print materials go beyond the textbook — digital tools, tactile kits, audio content, and manipulatives that create rich, engaging experiences. Digital platforms like DIKSHA and e-Pathshala offer competency-based e-modules, animations, and quizzes for personalised learning. Audio-visual programmes make abstract ideas tangible through sound and sight. Educational kits like NCERT's Jaadui Pitara — a multilingual, play-based foundational kit — turn early learning into hands-on play, building literacy, numeracy, motor skills, and problem-solving all at once. Manipulatives like counting blocks and shape sorters build fine motor skills and concrete mathematical understanding. And puppets and role-play materials, like doctor sets or kitchen sets, nurture imagination, vocabulary, and social-emotional learning."
+  },
+  {
+    title: "The Multimodal Approach — Blending Print and Non-Print",
+    text: "The real power comes from blending these two. Take the theme of Seasons and Weather: print material might be a colourful seasons chart and matching worksheets, while non-print material could be recorded weather sounds — rain, thunder, wind — plus videos of seasonal change and dressing dolls appropriately. This supports auditory, visual, and tactile learners all at once, making an abstract concept concrete. Or take Animals and Their Homes: a big picture book pairs with toy animals matched to miniature homes, a short animation, and animal-themed songs — building language, categorisation, and observation skills in one joyful, integrated experience."
+  },
+  {
+    title: "Operationalising the Curriculum — Age-Appropriateness, Inclusivity, Cultural Relevance",
+    text: "NIPUN Bharat aims for every child in India to achieve foundational literacy and numeracy by the end of Grade 3. To support this, teachers select materials using three key criteria. Age-appropriateness means matching resources to cognitive and social development — colourful picture books and puzzles for younger children, more detailed stories and structured games as they grow, reviewed regularly so nothing becomes frustrating or boring. Inclusivity means choosing resources that reflect diverse cultures, languages, and abilities — bilingual storybooks, tactile aids for visually impaired students, audio resources for varied needs — so every child feels seen. And cultural relevance means connecting learning to students' real lives — local folk tales, math examples using familiar market objects, science lessons drawing on traditional ecological knowledge."
+  },
+  {
+    title: "Material Adaptation — Bringing the Local World Into the Classroom",
+    text: "Children learn best when materials reflect their lived experience. So language lessons might feature peacocks, cows, or goats instead of polar bears or penguins. Environmental studies might discuss the nearby river or pond a child has actually visited. Art activities might involve rangoli patterns or scenes from Makar Sankranti or Holi. Role-play might centre on the village postman or milk vendor rather than unfamiliar professions. Mathematics might use real rupees and paise in a mock village market. Science lessons might examine neem or banyan leaves from around the school rather than exotic species. This localisation — transforming generic examples into culturally relevant ones — measurably boosts engagement and comprehension."
+  },
+  {
+    title: "Modifying for Different Needs, and Building Multilingual Resources",
+    text: "Consider Aanya, a Class 1 student who finds it hard to recognise letters as quickly as her classmates. Her teacher gives her alphabet cards matched to her current skill level, lets her use letter tiles and tracing sheets for tactile learning, and during assessment, asks questions aloud so Aanya can respond by pointing rather than writing. Small adjustments like yellow-tinted reading sheets for dyslexic students, sand-tray number tracing for kinaesthetic learners, or tactile storybooks for visually impaired learners ensure equitable access for everyone. Multilingual classrooms need similar creativity — in Tamil Nadu, science vocabulary might appear in both Tamil and English; in Assam, a 'days of the week' chart might be written in Assamese, Bengali, and Hindi with cheerful illustrations, letting every child say the day in whichever language feels like home."
+  },
+  {
+    title: "Balancing Structure, Play, and Multiple Levels",
+    text: "Good foundational classrooms hold structure and imagination together. After practising letter recognition with flashcards, a corner of the room might become a lively 'Post Office' where children write notes and mail them in a homemade post-box — turning new literacy skills into authentic, memorable play. For numbers, you might start with structured worksheet tracing, move to an outdoor hopscotch game shouting numbers, then set up a pretend grocery store with play money. And because every child learns at their own pace, multi-level teaching lets the same picture storybook serve everyone — beginners name characters and colours, more advanced children sequence the story events with picture cards, and advanced learners imagine and share their own endings."
+  },
+  {
+    title: "Evaluating Curriculum Effectiveness — Watching, Recording, Reflecting",
+    text: "Evaluating effectiveness isn't about ticking boxes — it's about closely watching how children actually engage. If the science corner with experiment kits sits mostly unused while the art table buzzes with activity, that's a valuable clue — maybe the kits need a more inviting introduction. Classroom observation techniques — anecdotal notes, checklists, running records — reveal not just what children are learning but how. And simple material usage logs, noting the date, material type, activity, and student response, reveal trends over weeks and months — perhaps storybooks are always in demand, while a digital story only captured interest briefly. Together, these tools help teachers keep the classroom lively and effective for every learner."
+  },
+  {
+    title: "Assessing Learning Outcomes — Rubrics, Portfolios, and DIKSHA Analytics",
+    text: "Rubrics give teachers a structured, fair way to assess engagement, understanding, imagination, application, and communication — for instance, in a Nature Walk activity, a rubric might track a child's observation skills, ability to describe findings, and participation in group sharing, rated with simple smiley faces. Portfolios and project work, like a 'My Family' project combining drawings, discussion, and a photo collage, give a holistic picture of a child's growth in language, emotional expression, and fine motor skills over time. And digital platforms like DIKSHA offer analytics — completion rates, time spent, quiz scores — that reveal patterns, such as children loving story modules but disengaging from math content, prompting a teacher to bring in more hands-on math games."
+  },
+  {
+    title: "Continuous Improvement — Feedback, Action Research, and Sharing What Works",
+    text: "Continuous improvement starts with being open to feedback — even young children show what they liked or found confusing through a smile, a drawing, or a simple gesture, and colleagues observing your class can suggest small but powerful changes. Action research takes this further through structured steps: identify a problem, like low engagement with flashcards; plan a strategy, like switching to puppets; implement the change; collect data on children's responses; analyse the results; make adjustments; and document and share what you learned with colleagues. Regularly documenting what works — a local folk tale with puppets leading to strong vocabulary recall, for instance — builds a shared resource pool that benefits the whole teaching community over time."
+  },
+  {
+    title: "Real Challenges, Practical Solutions",
+    text: "Even with strong curriculum frameworks, real classrooms face real constraints. Too few materials for every child? Use group activities to share resources and routines to manage large groups. Resource limitations in rural areas? Make teaching aids from local materials like stones or cloth puppets, and build shared community resource corners. A digital divide with unreliable internet? Use downloaded DIKSHA content offline, organise group learning around a single device, or pair children for buddy tech learning. Little time to prepare materials? Fix a weekly slot for it, rotate and reuse existing charts and kits, and lean on ready-made NCERT and SCERT resources. And for continuous improvement itself — when young children can't express feedback clearly — simple smiley charts and watching body language go a long way."
+  },
+  {
+    title: "Let Us Sum Up",
+    text: "So, to sum up today's lesson. Teachers are the heart of the classroom — they turn curriculum goals into real, daily learning experiences, especially crucial at the foundational stage, which NEP 2020 and NCF-FS 2022 frame around holistic, play-based, competency-driven learning. Operationalising the curriculum means planning, choosing materials, and designing activities; evaluating it means continuous observation, checklists, and reflection on student work. Print materials offer structure and language richness, while non-print materials — digital tools, hands-on kits, puppets — make learning dynamic and fun; blending both supports every kind of learner. Material selection must be age-appropriate, inclusive, and culturally relevant, and material adaptation means localising content, modifying for diverse needs, and embracing multilingual learning. Finally, teachers must keep reflecting, adapting, and innovating — because that ongoing cycle is what keeps a curriculum truly alive in the classroom. Thank you, and that's all for today!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let selectedVoice = null;
+let playQueueActive = false;
+
+function pickVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  selectedVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en')) || null;
+  if (selectedVoice) {
+    voiceNote.textContent = "Voice: " + selectedVoice.name;
+  } else if (voices.length) {
+    voiceNote.textContent = "No English voice found on this device — using the default voice.";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickVoice();
+  window.speechSynthesis.onvoiceschanged = pickVoice;
+} else {
+  voiceNote.textContent = "This browser does not support text-to-speech.";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">Part ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ Play this part separately</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 Now playing: Part " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = 'en-US';
+  if (selectedVoice) utter.voice = selectedVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ Lesson complete";
+      playAllLabel.textContent = "▶ Play Full Lesson";
+    } else {
+      nowPlayingEl.textContent = "⏹ Part " + (i + 1) + " finished";
+      playAllLabel.textContent = "▶ Play Full Lesson";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ Play Full Lesson";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 Playing...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ Paused — press play again to continue";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
