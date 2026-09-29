@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MCQs के ज़रिए ब्रिज कोर्स की तैयारी करें, बिना किसी शुल्क के।</title>
+  <title>MCQs,ऑडियो बुक के ज़रिए ब्रिज कोर्स की तैयारी करें, बिना किसी शुल्क के।</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
     :root { --navy:#102f36; --ink:#18343b; --muted:#718487; --cream:#f4f7f3; --white:#fff; --line:#dbe8e2; --mint:#d5f0e5; --teal:#087f82; --teal-dark:#075e61; --coral:#ef806b; --correct:#16734b; --wrong:#b33d35; --gold:#e8b95f; --shadow:0 22px 60px rgba(16,47,54,.12); font-family:"DM Sans",sans-serif; }
@@ -15,7 +15,7 @@
     .is-inner-view .site-header::after { display:none; }
     .is-inner-view .header-inner { padding:18px 0; }
     .is-inner-view h1,.is-inner-view .subtitle { display:none; }
-    .is-inner-view .eyebrow { display:block; margin:0 0 8px; font-size:14px; letter-spacing:0; text-transform:none; }
+    .is-inner-view .eyebrow { display:block; width:fit-content; margin:0 0 8px; padding:8px 12px; color:var(--navy); background:#b7e8d3; border-left:4px solid var(--coral); border-radius:4px; font-size:14px; font-weight:700; letter-spacing:0; text-transform:none; }
     .header-inner, main { width:min(1120px,calc(100% - 40px)); margin:auto; }
     .is-inner-view main { min-height:calc(100vh - 360px); }
     .header-inner { position:relative; z-index:1; padding:28px 0 42px; }
@@ -50,8 +50,13 @@
     .chapter-card:hover { border-color:var(--teal); background:#f2fbf7; }
     .chapter-card strong { display:block; margin-bottom:4px; font:600 16px "Space Grotesk",sans-serif; }
     .chapter-card small { color:var(--muted); font-size:12px; }
-    .chapter-main { min-width:0; flex:1 1 100%; padding:11px 13px; text-align:left; color:var(--ink); background:var(--white); border:1px solid var(--line); border-radius:6px; }
+    .chapter-main { display:grid; min-width:0; flex:1 1 100%; grid-template-columns:76px minmax(0,1fr); grid-template-rows:auto auto; column-gap:12px; align-items:center; padding:11px 13px; text-align:left; color:var(--ink); background:var(--white); border:1px solid var(--line); border-radius:6px; }
+    .chapter-main::before { display:grid; grid-column:1; grid-row:1 / span 2; min-height:36px; padding:4px; place-items:center; border-radius:4px; color:var(--teal-dark); background:var(--mint); content:"CHAPTER " attr(data-number); font-size:10px; font-weight:700; }
     .chapter-main:hover { color:var(--teal-dark); border-color:var(--teal); background:#f2fbf7; }
+    .chapter-main strong { grid-column:2; margin:0 0 4px; line-height:1.3; overflow-wrap:anywhere; }
+    .chapter-main small { display:inline-flex; width:fit-content; grid-column:2; align-items:center; gap:6px; margin-top:3px; padding:6px 9px; color:var(--white); background:var(--teal); border-radius:4px; font-size:12px; font-weight:700; line-height:1.2; }
+    .chapter-main small::before { content:"▶"; font-size:9px; }
+    .chapter-main:hover small { background:var(--teal-dark); }
     .chapter-actions { display:flex; min-width:0; flex:1 1 100%; flex-wrap:wrap; align-items:center; gap:8px; }
     .document-link { padding:8px 10px; color:var(--teal-dark); background:var(--mint); border:1px solid #b9e2d0; border-radius:5px; font-size:12px; font-weight:700; white-space:nowrap; }
     .chapter-actions > .document-link { display:inline-flex; width:144px; max-width:100%; min-height:40px; flex:0 1 144px; align-items:center; justify-content:center; gap:6px; padding:7px 9px; line-height:1.2; text-align:center; white-space:normal; }
@@ -125,7 +130,7 @@
   </style>
 </head>
 <body>
-  <header class="site-header"><div class="header-inner"><div class="topline"><button id="home-top" class="brand" type="button">ExamQuiz <span>for BridgeCourse</span></button><div class="top-actions"><button id="progress-top" class="secondary-button" type="button">My progress</button><a class="secondary-button" href="https://examquiz.github.io/Bridge-Course/documents/examtimeline/bridge-academic-calendar.pdf" target="_blank" rel="noopener">Calendar</a></div></div><p id="medium-indicator" class="eyebrow">Bridge Course Preparation with Free MCQs and Audio Lessons</p><h1>ब्रिज कोर्स की तैयारी को गति देने का प्रयास</h1><p class="subtitle">आपकी मदद के लिए NIOS की आधिकारिक वेबसाइट https://bridge.nios.ac.in/ सिलेबस से MCQ, Audio Lessions तैयार किए गए हैं। कृपया किसी भी ताज़ा जानकारी के लिए आधिकारिक वेबसाइट देखें।</p></div></header>
+  <header class="site-header"><div class="header-inner"><div class="topline"><button id="home-top" class="brand" type="button">ExamQuiz <span>for BridgeCourse</span></button><div class="top-actions"><button id="progress-top" class="secondary-button" type="button">My progress</button><a class="secondary-button" href="https://examquiz.github.io/Bridge-Course/documents/examtimeline/bridge-academic-calendar.pdf" target="_blank" rel="noopener">Exam Calendar</a></div></div><p id="medium-indicator" class="eyebrow">Bridge Course Preparation with Free MCQs and Audio Lessons</p><h1>ब्रिज कोर्स की तैयारी को गति देने का प्रयास</h1><p class="subtitle">आपकी मदद के लिए NIOS की आधिकारिक वेबसाइट https://bridge.nios.ac.in/ सिलेबस से MCQ, Audio Lessions तैयार किए गए हैं। कृपया किसी भी ताज़ा जानकारी के लिए आधिकारिक वेबसाइट देखें।</p></div></header>
   <main>
     <div id="loading" class="notice">Loading your quiz library...</div>
     <div id="error" class="notice error" hidden><div class="error-content"><span id="error-message"></span><button id="error-back-to-chapters" class="back-button" type="button">← Back to chapters</button></div></div>
@@ -242,6 +247,7 @@
     function chapterNameFor(subject,chapterNumber) { const chapterNames=subject.sharedMediumSlug?subject.chapterNames:(selectedMedium.slug==="english"?subject.englishChapterNames:subject.chapterNames); return chapterNames?.[chapterNumber-1]||`Chapter ${chapterNumber} name`; }
     function podcastUrl(subject,chapterNumber) { return podcastLinks[`${contentMediumSlug(subject)}|${subject.slug}|${chapterNumber}`]||""; }
     function selectSubject(subject) { selectedSubject=subject; const medium=selectedMedium; document.querySelector("#chapter-title").textContent=subject.name; const chapterNames=subject.sharedMediumSlug?subject.chapterNames:(medium.slug==="english"?subject.englishChapterNames:subject.chapterNames); chaptersElement.innerHTML=Array.from({length:subject.chapters},(_,index)=>{ const chapterNumber=index+1, chapterName=chapterNames?.[index]||`Chapter ${chapterNumber} name`, url=documentUrl(chapterNumber), linkKey=`${contentMediumSlug(subject)}|${subject.slug}|${chapterNumber}`, audioUrl=podcastLinks[linkKey]||"", textAudioUrl=textAudioLinks[linkKey]||"", podcastLink=audioUrl?`<a class="document-link podcast-link" href="${escapeHtml(audioUrl)}" target="_blank" rel="noopener">Listen Podcast</a>`:"", textAudioLink=textAudioUrl?`<a class="document-link text-audio-link" href="${escapeHtml(textAudioUrl)}" target="_blank" rel="noopener" aria-label="Play Audio Lesson">Play Audio Lesson</a>`:`<button class="document-link podcast-link text-audio-placeholder" type="button" disabled title="Add this chapter URL to textAudioLinks">Listen Text Audio (awaiting from NIOS)</button>`; return `<article class="chapter-card"><button class="chapter-main" data-number="${chapterNumber}" type="button"><strong>${escapeHtml(chapterName)}</strong><small>Open Quiz</small></button><div class="chapter-actions">${podcastLink}${textAudioLink}<a class="document-link" href="${url}" target="_blank" rel="noopener">Read document</a><span class="chapter-arrow" aria-hidden="true">→</span></div></article>`; }).join(""); chaptersElement.querySelectorAll(".chapter-main").forEach(card=>card.addEventListener("click",()=>loadQuiz(Number(card.dataset.number)))); showOnly(chaptersView); }
+    document.addEventListener("click",event=>{ const audioLink=event.target.closest(".text-audio-link"); if (!audioLink) return; event.preventDefault(); window.location.assign(audioLink.href); });
     function stopSpeaking() { speechActive=false; readQuestion.textContent="🔊 Read aloud"; if ("speechSynthesis" in window) window.speechSynthesis.cancel(); }
     function speakQuestion(question) { if (!("speechSynthesis" in window)) return; stopSpeaking(); const text=`${question.text}. Options: ${question.options.map((option,index)=>`${String.fromCharCode(65+index)}. ${option}`).join(". ")}`; const utterance=new SpeechSynthesisUtterance(text); utterance.onend=()=>{ speechActive=false; readQuestion.textContent="🔊 Read aloud"; }; utterance.onerror=()=>window.setTimeout(()=>{ if (speechActive) stopSpeaking(); },500); speechActive=true; readQuestion.textContent="⏹ Stop reading"; window.speechSynthesis.speak(utterance); }
     function speakAnswerFeedback(question,selectedIndex) { if (!("speechSynthesis" in window)) return; const correct=answerMatches(question.correct,question.options[selectedIndex],question.options), acknowledgement=correct?"हाँ, यह सही उत्तर है।":"नहीं, यह सही उत्तर नहीं है।", explanation=question.explanation||"इस प्रश्न की कोई व्याख्या उपलब्ध नहीं है।"; const utterance=new SpeechSynthesisUtterance(`${acknowledgement} ${explanation}`); utterance.lang="hi-IN"; window.speechSynthesis.speak(utterance); }
