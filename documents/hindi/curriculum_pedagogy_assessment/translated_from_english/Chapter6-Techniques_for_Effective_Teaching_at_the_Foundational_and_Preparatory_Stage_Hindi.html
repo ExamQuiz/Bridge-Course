@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>आधारभूत और प्रारंभिक चरण में प्रभावी शिक्षण की तकनीकें — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8; --card: #ffffff; --text: #202824; --text-secondary: #5f6b64;
+  --accent: #1a7a5e; --accent-bg: #dcf0e8; --border: #dbe7e0; --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+    --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+  --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Noto Sans Devanagari', 'Nirmala UI', 'Segoe UI', system-ui, sans-serif; line-height: 1.7; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+header { text-align: center; margin-bottom: 1.25rem; }
+header h1 { font-size: 1.2rem; margin: 0 0 0.25rem; font-weight: 700; }
+header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+.player { position: sticky; top: env(safe-area-inset-top, 0px); background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 10; }
+.now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
+.controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+button { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 0.55rem 0.8rem; font-size: 0.95rem; cursor: pointer; min-height: 44px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
+button:active { transform: scale(0.97); }
+.speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
+select { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; padding: 0.3rem 0.4rem; min-height: 36px; }
+.voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
+.sections { display: flex; flex-direction: column; gap: 0.7rem; }
+.section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; cursor: pointer; transition: background 0.2s; }
+.section.active { background: var(--active-bg); border-color: var(--accent); }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.section-title { font-weight: 600; font-size: 1rem; }
+.section-num { font-size: 0.78rem; color: var(--accent); background: var(--accent-bg); border-radius: 999px; padding: 0.1rem 0.55rem; white-space: nowrap; }
+.section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
+.section.active .section-text { display: block; color: var(--text); }
+.play-icon { font-size: 0.8rem; color: var(--accent); }
+footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>आधारभूत और प्रारंभिक चरण में प्रभावी शिक्षण की तकनीकें</h1>
+    <p>इकाई 3 · पाठ्यचर्या, शिक्षण-शास्त्र और मूल्यांकन — ऑडियो पाठ</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ चलाएँ" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ चलाएँ</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>किसी भी भाग पर टैप करके उसे खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — पाठ्यचर्या के लक्ष्यों से कक्षा के अभ्यास तक",
+    text: "आज हम पाठ्यचर्या के लक्ष्यों को समझने से आगे बढ़कर उन्हें कक्षा में जीवंत बनाने की बात करेंगे। पिछले अध्याय में हमने देखा कि शिक्षक पाठ्यचर्या को कैसे लागू और उसका मूल्यांकन करते हैं। इस अध्याय का प्रश्न है: आधारभूत और प्रारंभिक चरण में प्रभावी शिक्षण की कौन-सी तकनीकें हैं? हम शिक्षण के सिद्धांत, विषय-आधारित, खेल-आधारित, गतिविधि-आधारित और जिज्ञासा-आधारित अधिगम, शिक्षण-अधिगम सामग्री, शिक्षार्थी-केंद्रित पाठ योजना और संतुलित दैनिक समय-सारणी देखेंगे। ये सभी तरीके बच्चों के संज्ञानात्मक और भावनात्मक विकास को बढ़ाते हैं और आजीवन सीखने की नींव रखते हैं।"
+  },
+  {
+    title: "अधिगम निष्पत्तियाँ",
+    text: "इस अध्याय के बाद आप प्रारंभिक शिक्षार्थियों के लिए प्रभावी शिक्षण के सिद्धांत समझा सकेंगे। आप खेल, गतिविधि, कहानी, अनुभवात्मक अधिगम और शिक्षण-अधिगम सामग्री जैसी उम्र के अनुकूल तकनीकों की समझ दिखा सकेंगे। आप कई तरीकों को जोड़ने वाली शिक्षार्थी-केंद्रित पाठ योजनाएँ बना सकेंगे, और विविध, विकासात्मक रूप से उपयुक्त गतिविधियों वाली संतुलित दैनिक समय-सारणी तैयार कर सकेंगे।"
+  },
+  {
+    title: "सिद्धांत — बच्चे को समझना और सही वातावरण बनाना",
+    text: "प्रभावी शिक्षण की शुरुआत छोटे बच्चों को गहराई से समझने से होती है: वे कैसे बढ़ते, सोचते और सीखते हैं, और उनकी रुचियाँ व ध्यान की अवधि कैसी है। पहला सिद्धांत बाल-केंद्रितता है, जिसमें बच्चे की रुचि, अनुभव और विकासात्मक ज़रूरतें हर गतिविधि के केंद्र में होती हैं और सीखना उनके पूर्व ज्ञान पर आधारित होता है। शिक्षण तीन से आठ वर्ष के बच्चों की क्षमताओं के अनुरूप होना चाहिए। एनईपी 2020 के अनुसार लक्ष्य है कि बच्चे कक्षा 1 तक संज्ञानात्मक और भावनात्मक रूप से स्कूल के लिए तैयार हों। वातावरण सुरक्षित, स्वच्छ, आकर्षक और भाषा-समृद्ध हो, और बच्चों की घर की भाषा का स्वागत हो, जो स्कूल की भाषा तक पहुँचने का पुल बने।"
+  },
+  {
+    title: "सिद्धांत — समावेशन, खेल और समग्र अधिगम",
+    text: "समावेशिता का अर्थ है सीखने की गति, शैली, भाषा और पृष्ठभूमि की भिन्नताओं का सम्मान करना, और स्थानीय कहानियों, गीतों, खेलों व शिल्प के ज़रिए कक्षा को बच्चों के जीवन से जोड़ना। खेल प्रारंभिक अधिगम का केंद्र है। यह केवल विधि नहीं, मार्गदर्शक सिद्धांत है, क्योंकि खेलते हुए बच्चे योजना बनाते, कल्पना करते, बातचीत करते और रचते हैं। एनसीएफ-एफएस के अनुसार खेल सीखने का संदर्भ, विधि और परिणाम तीनों है। गतिविधियाँ आनंददायी, हाथ से करने वाली और सभी इंद्रियों को जोड़ने वाली हों। एकीकरण का सिद्धांत कहता है कि भाषा, संख्या-ज्ञान, पर्यावरण और कलाओं को जोड़कर शारीरिक, संज्ञानात्मक, सामाजिक-भावनात्मक, नैतिक, सौंदर्यबोधी और सांस्कृतिक विकास में संतुलन रखा जाए।"
+  },
+  {
+    title: "सिद्धांत — स्कैफ़ोल्डिंग, मूल्यांकन और संबंध",
+    text: "बच्चे संरचित सहारे से सबसे अच्छा सीखते हैं, जिसे स्कैफ़ोल्डिंग कहते हैं, और आत्मविश्वास बढ़ने पर यह सहारा धीरे-धीरे हटाया जाता है। इसे ज़िम्मेदारी के क्रमिक हस्तांतरण के तीन चरणों से लागू किया जाता है: पहले शिक्षक करके दिखाता या समझाता है, फिर शिक्षक और बच्चे मिलकर मार्गदर्शन में काम करते हैं, और अंत में बच्चे स्वतंत्र अभ्यास करते हैं। सतत और व्यापक मूल्यांकन, यानी अवलोकन, पोर्टफ़ोलियो, जाँच-सूचियाँ और अभिभावकों से साझा प्रतिपुष्टि, शिक्षक को हर बच्चे के अनुसार शिक्षण ढालने में मदद करता है। और सबके नीचे शिक्षक-बच्चे का गर्मजोशी भरा, विश्वासपूर्ण संबंध है, जिसे एनसीएफ-एफएस भविष्य की सारी शिक्षा की नींव कहता है।"
+  },
+  {
+    title: "तकनीकें — विषय-आधारित और खेल-आधारित अधिगम",
+    text: "इस आयु में बच्चे जिज्ञासु, ऊर्जावान और खोजने को उत्सुक होते हैं, इसलिए रटने और कठोर ढाँचों की जगह सक्रिय, आनंददायी और समावेशी तरीके अपनाने चाहिए। प्रारंभिक चरण में ध्यान केंद्रित करने की क्षमता को भी धीरे-धीरे बढ़ाना चाहिए। विषय-आधारित अधिगम में भाषा, गणित, कला, संगीत और खेल, सब कुछ एक केंद्रीय विचार से जुड़ता है, जैसे मेरा परिवार, मौसम या बारिश। बारिश पर बच्चे गीत गा सकते हैं, चित्र बना सकते हैं, बूँदें गिन सकते हैं और जलचक्र पर बात कर सकते हैं। खेल-आधारित अधिगम में शिक्षक सुगमकर्ता है जो खिलौने, भूमिका-खेल के कोने, ब्लॉक और कला सामग्री जुटाता है। मुक्त खेल से आत्म-अभिव्यक्ति बढ़ती है, और निर्देशित खेल से संख्या, अक्षर और आकार सहज ढंग से सिखाए जाते हैं।"
+  },
+  {
+    title: "गतिविधि-आधारित और जिज्ञासा-आधारित अधिगम",
+    text: "गतिविधि-आधारित अधिगम में बच्चे सुनते नहीं, करते हैं: काटना, छाँटना, गिनना, बनाना, चित्र बनाना, मिलान करना और प्रयोग करना। मिट्टी से संख्याएँ या मोतियों से पैटर्न सिखाने से बारीक मोटर कौशल बनते हैं और गणित की समझ पक्की होती है। यह दृश्य, श्रव्य और गतिबोधी, सभी तरह के शिक्षार्थियों के काम आता है। जिज्ञासा-आधारित अधिगम किसी प्रश्न या अवलोकन से शुरू होता है, जैसे पत्ते रंग क्यों बदलते हैं या सूरज रात को कहाँ जाता है। शिक्षक सामग्री देता, चर्चा कराता और अवलोकन को प्रोत्साहित करता है। इससे वैज्ञानिक सोच, तर्क और आत्मविश्वास बढ़ता है, और बच्चे महसूस करते हैं कि उनके प्रश्नों की कद्र है।"
+  },
+  {
+    title: "कहानी सुनाना और अनुभवात्मक अधिगम",
+    text: "कहानी सुनाना भाषा, सुनने के कौशल, कल्पना और भावनात्मक बुद्धि को बढ़ाने वाला शाश्वत साधन है। कहानियों से नई अवधारणाएँ, मूल्य, शब्दावली और सामाजिक कौशल सिखाए जा सकते हैं, साथ ही घटनाओं का क्रम और कारण-प्रभाव समझ आता है। इसके लिए चित्र-पुस्तकें, कठपुतलियाँ, सामग्री या मौखिक कथन उपयोग हो सकते हैं। खोए हुए पिल्ले की कहानी से सहानुभूति, दिशाओं या समुदाय के सहायकों पर बात हो सकती है। अनुभवात्मक अधिगम का अर्थ है करके सीखना और उस पर विचार करना। जब बच्चे बीज बोते, पानी देते और बढ़ता देखते हैं, तो अवलोकन, धैर्य, ज़िम्मेदारी और विज्ञान की समझ एक साथ आती है। यह पर्यावरण अध्ययन, स्वास्थ्य और जीवन कौशल के लिए विशेष रूप से प्रभावी है।"
+  },
+  {
+    title: "शिक्षण-अधिगम सामग्री, डिजिटल सामग्री सहित",
+    text: "शिक्षण-अधिगम सामग्री यानी टीएलएम अमूर्त विचारों को ठोस बनाती है। ये शिक्षक-निर्मित या बाज़ार से ली हुई हो सकती हैं: फ़्लैशकार्ड, कहानी की किताबें, संख्या-छड़ें, कठपुतलियाँ, मोती, पहेलियाँ और असली वस्तुएँ। संख्या-रेखा गिनती देखने में मदद करती है, चित्र-कार्ड शब्दावली बढ़ाते हैं, और बेकार या कम लागत की चीज़ें संसाधन-कुशलता सिखाती हैं। डिजिटल टीएलएम भी सोच-समझकर जोड़े जा सकते हैं। शोध बताता है कि संतुलित, नियंत्रित उपयोग कल्याण में सहायक है, जबकि अधिक अनियंत्रित उपयोग हानिकारक हो सकता है। डिजिटल सामग्री उम्र के अनुकूल, संदर्भित और बहुभाषी हो, जैसे ऑडियो, वीडियो, वर्चुअल रियलिटी, चित्र-पुस्तकें और खेल। डायनासोर, ग्रह या महासागर पर एक सरल प्रस्तुति शब्दावली और पृष्ठभूमि ज्ञान बढ़ाती है।"
+  },
+  {
+    title: "शिक्षार्थी-केंद्रित पाठ योजना",
+    text: "शिक्षण एक सोद्देश्य प्रक्रिया है, इसलिए इसे दक्षताओं और अधिगम निष्पत्तियों के आधार पर व्यवस्थित योजना चाहिए, जिसमें विधियाँ, संसाधन और मूल्यांकन सोच-समझकर चुने जाएँ। शिक्षार्थी-केंद्रित योजना में बच्चे सक्रिय रूप से ज्ञान गढ़ते हैं और शिक्षक सुगमकर्ता बनकर रुचियाँ देखता, सहारा देता और गतिविधियाँ ढालता है। मुख्य तत्व हैं: स्पष्ट निष्पत्तियाँ और उद्देश्य; शिक्षक-नेतृत्व, शिक्षक-निर्देशित और बाल-नेतृत्व वाली गतिविधियों का संतुलन; गतिविधियों का समय और क्रम; उपयुक्त सामग्री; कक्षा का सुविचारित संगठन; अतिरिक्त सहायता की रणनीतियाँ; और उपयुक्त मूल्यांकन। अच्छी योजना में संवाद, रचनात्मकता, शारीरिक गतिविधि और भावनात्मक अभिव्यक्ति के अवसर तथा अवलोकन, कार्य-नमूनों और घटनात्मक अभिलेखों से चिंतन की जगह भी होती है।"
+  },
+  {
+    title: "विभेदित शिक्षण और गृहकार्य",
+    text: "विभेदन का अर्थ है बच्चों की विविध रुचियों और क्षमताओं के अनुसार विषय-वस्तु, तरीके, सामग्री और मूल्यांकन को बदलना। बड़ी कक्षाओं में हर बच्चे के लिए अलग योजना कठिन है, पर समान ज़रूरतों वाले बच्चों के समूह बनाना कारगर है। ब्लॉक खेल में कुछ बच्चे मीनार बनाते हैं, कुछ रंग या आकार से छाँटते हैं, और कुछ कल्पनाशील वस्तुएँ बनाते हैं। तितलियों के विषय पर अलग समूह कहानी की किताबों, वीडियो, पहेलियों या मॉडल का उपयोग कर सकते हैं, और पठन में अलग-अलग स्तर के पाठ दिए जा सकते हैं। गृहकार्य सीखने का विस्तार है, बोझ नहीं। आधारभूत चरण में यह आनंददायी, सरल और घर के जीवन से जुड़ा हो, जैसे दादा-दादी से परिवार के नाम पूछना, रंगोली बनाना या पुस्तकालय की कहानी पढ़ना। यह तभी शुरू हो जब बच्चे स्कूल की दिनचर्या में रम जाएँ, और वे इसे बिना बड़ों की मदद के कर सकें।"
+  },
+  {
+    title: "नमूना पाठ योजना — मेरा परिवार",
+    text: "अध्याय में पाँच से छह वर्ष के बच्चों के लिए पैंतालीस मिनट की नमूना योजना दी गई है, जिसका विषय मेरा परिवार है और जिसमें विषय-आधारित, खेल-आधारित, कहानी, गतिविधि और अनुभवात्मक तरीके जुड़े हैं। शुरुआत पाँच मिनट के गीत से होती है, जैसे फ़िंगर फ़ैमिली। फिर पाँच मिनट खुले प्रश्न और फ़्लैशकार्ड, जैसे आपके घर में कौन रहता है। इसके बाद दस मिनट कठपुतलियों या चित्र-कार्ड के साथ रवि का बड़ा परिवार कहानी, जिसमें बीच-बीच में बच्चों को जोड़ा जाए। फिर पंद्रह मिनट की कला गतिविधि, जिसमें बच्चे परिवार-वृक्ष में चित्र बनाते या चिपकाते हैं। पाँच मिनट साझा करने और पाँच मिनट फ़्लैशकार्ड से दोहराव और विदाई गीत के बाद शिक्षक सहभागिता, शब्दावली और अभिव्यक्ति को जाँच-सूची और घटनात्मक अभिलेख से परखता है।"
+  },
+  {
+    title: "संतुलित दैनिक समय-सारणी बनाना",
+    text: "छोटे बच्चे ऐसी दिनचर्या में फलते-फूलते हैं जो अनुमान योग्य भी हो और लचीली भी। संतुलित समय-सारणी सुरक्षा का भाव देती है, समय-प्रबंधन सिखाती है, और शारीरिक, भावनात्मक, संज्ञानात्मक और सामाजिक ज़रूरतें पूरी करती है। इसमें सक्रिय और शांत समय, व्यक्तिगत और समूह कार्य, संरचित और मुक्त खेल, भीतर और बाहर के अनुभव, तथा आराम और भोजन शामिल होते हैं, जिससे थकान और अति-उत्तेजना से बचाव होता है। चार से छह वर्ष के बच्चों की नमूना दिनचर्या आगमन और मुक्त खेल से शुरू होकर सर्कल टाइम, कहानी या गतिविधि का विषय-खंड, बाहरी खेल, नाश्ता, गणित खेल, रचनात्मक समय, जिज्ञासा और अन्वेषण, चिंतन और पुनरावृत्ति के बाद साढ़े बारह बजे कहानी-समय और छुट्टी पर समाप्त होती है।"
+  },
+  {
+    title: "सारांश",
+    text: "संक्षेप में: प्रभावी प्रारंभिक शिक्षण विकासात्मक रूप से उपयुक्त और बाल-केंद्रित होता है, जो हर बच्चे की ज़रूरतों, रुचियों और सीखने की शैली का सम्मान करता है। विषय-आधारित, खेल-आधारित, गतिविधि-आधारित, जिज्ञासा-आधारित, कहानी और अनुभवात्मक तरीके संज्ञानात्मक, भावनात्मक, शारीरिक और सामाजिक विकास को जोड़कर समग्र वृद्धि कराते हैं। टीएलएम, और संतुलित डिजिटल सामग्री, अमूर्त अवधारणाओं को ठोस बनाती हैं। शिक्षार्थी-केंद्रित पाठ योजना में शिक्षक सुगमकर्ता और अवलोकनकर्ता रहता है, और लचीली संरचित समय-सारणी खेल, विश्राम, रचनात्मकता और संवाद का संतुलन रखती है। इन सबसे बच्चों में आत्मविश्वास, जिज्ञासा और सीखने के प्रति स्थायी प्रेम पनपता है। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let selectedVoice = null;
+let playQueueActive = false;
+
+function pickVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  const norm = v => (v.lang || '').toLowerCase().replace('_', '-');
+  selectedVoice =
+    voices.find(v => norm(v) === 'hi-in') ||
+    voices.find(v => norm(v).startsWith('hi')) ||
+    voices.find(v => /hindi|हिन्दी|हिंदी/i.test(v.name)) || null;
+  if (selectedVoice) {
+    voiceNote.textContent = "आवाज़: " + selectedVoice.name + " (हिन्दी – भारत)";
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिन्दी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ का उपयोग हो रहा है। हिन्दी (भारत) आवाज़ अपने डिवाइस की स्पीच सेटिंग में जोड़ें।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickVoice();
+  window.speechSynthesis.onvoiceschanged = pickVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र टेक्स्ट-टू-स्पीच का समर्थन नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ यह भाग अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 अभी चल रहा है: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = (selectedVoice && selectedVoice.lang) || 'hi-IN';
+  if (selectedVoice) utter.voice = selectedVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पाठ पूरा हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ चलाएँ";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ चलाएँ";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ चलाएँ";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर से चलाएँ दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>

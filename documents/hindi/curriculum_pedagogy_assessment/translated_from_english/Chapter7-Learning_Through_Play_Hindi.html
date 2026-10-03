@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>खेल के माध्यम से सीखना — ऑडियो पाठ</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #f5faf8; --card: #ffffff; --text: #202824; --text-secondary: #5f6b64;
+  --accent: #1a7a5e; --accent-bg: #dcf0e8; --border: #dbe7e0; --active-bg: #e7f5ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+    --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+  --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Noto Sans Devanagari', 'Nirmala UI', 'Segoe UI', system-ui, sans-serif; line-height: 1.7; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+header { text-align: center; margin-bottom: 1.25rem; }
+header h1 { font-size: 1.2rem; margin: 0 0 0.25rem; font-weight: 700; }
+header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+.player { position: sticky; top: env(safe-area-inset-top, 0px); background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 10; }
+.now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
+.controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+button { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 0.55rem 0.8rem; font-size: 0.95rem; cursor: pointer; min-height: 44px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
+button:active { transform: scale(0.97); }
+.speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
+select { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; padding: 0.3rem 0.4rem; min-height: 36px; }
+.voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
+.sections { display: flex; flex-direction: column; gap: 0.7rem; }
+.section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; cursor: pointer; transition: background 0.2s; }
+.section.active { background: var(--active-bg); border-color: var(--accent); }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.section-title { font-weight: 600; font-size: 1rem; }
+.section-num { font-size: 0.78rem; color: var(--accent); background: var(--accent-bg); border-radius: 999px; padding: 0.1rem 0.55rem; white-space: nowrap; }
+.section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
+.section.active .section-text { display: block; color: var(--text); }
+.play-icon { font-size: 0.8rem; color: var(--accent); }
+footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>खेल के माध्यम से सीखना</h1>
+    <p>इकाई 3 · पाठ्यचर्या, शिक्षण-शास्त्र और मूल्यांकन — ऑडियो पाठ</p>
+  </header>
+
+  <div class="player">
+    <div class="now-playing" id="nowPlaying">▶️ सुनना शुरू करने के लिए "पूरा पाठ चलाएँ" दबाएँ</div>
+    <div class="controls">
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ पूरा पाठ चलाएँ</span></button>
+      <button id="pauseBtn">⏸ रोकें</button>
+      <button id="prevBtn">⏮ पिछला</button>
+      <button id="nextBtn">⏭ अगला</button>
+    </div>
+    <div class="speed-row">
+      <label for="rateSelect">गति:</label>
+      <select id="rateSelect">
+        <option value="0.8">धीमी</option>
+        <option value="1" selected>सामान्य</option>
+        <option value="1.2">तेज़</option>
+      </select>
+    </div>
+    <div class="voice-note" id="voiceNote"></div>
+  </div>
+
+  <div class="sections" id="sectionsList"></div>
+
+  <footer>किसी भी भाग पर टैप करके उसे खोलें और अलग से सुनें</footer>
+</div>
+
+<script>
+const sections = [
+  {
+    title: "परिचय — खेल क्यों महत्त्वपूर्ण है",
+    text: "आज का पाठ खेल के माध्यम से सीखने पर है। बच्चे तब सबसे अच्छा सीखते हैं जब वे सक्रिय और रुचि के साथ जुड़े हों, और खेल यही जुड़ाव स्वाभाविक रूप से पैदा करता है। सोचिए, एक माँ सफ़ाई को रंग छाँटने या घड़ी से होड़ का खेल बना दे, या खाना लगाने को रेस्तराँ-खेल बना दे। बच्चा बिना दबाव के व्यवस्था, ज़िम्मेदारी और सहयोग सीखता है। एनसीएफ-एफएस 2022 खेल को प्रारंभिक अधिगम के केंद्र में रखता है और इसे सीखने से विराम नहीं, बल्कि स्वयं सीखना मानता है, चाहे वह शारीरिक हो, सामाजिक, कल्पनात्मक या रचनात्मक।"
+  },
+  {
+    title: "अधिगम निष्पत्तियाँ",
+    text: "इस अध्याय के बाद आप प्रारंभिक चरण में खेल-आधारित अधिगम का महत्त्व पहचान सकेंगे, और भाषा व संख्या-ज्ञान के लिए खेल के विभिन्न रूप समझा सकेंगे। आप भाषा विकास, सुनने और भाषा-अर्जन के लिए बातचीत और कहानी का प्रभावी उपयोग कर सकेंगे, रचनात्मकता को बढ़ाने और साक्षरता व संख्या-ज्ञान को जोड़ने वाली कला और शिल्प गतिविधियाँ बना सकेंगे, और विविध तरीकों को जोड़ने वाली खेल-आधारित अधिगम योजना तैयार कर सकेंगे।"
+  },
+  {
+    title: "खेल की अवधारणा — खेल से सीखना आसान क्यों है",
+    text: "शिक्षार्थी तब सबसे अच्छा सीखते हैं जब गतिविधियाँ अर्थपूर्ण, आनंददायी, स्व-निर्देशित, कल्पनाशील और खोजपरक हों। खेल को प्रभावी बनाने वाले कई कारक हैं। सक्रिय जुड़ाव: बच्चे वस्तुओं को छूते, खोजते और दूसरों से जुड़ते हैं, जिससे संज्ञानात्मक और मोटर कौशल बढ़ते हैं। आंतरिक प्रेरणा: खेल अपने आप में किया जाता है, जिज्ञासा से। कल्पना और रचनात्मकता: भूमिका-खेल और समस्या-समाधान लचीली सोच बनाते हैं। सामाजिक संपर्क: सहयोग, बातचीत और बारी-बारी से खेलना सहानुभूति सिखाता है। पुनरावृत्त अधिगम: बच्चे विचार आज़माते, गलती करते और फिर कोशिश करते हैं, जिससे लचीलापन आता है। और प्रासंगिकता: खेल वास्तविक जीवन से जुड़ा होता है, इसलिए समझ और स्मरण बेहतर होते हैं।"
+  },
+  {
+    title: "खेल के सिद्धांत",
+    text: "कक्षा की योजना के लिए नौ सिद्धांत हैं। पहला, सुरक्षित, उत्तेजक, स्वच्छ और रोशन वातावरण जिसमें आनंददायी, बहु-इंद्रिय गतिविधियाँ हों। दूसरा, खेल केंद्र में है, चाहे मुक्त, निर्देशित या संरचित; बातचीत, कहानियाँ, संगीत, गति, कला, शिल्प, खिलौने और खेल इसमें शामिल हैं, और बाहरी खेल को प्रोत्साहन मिले। तीसरा, शिक्षक-बच्चे के पोषक संबंध, ध्यान से सुनना और पूरी तरह साथ होना। चौथा, गतिविधियों से स्थूल और सूक्ष्म मोटर कौशल का विकास। पाँचवाँ, हर बच्चा अपनी गति से सीखता है। छठा, घर की भाषा आधार है, और स्कूल की भाषा की ओर बदलाव सहज हो। सातवाँ, सीखना बच्चों के जीवन से जुड़ा हो, स्थानीय कहानियों और खेलों के साथ। आठवाँ, नया सीखना पूर्व समझ पर बने, सरल से जटिल की ओर। नौवाँ, विकास के सभी क्षेत्रों में संतुलन रहे।"
+  },
+  {
+    title: "बातचीत — सीखने का साधन",
+    text: "बातचीत बच्चों को दुनिया से जोड़ती है, विश्वास और आत्मविश्वास बनाती है और भाषा विकसित करती है। एनसीएफ-एफएस दो प्रकार बताता है। मुक्त बातचीत: शिक्षक कुछ बच्चों को इकट्ठा कर उन्हें अपने दिन, स्कूल के रास्ते या कुछ भी साझा करने को कहता है, सरल संकेतों के साथ। संरचित बातचीत: शिक्षक द्वारा नियोजित, अक्सर सुबह की सभा में, दिनचर्या या भावनाओं जैसे परिचित विषयों पर। एक प्रमुख गतिविधि है चित्र-वार्ता। कक्षा 2 की शिक्षिका रिचा रस्साकशी खेलते बच्चों का चित्र दिखाकर पूछती हैं: चित्र में क्या दिखता है, हर तरफ़ कितने बच्चे हैं, वे क्या कर रहे हैं, क्या आपने यह खेल खेला है? बच्चे वर्णन करते हैं, गिनते हैं, अपने अनुभव याद करते हैं और सोचते हैं कि दोनों तरफ़ बराबर बच्चे क्यों हैं।"
+  },
+  {
+    title: "और बातचीत गतिविधियाँ — थैला घुमाओ और सब्ज़ी बाज़ार",
+    text: "थैला घुमाओ गतिविधि में शिक्षक थैले में गेंद, टूथब्रश, बिस्कुट का छोटा डिब्बा या रसोई सेट के खिलौने जैसी रोज़ की चीज़ें रखता है। थैला घूमते समय संकेत-प्रश्न बच्चों को चीज़ों के नाम बताने, वर्णन करने और अपने जीवन से जोड़ने में मदद करते हैं, जिससे भाषा और आकार या बनावट जैसी अवधारणाएँ विकसित होती हैं। कक्षा के सब्ज़ी बाज़ार में बच्चे दुकानदार और ग्राहक बनते हैं, असली या खिलौना फल-सब्ज़ियों पर नाम और दाम की पर्ची के साथ, जैसे सेब, पाँच रुपये। आप क्या खरीदेंगे, क्या आप दाम पढ़ने में मदद करेंगे, सेब या केला कौन सस्ता है, आपके थैले में अब कितनी चीज़ें हैं, जैसे प्रश्न बातचीत, पढ़ना और गणित, सब खेल-खेल में सिखाते हैं।"
+  },
+  {
+    title: "कहानियाँ — सीखने का साधन",
+    text: "कहानी सुनाना भाषा, कल्पना और सोच को विकसित करता है और सुनना, बोलना और समझना सिखाता है। कहानियाँ क्रम, तर्क और मात्रा जैसी अवधारणाएँ आनंद से सिखाती हैं, सामाजिक संबंध, नैतिक चुनाव, भावनाएँ और जीवन कौशल सिखाती हैं, और कम ध्यान-अवधि वाले बच्चों को भी देर तक जोड़े रखती हैं। बार-बार सुनने से समझ गहरी होती है। शिक्षक को कहानी अच्छी तरह आनी चाहिए और आवाज़ के उतार-चढ़ाव और चेहरे के भावों के साथ सुनानी चाहिए, कठपुतलियों, क्रम-कार्ड, चार्ट और पोस्टर के साथ। बच्चों को भी कहानी सुनाने का मौका मिले, जैसे शिक्षक शुरू करे और वे पूरी करें। कहानी उम्र के अनुकूल, परिचित भाषा में, पढ़ाई से जुड़ी और भारतीय संदर्भ में हो, जैसे पंचतंत्र, जातक और हितोपदेश। बाद में क्या, कौन, क्यों, कहाँ, कैसे और अगर ऐसा होता तो, जैसे प्रश्न पूछें और चित्रकारी, भूमिका-अभिनय और नाटक से आगे बढ़ें।"
+  },
+  {
+    title: "कहानी गतिविधियाँ — टोपी वाला और बंदर",
+    text: "अध्याय कक्षा 1 की अंग्रेज़ी पुस्तक मृदंग की टोपी बेचने वाले की कहानी से कहानी-शिक्षण दिखाता है। शिक्षक पृष्ठभूमि बनाकर चित्र-कार्ड से कहानी सुनाता है: गर्मी में एक टोपी वाला पेड़ के नीचे आराम करता है, बंदर उसकी टोपियाँ ले जाते हैं, और वह अपनी टोपी ज़मीन पर फेंकता है, क्योंकि बंदर नकल करते हैं, और टोपियाँ वापस पा लेता है। आगे की गतिविधियाँ हैं: चित्रों को सही क्रम में लगाना, जिससे कहानी की शुरुआत, मध्य और अंत समझ आता है; साथ मिलकर लिखें, जिसमें बच्चे पेड़, बंदर, टोपी और टोकरी जैसे शब्द बोलकर लिखते हैं; टोपियाँ छाँटना और गिनना; और मेरी दुनिया के सोच-प्रश्न, जैसे टोपी वाला और क्या कर सकता था, या टोपियों की जगह आप क्या रखेंगे। इनसे शब्दावली, समझ और संज्ञानात्मक कौशल बढ़ते हैं।"
+  },
+  {
+    title: "खिलौने — सीखने का साधन",
+    text: "एनसीएफ-एफएस खिलौनों को शक्तिशाली साधन मानता है जो सीखने को आनंददायी और अर्थपूर्ण बनाते हैं और सोच, भाषा, गति और सामाजिक कौशल विकसित करते हैं। बच्चे असली वस्तुओं और प्रत्यक्ष अनुभव से सबसे अच्छा सीखते हैं, और हर बच्चे के परिवेश में स्थानीय खिलौने होते हैं जिनका शिक्षक को उपयोग करना चाहिए। ब्लॉक जमाने से संतुलन और कारण-प्रभाव, पहेलियों से पैटर्न और समस्या-समाधान, नाटकीय खिलौनों से कहानियाँ, बोर्ड खेलों से नियम, भाषा और गणित, और शिल्प सामग्री से रचनात्मकता विकसित होती है। गेंद, बीनबैग और रस्सी आत्मविश्वास और मोटर कौशल बढ़ाते हैं। उदाहरण हैं: कर्नाटक का चन्नपट्टना लकड़ी का रिंग सेट पहेली, जो मोटर कौशल, रंग-आकार की समझ और क्रम-निर्धारण में सहायक है; गुजरात की पारंपरिक सूती गुड़िया ढिंगली; और पूरे भारत में प्रचलित रसोई सेट।"
+  },
+  {
+    title: "खिलौना गतिविधियाँ — महल और आनंददायी गणित",
+    text: "लकड़ी के ब्लॉक गतिविधि में शिक्षक कहानी या संकेत से शुरू करता है, बच्चों से पूछकर कि क्या वे अपना महल बनाने को तैयार हैं। हर बच्चा या समूह आकार और ऊँचाई के साथ प्रयोग करते हुए बनाता है, और शिक्षक पूछता है कि नींव किस आकार की है, क्या त्रिकोण ब्लॉक से मीनार बन सकती है, और कितने ब्लॉक लगे। बाद में बातचीत: आपके महल में कौन रहता है, उसके हिस्से क्या हैं, उसमें क्या ख़ास या जादुई है। कक्षा 2 की गणित पुस्तक जॉयफ़ुल मैथमेटिक्स के दो उदाहरण दिखाते हैं कि खिलौने संख्याएँ सिखाते हैं: ब्लॉक जमाकर खिलौना जानवरों की ऊँचाई मापना, और सबसे लंबा या छोटा रास्ता चुनने की गतिविधि, जिसमें धागे से जाँच कर बच्चे आलोचनात्मक सोच विकसित करते हैं।"
+  },
+  {
+    title: "संगीत और कविताएँ — सीखने के साधन",
+    text: "संगीत ख़ुशी देता है और मस्तिष्क विकास तथा तंत्रिका संबंधों को बहुत प्रेरित करता है। इसलिए गाना, सरल वाद्य बजाना और ताल रखना प्रोत्साहित हों, जैसे टिन के डिब्बे, खंजरी या मंजीरे पर ताल और साथ में अंग-संचालन। शिक्षक गाकर बच्चों से दोहराने को कह सकता है, बच्चे अकेले, जोड़ी में या समूह में गा सकते हैं, धुन पहचानने के खेल हो सकते हैं, बिना बोल के गुनगुनाना हो सकता है, और वे सरल गीत बना भी सकते हैं। एनसीएफ-एफएस के अनुसार गीत, कविताएँ और लय सांस्कृतिक रूप से जुड़े हैं और मौखिक भाषा, प्रारंभिक साक्षरता और संख्या-ज्ञान की नींव हैं। ये शब्दावली बढ़ाते हैं, ध्वनि-जागरूकता बनाते हैं जो पढ़ना सीखने के लिए ज़रूरी है, वाक्य-रचना सिखाते हैं, स्मरण और क्रम को मज़बूत करते हैं और गिनती सिखाते हैं।"
+  },
+  {
+    title: "कविताओं से सीखना — दो छोटे हाथ",
+    text: "अध्याय का उदाहरण क्रिया-कविता दो छोटे हाथ है, जो शरीर के अंगों और उनके काम बताती है: हाथ ताली बजाने को, पैर चलने को, आँखें देखने को। शिक्षक इसे आवाज़ के उतार-चढ़ाव, हाव-भाव और लय के साथ सुनाता है, और बच्चे साथ-साथ क्रियाएँ करते हैं, जिससे शब्द और अर्थ का संबंध पक्का होता है। लय और दोहराव नए शब्द और वाक्य-पैटर्न याद रखना आसान बनाते हैं। अध्याय में कक्षा 2 की अंग्रेज़ी कविता इट इज़ फ़न भी दिखाई गई है, जिसमें मेंढक की तरह कूदने और बिल्ली की तरह चढ़ने की बात है। शिक्षक बच्चों से कविताएँ सुनवा सकता है और उनसे अपनी छोटी कविताएँ बनवा सकता है।"
+  },
+  {
+    title: "कला और शिल्प — सीखने का साधन",
+    text: "बच्चों को रंगों से प्रयोग करना और चीज़ें बनाना पसंद है। कला और शिल्प से वे विचार, भावनाएँ और अनुभूतियाँ व्यक्त करते हैं, बारीक मोटर कौशल मज़बूत करते हैं और अपनी सांस्कृतिक परंपराओं से जुड़ते हैं। गतिविधि 1 में बच्चे अपनी पसंदीदा चीज़ें बनाते हैं, उनके नाम लिखते हैं और ध्वनि के अनुसार पढ़ते हैं, जिससे शब्दावली और ध्वनि-अक्षर संबंध बनते हैं। गतिविधि 2, परिवार-वृक्ष, में वे परिवार के चित्र चिपकाते, नाम और एक शब्द की भावनाएँ लिखते हैं, जिससे लिखित भाषा की समझ बनती है और साक्षरता बच्चे की पहचान से जुड़ती है। चित्रकारी कागज़, स्लेट, श्यामपट या फ़र्श पर हो सकती है। रंगाई में अँगूठे, हथेली, सब्ज़ी और बोतल के ढक्कन की छपाई और उँगली से रंगाई है, और चिपकाने में रेत, बुरादा, सूखी मिट्टी या कागज़ का उपयोग होता है।"
+  },
+  {
+    title: "मिट्टी, तोरण और कठपुतलियाँ",
+    text: "मिट्टी से अक्षर बनाने में बच्चे मिट्टी के साँप बेलते हैं और उनसे एस जैसे अक्षर बनाते हैं, ध्वनि बोलते हैं और उस ध्वनि से शुरू होने वाला शब्द सोचते हैं, और अपने अक्षर सबको दिखाकर बोलते हैं, जिससे आत्मविश्वास बढ़ता है। तोरण गतिविधि में बच्चे आम के पत्तों को पैटर्न में सजाकर दरवाज़े पर टाँगने के लिए पिरोते हैं, पत्ते गिनते हैं, बड़े-छोटे पत्तों का पैटर्न बनाते हैं और सांस्कृतिक महत्त्व जानते हैं। कठपुतली गतिविधि में चार-पाँच बच्चों के समूह अपनी कठपुतली का नाम रखते हैं, तय करते हैं कि उसे क्या पसंद है, उसकी भावनाओं और पसंदीदा भोजन या शौक का वर्णन करते हैं और कक्षा के सामने प्रस्तुत करते हैं। इससे मौखिक भाषा और सामाजिक-भावनात्मक अधिगम विकसित होता है।"
+  },
+  {
+    title: "कला और शिल्प के समय ध्यान रखने योग्य बातें",
+    text: "कला कार्य के लिए पाँच बातें याद रखें। पहली, बिना झिझक अभिव्यक्ति की छूट दें, सही-गलत की धारणा से बचें और भिन्न दृष्टिकोणों का उत्सव मनाएँ। दूसरी, सामग्री और औज़ारों की खोज को प्रोत्साहित करें, जैसे ब्रश को नाटक की वस्तु या वाद्य की तरह उपयोग करना। तीसरी, परिवेश और अपनी भावनाओं व व्यवहार के अवलोकन की क्षमता बनाएँ। चौथी, बातचीत समावेशी रखें, जिसमें शिक्षक बोले और अनबोले संवाद को ध्यान से सुने। पाँचवीं, सौंदर्य-प्रशंसा पर नियमित चर्चा हो, जिसमें शिक्षक भागीदार हो, निर्णायक नहीं, और यह आठ से दस मिनट से अधिक न चले। अन्य गतिविधियों में मुखौटे बनाना, या बिंदु जोड़कर रंगोली बनाना शामिल है।"
+  },
+  {
+    title: "सारांश",
+    text: "संक्षेप में: खेल सीखने का स्वाभाविक और शक्तिशाली माध्यम है, जो जिज्ञासा, कल्पना और विकास के सभी क्षेत्रों में सक्रिय जुड़ाव को बढ़ाता है, और एनसीएफ-एफएस इसे समग्र अधिगम का केंद्र मानता है। मुक्त और संरचित बातचीत शब्दावली, आत्मविश्वास और मौखिक अभिव्यक्ति बढ़ाती है। कहानियाँ सुनना, समझ, क्रम, नैतिक तर्क और सहानुभूति विकसित करती हैं। खिलौना-आधारित शिक्षण प्रत्यक्ष खोज, गणित और समस्या-समाधान बढ़ाता है। संगीत और कविताएँ लय, स्मृति, भाषा और संख्या-ज्ञान सिखाती हैं। कला और शिल्प रचनात्मकता, बारीक मोटर कौशल और सांस्कृतिक जुड़ाव पोसते हैं। जब शिक्षक सोद्देश्य, समावेशी और संस्कृति से जुड़ा खेल नियोजित करते हैं, तो बच्चे बेहतर सीखते हैं और सीखने के प्रति आजीवन प्रेम विकसित करते हैं। धन्यवाद, आज के लिए बस इतना ही!"
+  }
+];
+
+const listEl = document.getElementById('sectionsList');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const playAllBtn = document.getElementById('playAllBtn');
+const playAllLabel = document.getElementById('playAllLabel');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const rateSelect = document.getElementById('rateSelect');
+const voiceNote = document.getElementById('voiceNote');
+
+let currentIndex = -1;
+let isPaused = false;
+let selectedVoice = null;
+let playQueueActive = false;
+
+function pickVoice() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  const norm = v => (v.lang || '').toLowerCase().replace('_', '-');
+  selectedVoice =
+    voices.find(v => norm(v) === 'hi-in') ||
+    voices.find(v => norm(v).startsWith('hi')) ||
+    voices.find(v => /hindi|हिन्दी|हिंदी/i.test(v.name)) || null;
+  if (selectedVoice) {
+    voiceNote.textContent = "आवाज़: " + selectedVoice.name + " (हिन्दी – भारत)";
+  } else if (voices.length) {
+    voiceNote.textContent = "इस डिवाइस पर हिन्दी आवाज़ नहीं मिली — डिफ़ॉल्ट आवाज़ का उपयोग हो रहा है। हिन्दी (भारत) आवाज़ अपने डिवाइस की स्पीच सेटिंग में जोड़ें।";
+  } else {
+    voiceNote.textContent = "";
+  }
+}
+if ('speechSynthesis' in window) {
+  pickVoice();
+  window.speechSynthesis.onvoiceschanged = pickVoice;
+} else {
+  voiceNote.textContent = "यह ब्राउज़र टेक्स्ट-टू-स्पीच का समर्थन नहीं करता।";
+  playAllBtn.disabled = true;
+}
+
+function buildList() {
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.id = 'sec-' + i;
+    div.innerHTML =
+      '<div class="section-head">' +
+        '<span class="section-title">' + sec.title + '</span>' +
+        '<span class="section-num">भाग ' + (i + 1) + '</span>' +
+      '</div>' +
+      '<div class="section-text">' + sec.text + '</div>' +
+      '<div class="play-icon">▶ यह भाग अलग से सुनें</div>';
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playQueueActive = false;
+      speakSection(i, false);
+    });
+    listEl.appendChild(div);
+  });
+}
+buildList();
+
+function highlightSection(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('sec-' + i);
+  if (el) {
+    el.classList.add('active');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function speakSection(i, continueQueue) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  currentIndex = i;
+  highlightSection(i);
+  nowPlayingEl.textContent = "🔊 अभी चल रहा है: भाग " + (i + 1) + " — " + sections[i].title;
+  const utter = new SpeechSynthesisUtterance(sections[i].text);
+  utter.lang = (selectedVoice && selectedVoice.lang) || 'hi-IN';
+  if (selectedVoice) utter.voice = selectedVoice;
+  utter.rate = parseFloat(rateSelect.value);
+  utter.onend = () => {
+    if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
+      speakSection(currentIndex + 1, true);
+    } else if (continueQueue && playQueueActive) {
+      playQueueActive = false;
+      nowPlayingEl.textContent = "✅ पाठ पूरा हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ चलाएँ";
+    } else {
+      nowPlayingEl.textContent = "⏹ भाग " + (i + 1) + " समाप्त हुआ";
+      playAllLabel.textContent = "▶ पूरा पाठ चलाएँ";
+    }
+  };
+  window.speechSynthesis.speak(utter);
+  isPaused = false;
+}
+
+playAllBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && isPaused) {
+    window.speechSynthesis.resume();
+    isPaused = false;
+    playAllLabel.textContent = "▶ पूरा पाठ चलाएँ";
+    return;
+  }
+  playQueueActive = true;
+  playAllLabel.textContent = "🔊 चल रहा है...";
+  speakSection(currentIndex >= 0 && currentIndex < sections.length - 1 ? currentIndex : 0, true);
+});
+
+pauseBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  if (window.speechSynthesis.speaking && !isPaused) {
+    window.speechSynthesis.pause();
+    isPaused = true;
+    nowPlayingEl.textContent = "⏸ रुका हुआ है — जारी रखने के लिए फिर से चलाएँ दबाएँ";
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  const target = currentIndex > 0 ? currentIndex - 1 : 0;
+  speakSection(target, playQueueActive);
+});
+
+nextBtn.addEventListener('click', () => {
+  const target = currentIndex < sections.length - 1 ? currentIndex + 1 : sections.length - 1;
+  speakSection(target, playQueueActive);
+});
+
+window.addEventListener('beforeunload', () => {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+</script>
+</body>
+</html>
