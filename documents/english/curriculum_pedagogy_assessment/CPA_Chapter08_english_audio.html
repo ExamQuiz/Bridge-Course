@@ -3,112 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Learning by Children with Special Needs — Audio Lesson</title>
+<title>Assessment — Audio Lesson</title>
 <style>
 :root {
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  --bg: #f5faf8;
-  --card: #ffffff;
-  --text: #202824;
-  --text-secondary: #5f6b64;
-  --accent: #1a7a5e;
-  --accent-bg: #dcf0e8;
-  --border: #dbe7e0;
-  --active-bg: #e7f5ef;
+  --bg: #f5faf8; --card: #ffffff; --text: #202824; --text-secondary: #5f6b64;
+  --accent: #1a7a5e; --accent-bg: #dcf0e8; --border: #dbe7e0; --active-bg: #e7f5ef;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #131a17;
-    --card: #1c2521;
-    --text: #e9f1ec;
-    --text-secondary: #a3b3ab;
-    --accent: #4fcba0;
-    --accent-bg: #1c3a2e;
-    --border: #2c3a33;
-    --active-bg: #1e3329;
+    --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+    --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #131a17;
-  --card: #1c2521;
-  --text: #e9f1ec;
-  --text-secondary: #a3b3ab;
-  --accent: #4fcba0;
-  --accent-bg: #1c3a2e;
-  --border: #2c3a33;
-  --active-bg: #1e3329;
+  --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+  --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
 }
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
 * { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
-  line-height: 1.7;
-}
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.7; }
 .wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
 header { text-align: center; margin-bottom: 1.25rem; }
-header h1 { font-size: 1.25rem; margin: 0 0 0.25rem; font-weight: 700; }
+header h1 { font-size: 1.2rem; margin: 0 0 0.25rem; font-weight: 700; }
 header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
-.player {
-  position: sticky;
-  top: env(safe-area-inset-top, 0px);
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 0.9rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-  z-index: 10;
-}
+.player { position: sticky; top: env(safe-area-inset-top, 0px); background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 10; }
 .now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
 .controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-button {
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  border-radius: 10px;
-  padding: 0.55rem 0.8rem;
-  font-size: 0.95rem;
-  cursor: pointer;
-  min-height: 44px;
-}
-button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 0.55rem 0.8rem; font-size: 0.95rem; cursor: pointer; min-height: 44px; }
 button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
 button:active { transform: scale(0.97); }
 .speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
-select {
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  border-radius: 8px;
-  padding: 0.3rem 0.4rem;
-  min-height: 36px;
-}
+select { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; padding: 0.3rem 0.4rem; min-height: 36px; }
 .voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
 .sections { display: flex; flex-direction: column; gap: 0.7rem; }
-.section {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 0.9rem 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
+.section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; cursor: pointer; transition: background 0.2s; }
 .section.active { background: var(--active-bg); border-color: var(--accent); }
 .section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
 .section-title { font-weight: 600; font-size: 1rem; }
-.section-num {
-  font-size: 0.78rem;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border-radius: 999px;
-  padding: 0.1rem 0.55rem;
-  white-space: nowrap;
-}
+.section-num { font-size: 0.78rem; color: var(--accent); background: var(--accent-bg); border-radius: 999px; padding: 0.1rem 0.55rem; white-space: nowrap; }
 .section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
 .section.active .section-text { display: block; color: var(--text); }
 .play-icon { font-size: 0.8rem; color: var(--accent); }
@@ -118,14 +53,14 @@ footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; m
 <body>
 <div class="wrap">
   <header>
-    <h1>Learning by Children with Special Needs</h1>
-    <p>Audio lesson — listen and read along</p>
+    <h1>Assessment</h1>
+    <p>Unit 4 · Curriculum, Pedagogy and Assessment — Audio Lesson</p>
   </header>
 
   <div class="player">
-    <div class="now-playing" id="nowPlaying">▶️ Press "Play full lesson" to start listening</div>
+    <div class="now-playing" id="nowPlaying">▶️ Press "Play Full Lesson" to start listening</div>
     <div class="controls">
-      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ Play full lesson</span></button>
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ Play Full Lesson</span></button>
       <button id="pauseBtn">⏸ Pause</button>
       <button id="prevBtn">⏮ Previous</button>
       <button id="nextBtn">⏭ Next</button>
@@ -143,58 +78,78 @@ footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; m
 
   <div class="sections" id="sectionsList"></div>
 
-  <footer>Tap any part to open it and listen to it separately</footer>
+  <footer>Tap any section to open it and listen separately</footer>
 </div>
 
 <script>
 const sections = [
   {
-    "title": "Introduction — teaching children with special needs",
-    "text": "Today we study Learning by Children with Special Needs. This chapter is about facilitating the learning of children with special needs, teaching in an inclusive classroom, and understanding the 21 types of disabilities mentioned in the Rights of Persons with Disabilities Act. It also covers how teachers assess these children over time, and how to improve their teaching and learning through an Individualised Education Plan and differentiated learning. The aim is to strengthen teachers so they can prepare according to each child's needs, build confidence among children with special needs, and bring them into the mainstream."
+    title: "Introduction — Rethinking Assessment",
+    text: "Today's lesson is on assessment. For most of us, the word brings to mind grades, progress reports and a bit of dread, and labels like creative, gifted or slow learner that follow us from preschool onwards and shape how we think and act. As educators, we often shrink assessment down to marking learners' performance. But assessment has a much wider meaning and scope, and this chapter helps us see it properly."
   },
   {
-    "title": "Learning outcomes",
-    "text": "After this chapter, the learner will define inclusive settings, understand different learning styles, design differentiated learning practices, identify types and strategies for early intervention in learning disabilities, screen for early identification of children with learning disabilities, and understand the concept of an Individualised Education Plan and how to use it in teaching."
+    title: "Learning Outcomes",
+    text: "After this chapter, you'll understand the need, meaning and characteristics of assessment. You'll tell apart formative, summative and diagnostic assessment, apply suitable methods for different learning situations, and explain assessment's role in education. You'll describe the assessment cycle, and critically examine best practices in India and abroad, drawing lessons for your own teaching."
   },
   {
-    "title": "Understanding disability and ability",
-    "text": "India is a country of great diversity, and this includes diversity in children's learning abilities. Children with special needs are those who are unable to learn like other children due to disturbance in one or more senses, but a decline in one sense is often compensated by more effective working of other senses; with timely identification and appropriate intervention, they can develop in an all-round way. For example, a locomotor disabled child has normal IQ and can excel at mental activities and indoor school activities despite movement limitations. Children with hearing impairment may have slower speech and language development, but are often less distracted by external noise, giving them stronger attention. Children with visual impairment often have enhanced hearing and touch, and can learn using Braille, digital tools and auditory signals. Children with speech and language disabilities may struggle with communication but can develop strengths in visual-spatial skills, math or music. And children with specific learning disabilities or autism spectrum disorder have normal intelligence but may struggle with reading, writing, math or social skills, needing timely input and practice."
+    title: "Assessment — Meaning and the Two Approaches",
+    text: "Assessment is a core part of teaching and learning. It doesn't just measure academic progress; it informs instruction and supports overall development, using observation tools, performance tasks, self and peer assessment and more. Analysing children's responses helps teachers tailor instruction, and documenting and communicating outcomes tracks progress over time. Reporting formats like 360-degree progress reports, portfolios and narratives, along with PARAKH, give a holistic view. We assess children constantly and informally, for example asking whether learners are interested in a planned activity and whether we should change it. Two approaches emerge: assessment of learning, which sums up what has been learned, and assessment for learning, which uses information to improve teaching and learning as it happens."
   },
   {
-    "title": "Inclusive settings, and segregation vs integration vs inclusion",
-    "text": "An inclusive setting is welcoming to individuals from all backgrounds, whether linguistic, regional, socioeconomic or based on disability, aiming for everyone to feel valued, respected and able to participate. Key aspects include acceptance of all children as they are, respect for diversity, equal opportunity to participate and learn, and using varied teaching methods like differentiated instruction, universal design for learning, multi-sensory approaches, peer tutoring and assistive technology. It's useful to distinguish three related terms. Segregation focuses on services, a medical model of disability, categorisation, and separate curricula. Integration focuses on needs, individual adaptation, equal treatment, and improving educational opportunities for disabled pupils, but still manages difference at an individual level. Inclusion focuses on rights, a social model of disability, institutional adaptation, support for all, celebrating diversity, and stress on outcomes and school effectiveness for everyone. Since the 1994 Salamanca conference, the movement toward true inclusion has intensified worldwide."
+    title: "Assessment for Learning and the NEP 2020 Vision",
+    text: "Assessment for learning, also called formative assessment, uses data about children's development, knowledge, attitudes and skills to plan new activities and to adapt content and teaching methods. Assessment of learning is vital, but assessment for learning is more beneficial. The chapter defines assessment as a systematic process of gathering information about children through varied methods, recording it, reflecting on it and using it. NEP 2020 recommends regular formative assessment rather than summative assessment, which feeds today's coaching culture. It envisions a shift from testing rote memorisation to assessment that is regular, formative and competency-based, testing higher-order skills like analysis, critical thinking and conceptual clarity, with the primary purpose of helping learning."
   },
   {
-    "title": "Children with special needs and the RPWD Act's 21 disabilities",
-    "text": "Children with special needs suffer from some obstacle in physical, sensory, developmental, behavioural or cognitive development and need more support and effort than other children, for example children with autism, ADHD, Down syndrome or learning difficulties. These children can be broadly categorised as having physical disability, intellectual disability, cognitive disability, or as children with disabilities more generally, meaning a long-term condition from birth or thereafter affecting daily activities. Three related terms matter here. Impairment is a physical, psychological or anatomical abnormality at the organ level. Disability is a restriction in performing an activity in the manner considered normal, a disturbance at the individual level. And handicap is the disadvantage resulting from an impairment or disability that limits fulfilling roles considered normal for one's age, sex or social context. The National Education Policy 2020 states that social justice and equality can be guaranteed only through education, and as per the RPWD Act 2016, there are 21 types of disability, including blindness, low vision, hearing impairment, locomotor disability, dwarfism, cerebral palsy, intellectual disability, autism spectrum disorder, mental illness, chronic neurological conditions, muscular dystrophy, multiple sclerosis, specific learning disabilities, thalassemia, speech and language disability, sickle cell disease, hemophilia, leprosy cured persons, Parkinson's disease, acid attack victims, and multiple disabilities."
+    title: "Characteristics of Good Assessment",
+    text: "Good assessment has four main characteristics. First, it's a continuous process, not a one-time event; results feed back to learners and teachers to strengthen weak areas. Second, it's open, or authentic, involving learners, parents and teachers through real-world tasks, like an open-book test not confined to an examination hall. Third, it promotes valid inferences: a maths assessment shouldn't really be testing reading comprehension. Fourth, it uses multiple measures, such as paper-pencil tests, observations and hands-on exercises in science. And it should measure what's worth learning, not just what's easy to measure. A water cycle worksheet is easy to mark, but lab tasks, role play or storytelling reveal real conceptual understanding."
   },
   {
-    "title": "Learning disability — meaning and dyslexia",
-    "text": "Learning disabilities are neuro-developmental disorders that significantly inhibit a person's ability to learn new things, causing difficulty in speaking, reading, writing, paying attention, understanding, remembering, doing math, or eye-object coordination. The RPWD Act defines specific learning disabilities as a heterogeneous group of conditions involving a deficit in processing spoken or written language, including perceptual disabilities, dyslexia, dysgraphia, dyscalculia, dyspraxia and developmental aphasia. There are five main types. Dyslexia is a language processing disorder affecting reading and comprehension; children may read was as saw, from as form, pat as tap, or confuse b and d, or omit small words, or struggle with longer words. Solutions include multisensory teaching, oral answering, focused reading and writing practice, correct pronunciation work, audio-visuals, and use of ICT."
+    title: "The Role of Assessment in Education",
+    text: "In every classroom, assessment works like a heartbeat, pulsing through instruction and shaping what, how and why we teach. Historically it was seen as summative: to test, rank and sort. But holistic development, competency frameworks and inclusive pedagogy have changed that. Classrooms are diverse in pace, background, language and cognitive style, so assessments must respect that diversity. NEP 2020 emphasises formative, adaptive, child-centred assessment, discouraging rote memorisation and valuing understanding, creativity, problem-solving, critical thinking, emotional intelligence and collaboration. The chapter introduces four types, formative, summative, diagnostic and ipsative, which work best in combination."
   },
   {
-    "title": "Dysgraphia, dyscalculia, dyspraxia and developmental aphasia",
-    "text": "Dysgraphia is trouble writing or expressing thoughts in writing; besides poor handwriting, children may reverse letters like b for d, space letters inconsistently, mix uppercase and lowercase within a word, spell the same word differently in one paragraph, or struggle to keep writing aligned. Solutions include writing in sand, air writing, dot tracing, correcting pencil grip, and writing practice. Dyscalculia is a learning disability related to mathematical calculations, sometimes called math dyslexia, where children confuse numbers like 6 and 9, or make errors in addition and subtraction. Solutions include hands-on experience, visual tools, step-by-step instruction, real-life experience like shopping, number blocks and flashcards, counting snacks or beads, handling money, and field trips. Dyspraxia, or developmental coordination disorder, makes it difficult to perform motor skills and coordinate movement; occupational therapy helps, along with activities like needle-thread work, catching and throwing a ball, bead threading, cutting and folding shapes, playing with clay, and building blocks. And developmental aphasia results from damage to brain areas responsible for comprehending language, impairing expression, understanding, reading and writing; support includes simple clear language, repeating and rephrasing, speaking slowly, using pictures and gestures, mimicry and cartoon dialogues, and storytelling."
+    title: "Formative Assessment — Guiding Learning in Real Time",
+    text: "Formative assessment is embedded in daily instruction, giving immediate feedback to teachers and students so instruction can be adjusted quickly. It's usually informal, low-stakes and ungraded, and its flexibility helps prevent learning gaps from widening. Examples include exit slips, where students write one thing learned and one question; observing group work; open-ended questions; and quick concept-check games like flashcards, Kahoot or Think-Pair-Share. In a Grade 4 class in Kerala, a science teacher had children draw shadows at morning, noon and evening on whiteboards. She instantly spotted who misunderstood and corrected it before it became a lasting misconception."
   },
   {
-    "title": "Causes and early identification of learning disability",
-    "text": "Learning disabilities can arise from pre-natal causes like early marriage, poor maternal nutrition, alcohol or drug use during pregnancy, or unsupervised medicine use; natal causes like delivery by untrained people, low birth weight, forced delivery, or lack of oxygen at birth; and post-natal causes like serious illness or accident, missed vaccination, or malnutrition. The National Education Policy 2020 notes that over 85 percent of brain development occurs by age six, making quality Early Childhood Care and Education essential. Early identification follows a process: informal observation by the teacher during curricular and co-curricular activities; taking a case history with parents, covering onset of problems, developmental milestones, family history and past referrals; screening, if needed, by a special education teacher; referral to a specialist or assessment camp; and finally submission of the diagnostic report to the school so holistic planning can begin. The PRASHAST app, developed by NCERT, is a digital tool that can support this process. A useful screening checklist looks for difficulty maintaining attention, difficulty completing tasks within time limits, skipping letters or words while reading, difficulty tracking lines, difficulty organising objects by shape or size, difficulty comprehending from the blackboard, difficulty with mathematical symbols, confusing similar letters or numbers, difficulty maintaining a straight line or spacing, difficulty with punctuation, and difficulty comprehending word problems."
+    title: "Summative and Diagnostic Assessment",
+    text: "Summative assessment happens at the end of a unit, term or course to evaluate cumulative learning. It's used for grades, certification and reporting, and is typically formal, structured and high-stakes. Examples are unit tests, term exams, final projects and portfolios. It shouldn't be limited to one format; a Delhi school let Class 5 students show understanding of a poem by essay, monologue or illustration. Diagnostic assessment comes before teaching, to find prior knowledge, gaps, interests and learning styles, using pre-tests, concept maps and oral discussions. It informs planning rather than measuring achievement. A Rajasthan teacher asked students to mind-map What is a poem? Their varied answers led her to start with non-rhyming contemporary poetry."
   },
   {
-    "title": "Early intervention strategies",
-    "text": "Early intervention services help young children with developmental delays, through specialists like special educators, therapists and counsellors. Intensive intervention, both in hours and in quality, is the most effective approach, and parents and teachers are usually the first interventionists. Interventions should be tailored, since different children respond differently. For example, occupational therapy helps with fine motor and self-help skills like dressing; physiotherapy helps with walking, balancing, sitting and crawling; and speech therapy helps children with stuttering or stammering master language early. At the foundational stage, teaching should use the mother tongue, storytelling, free conversation, rhymes, songs, picture reading, puppet plays, dramatisation and role play, word games, and pronunciation practice, using materials like picture books, scrapbooks, models and puppets, evaluated mainly through observation of free expression and participation. At the preparatory stage, the focus shifts to basic listening and speaking skills, improving punctuation and spelling, developing good writing and silent reading with comprehension, using materials like story books, word games, word books, and tactile alphabets, evaluated through reading tests, dictation, questions during reading, story making, and observation."
+    title: "Ipsative Assessment and Comparing the Types",
+    text: "Ipsative assessment compares a learner's present performance with their own earlier performance, not with peers. It celebrates progress, builds self-esteem and a growth mindset, and uses tools like skill growth journals, self-assessment checklists and progress graphs. In an Uttar Pradesh government school, children kept My Learning Booklets tracking weekly maths scores against the previous week; even children far behind felt motivated, participation improved and absenteeism fell. Comparing types: formative is used during teaching to improve it in real time; summative at the end of a unit to evaluate final learning; diagnostic before teaching to identify readiness or gaps; ipsative any time to track personal progress. Formative's strength is real-time adjustment but it's often under-documented; summative validates outcomes but may come too late and cause anxiety; diagnostic helps plan but is time-consuming."
   },
   {
-    "title": "The Individualised Education Plan — concept and three parts",
-    "text": "The concept of the Individualised Education Plan in India traces back to early schools for children with visual and hearing impairment, and grew more formal after independence. As per Section 16 of the RPWD Act 2016, every government establishment must monitor the participation, progress and completion of education of every child with special needs. An IEP provides a plan to help a student meet individual goals beyond their current skills, is individual to each student, and is revised at least twice a year based on evaluation of progress. It has three parts. Part A covers basic information about the child, revised two or three times a year, including annual goals set with parents and subject teachers in sync with the previous year's achievement, and short-term goals revised after evaluating the previous IEP. Part B covers co-curricular activities, activities of daily living, therapeutic needs like occupational and speech therapy, pre-vocational training and life skills, prepared with subject teachers and specialists, and filled separately for each short-term goal. And Part C covers academics, planned, implemented and evaluated monthly in discussion with subject teachers."
+    title: "Integrating Multiple Assessments",
+    text: "Modern pedagogy layers assessment types rather than treating each as standalone. A concept can begin with a diagnostic pre-check, continue with formative adjustments, and end with a summative evaluation, creating a full learning cycle of identifying readiness, supporting growth and celebrating achievement. Involving students in understanding this process builds transparency and motivation, because they see assessment as a way to understand themselves as learners, not just as marks. The goal isn't ranking the types but knowing when each best supports learning."
   },
   {
-    "title": "Challenges in preparing IEPs, and differentiated learning",
-    "text": "Teachers preparing IEPs face challenges including diverse learning styles requiring adapted teaching methods, classroom management issues like limited resources, teacher overburden, insufficient training, and lack of parental support. Suggestions include using universal design for learning and differentiated instruction, exploring diverse learning needs, organising professional development programmes, adequate use of technology, and greater collaboration between staff, teachers and parents. This leads into differentiated learning itself. Given India's immense diversity in culture, socioeconomic status, language, gender, ability and learning style, teachers must ensure this diversity does not hinder learning. Differentiated instruction means providing students varied ways to understand new information, acquire content, process ideas, and demonstrate understanding, and developing assessment measures so all students can learn effectively. It happens at two levels: the administrative level, considering socioeconomic status and gender, and the classroom level, revolving around content, process, product and learning environment. Differentiated learning increases classroom engagement, improves academic outcomes, promotes a healthy and supportive environment, addresses diverse needs and learning styles, promotes active learning, closes achievement gaps, and increases teacher effectiveness. It can be implemented through recital methods, role play, smartboards, small group and peer learning, teaching-learning materials, games and activities, multisensory approaches, peer tutoring, art and crafts, and individual attention."
+    title: "Assessment — Who, How and When",
+    text: "Assessments must align with the curriculum's objectives, or performance won't reflect true learning. It would be unfair, for instance, to test adverbs when only verbs were taught. Assessment should also cover values, morals and attitudes, not just knowledge and skills. The teacher who works with the children should assess them, since she observes closely, knows each child's development and plans the next cycle. And assessment starts the moment the teacher enters the classroom, by asking questions, reciting a poem or telling a story to find prior knowledge. Its outcomes then feed back into teaching experiences and even curriculum design, so it's never a single task at year's end."
   },
   {
-    "title": "Summary — what we learned today",
-    "text": "Let us recap. First, children with special needs show diversity in physical, sensory, intellectual and developmental abilities, and the RPWD Act 2016 lists 21 types of disability. Second, inclusive settings differ from segregation and integration by focusing on rights, a social model of disability, and support for all, rather than services or individual adaptation alone. Third, specific learning disabilities include dyslexia, dysgraphia, dyscalculia, dyspraxia and developmental aphasia, each with characteristic error patterns and corrective strategies. Fourth, learning disabilities can arise from pre-natal, natal or post-natal causes, and early identification follows a structured process from informal observation through case history, screening, referral and diagnosis. Fifth, early intervention through occupational therapy, physiotherapy and speech therapy, tailored to the child, makes a real difference. Sixth, the Individualised Education Plan has three parts, covering basic information and goals, co-curricular and therapeutic needs, and academics, revised regularly based on progress. And finally, differentiated learning tailors content, process and product to each child's needs, using strategies like role play, multisensory approaches and peer tutoring. Thank you, that is all for today!"
+    title: "The Assessment Cycle — Plan, Do, Check, Act",
+    text: "The assessment cycle has four stages. Plan: what do I want pupils to understand? Write learning outcomes in behavioural, measurable terms, aligned from institution to programme to course. Do: how do I teach effectively? Plan learning experiences, projects, performances and presentations that stimulate learning and generate evidence, and develop assessment tools. Check: are my goals being accomplished? Examine student work against each outcome, since an overall grade is too global to be useful. Act: how do I use what I've learned? If outcomes weren't met, replan the lesson and try again. This repeats until all outcomes are achieved, letting the Plan-Do-Check-Act cycle continue."
+  },
+  {
+    title: "Categorisation of Assessment",
+    text: "Assessments can be categorised by five criteria. By who constructs the test: standardised or teacher-made. By response type: oral, written or performance. By administration: individual or group. By quantification: objective, with convergent answers easily scored, or subjective, like essays. And by result interpretation: norm-referenced, comparing a child with a group, or criterion-referenced, comparing with a set standard. Standardised tests, like the Stanford Achievement Test, Raven's Progressive Matrices, CBSE board exams and NIPUN Bharat tools, are rigorously validated and useful for benchmarking but may miss local context. Teacher-made tests, like worksheets, oral questions, peer rubrics and pre-tests, are flexible and suited for formative and diagnostic use, though their quality depends on the teacher's skill."
+  },
+  {
+    title: "Policy Context — NEP 2020, HPC and PARAKH",
+    text: "NEP 2020 envisions moving from high-stakes exams and rote learning to formative, diagnostic and adaptive assessment rooted in real-world competencies. Section 4.34 calls for redesigned report cards including self, peer and teacher assessment, with progress across cognitive, affective and psychomotor domains, which led to Holistic Progress Cards. Section 4.35 proposes PARAKH, a national assessment centre to standardise and reform school assessment. Under NCERT's 2023 guidelines, the Holistic Progress Card should capture multi-dimensional growth, with teachers documenting evidence across academic, physical, emotional and social domains, with space for narrative observations, work samples and reflections."
+  },
+  {
+    title: "Evolved Assessment — Beyond Grades",
+    text: "Assessment is shifting from memory and recall to application, creativity, values and critical thinking; from one-time exams to continuous assessment; from marksheets to 360-degree descriptive feedback; from teacher-centric evaluation to feedback from self, peers, parents and teachers; and from annual report cards to dynamic portfolios. A student scoring ninety percent in maths may not understand concepts deeply. In the evolved model, performance tasks, reasoning problems and group observations reveal more, and creative solutions at a science exhibition or leadership in a project are recognised through narratives, peer reflections and rubrics. Arts and physical education, once sidelined, are now assessed through portfolios, participation records and reflection journals."
+  },
+  {
+    title: "Global and Indian Best Practices",
+    text: "Globally, Finland uses descriptive assessment, trusts teachers' observation and avoids high-stakes grading until later years. Singapore uses e-portfolios, performance tasks, self-assessment and non-academic indicators like resilience, curiosity and collaboration. The OECD Learning Compass 2030 promotes student agency, documents competencies like global citizenship, well-being and empathy, and values qualitative, longitudinal data. In India, NCERT's Holistic Progress Card guidelines recommend anecdotal records, peer and self-evaluation, co-scholastic assessment and teacher comments. CBSE's competency-based framework from 2021 brings real-life, application-based questions, rubrics and reflection sheets. Delhi's Happiness Curriculum records emotional well-being and participation, and Karnataka schools used portfolios during the pandemic, with parents as partners. Together, these make learning personalised, recognise diverse children fairly, make teachers mentors, and prioritise development over competition."
+  },
+  {
+    title: "Let Us Sum Up",
+    text: "To sum up: assessment is a crucial part of teaching. It's a methodical process of collecting data on children through varied techniques, documenting it, reflecting on it and applying it to improve learning. Assessment of learning and assessment for learning are the two main approaches, with the latter strongly favoured by NEP 2020. We explored formative, summative, diagnostic and ipsative assessment, the Plan-Do-Check-Act cycle, standardised versus teacher-made tools, and the shift toward holistic, competency-based assessment in India and worldwide. Thank you, and that's all for today!"
   }
 ];
 
@@ -210,27 +165,31 @@ const voiceNote = document.getElementById('voiceNote');
 
 let currentIndex = -1;
 let isPaused = false;
-let enVoice = null;
+let selectedVoice = null;
 let playQueueActive = false;
 
-function pickEnglishVoice() {
+function pickVoice() {
   const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-  enVoice = voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-') === 'en-in')
-    || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en'))
-    || null;
-  if (enVoice) {
-    voiceNote.textContent = "Voice: " + enVoice.name;
+  const norm = v => (v.lang || '').toLowerCase().replace('_', '-');
+  selectedVoice =
+    voices.find(v => norm(v) === 'en-in') ||
+    voices.find(v => /india/i.test(v.name) && norm(v).startsWith('en')) ||
+    voices.find(v => norm(v).startsWith('en')) || null;
+  if (selectedVoice && norm(selectedVoice) === 'en-in') {
+    voiceNote.textContent = "Voice: " + selectedVoice.name + " (English – India)";
+  } else if (selectedVoice) {
+    voiceNote.textContent = "Voice: " + selectedVoice.name + " — no Indian English voice found on this device, using the closest English voice.";
   } else if (voices.length) {
-    voiceNote.textContent = "No English voice found on this device — the default voice will be used.";
+    voiceNote.textContent = "No English voice found on this device — using the default voice.";
   } else {
     voiceNote.textContent = "";
   }
 }
 if ('speechSynthesis' in window) {
-  pickEnglishVoice();
-  window.speechSynthesis.onvoiceschanged = pickEnglishVoice;
+  pickVoice();
+  window.speechSynthesis.onvoiceschanged = pickVoice;
 } else {
-  voiceNote.textContent = "This browser does not support read-aloud.";
+  voiceNote.textContent = "This browser does not support text-to-speech.";
   playAllBtn.disabled = true;
 }
 
@@ -245,7 +204,7 @@ function buildList() {
         '<span class="section-num">Part ' + (i + 1) + '</span>' +
       '</div>' +
       '<div class="section-text">' + sec.text + '</div>' +
-      '<div class="play-icon">▶ Listen to this part</div>';
+      '<div class="play-icon">▶ Play this part separately</div>';
     div.addEventListener('click', () => {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       div.classList.add('active');
@@ -274,19 +233,19 @@ function speakSection(i, continueQueue) {
   highlightSection(i);
   nowPlayingEl.textContent = "🔊 Now playing: Part " + (i + 1) + " — " + sections[i].title;
   const utter = new SpeechSynthesisUtterance(sections[i].text);
-  utter.lang = 'en-IN';
-  if (enVoice) utter.voice = enVoice;
+  utter.lang = (selectedVoice && selectedVoice.lang) || 'en-IN';
+  if (selectedVoice) utter.voice = selectedVoice;
   utter.rate = parseFloat(rateSelect.value);
   utter.onend = () => {
     if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
       speakSection(currentIndex + 1, true);
     } else if (continueQueue && playQueueActive) {
       playQueueActive = false;
-      nowPlayingEl.textContent = "✅ Lesson finished";
-      playAllLabel.textContent = "▶ Play full lesson";
+      nowPlayingEl.textContent = "✅ Lesson complete";
+      playAllLabel.textContent = "▶ Play Full Lesson";
     } else {
       nowPlayingEl.textContent = "⏹ Part " + (i + 1) + " finished";
-      playAllLabel.textContent = "▶ Play full lesson";
+      playAllLabel.textContent = "▶ Play Full Lesson";
     }
   };
   window.speechSynthesis.speak(utter);
@@ -298,7 +257,7 @@ playAllBtn.addEventListener('click', () => {
   if (window.speechSynthesis.speaking && isPaused) {
     window.speechSynthesis.resume();
     isPaused = false;
-    playAllLabel.textContent = "▶ Play full lesson";
+    playAllLabel.textContent = "▶ Play Full Lesson";
     return;
   }
   playQueueActive = true;
@@ -311,7 +270,7 @@ pauseBtn.addEventListener('click', () => {
   if (window.speechSynthesis.speaking && !isPaused) {
     window.speechSynthesis.pause();
     isPaused = true;
-    nowPlayingEl.textContent = "⏸ Paused — press Play to continue";
+    nowPlayingEl.textContent = "⏸ Paused — press play again to continue";
   }
 });
 
