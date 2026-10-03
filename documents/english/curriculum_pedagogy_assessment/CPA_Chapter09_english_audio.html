@@ -3,112 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Learner Friendly Environment — Audio Lesson</title>
+<title>Tools and Techniques of Assessment — Audio Lesson</title>
 <style>
 :root {
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  --bg: #f5faf8;
-  --card: #ffffff;
-  --text: #202824;
-  --text-secondary: #5f6b64;
-  --accent: #1a7a5e;
-  --accent-bg: #dcf0e8;
-  --border: #dbe7e0;
-  --active-bg: #e7f5ef;
+  --bg: #f5faf8; --card: #ffffff; --text: #202824; --text-secondary: #5f6b64;
+  --accent: #1a7a5e; --accent-bg: #dcf0e8; --border: #dbe7e0; --active-bg: #e7f5ef;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #131a17;
-    --card: #1c2521;
-    --text: #e9f1ec;
-    --text-secondary: #a3b3ab;
-    --accent: #4fcba0;
-    --accent-bg: #1c3a2e;
-    --border: #2c3a33;
-    --active-bg: #1e3329;
+    --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+    --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #131a17;
-  --card: #1c2521;
-  --text: #e9f1ec;
-  --text-secondary: #a3b3ab;
-  --accent: #4fcba0;
-  --accent-bg: #1c3a2e;
-  --border: #2c3a33;
-  --active-bg: #1e3329;
+  --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+  --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
 }
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
 * { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
-  line-height: 1.7;
-}
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.7; }
 .wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
 header { text-align: center; margin-bottom: 1.25rem; }
-header h1 { font-size: 1.25rem; margin: 0 0 0.25rem; font-weight: 700; }
+header h1 { font-size: 1.2rem; margin: 0 0 0.25rem; font-weight: 700; }
 header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
-.player {
-  position: sticky;
-  top: env(safe-area-inset-top, 0px);
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 0.9rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-  z-index: 10;
-}
+.player { position: sticky; top: env(safe-area-inset-top, 0px); background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 10; }
 .now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
 .controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-button {
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  border-radius: 10px;
-  padding: 0.55rem 0.8rem;
-  font-size: 0.95rem;
-  cursor: pointer;
-  min-height: 44px;
-}
-button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 0.55rem 0.8rem; font-size: 0.95rem; cursor: pointer; min-height: 44px; }
 button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
 button:active { transform: scale(0.97); }
 .speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
-select {
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  border-radius: 8px;
-  padding: 0.3rem 0.4rem;
-  min-height: 36px;
-}
+select { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; padding: 0.3rem 0.4rem; min-height: 36px; }
 .voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
 .sections { display: flex; flex-direction: column; gap: 0.7rem; }
-.section {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 0.9rem 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
+.section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; cursor: pointer; transition: background 0.2s; }
 .section.active { background: var(--active-bg); border-color: var(--accent); }
 .section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
 .section-title { font-weight: 600; font-size: 1rem; }
-.section-num {
-  font-size: 0.78rem;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border-radius: 999px;
-  padding: 0.1rem 0.55rem;
-  white-space: nowrap;
-}
+.section-num { font-size: 0.78rem; color: var(--accent); background: var(--accent-bg); border-radius: 999px; padding: 0.1rem 0.55rem; white-space: nowrap; }
 .section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
 .section.active .section-text { display: block; color: var(--text); }
 .play-icon { font-size: 0.8rem; color: var(--accent); }
@@ -118,14 +53,14 @@ footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; m
 <body>
 <div class="wrap">
   <header>
-    <h1>Learner Friendly Environment</h1>
-    <p>Audio lesson — listen and read along</p>
+    <h1>Tools and Techniques of Assessment</h1>
+    <p>Unit 4 · Curriculum, Pedagogy and Assessment — Audio Lesson</p>
   </header>
 
   <div class="player">
-    <div class="now-playing" id="nowPlaying">▶️ Press "Play full lesson" to start listening</div>
+    <div class="now-playing" id="nowPlaying">▶️ Press "Play Full Lesson" to start listening</div>
     <div class="controls">
-      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ Play full lesson</span></button>
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ Play Full Lesson</span></button>
       <button id="pauseBtn">⏸ Pause</button>
       <button id="prevBtn">⏮ Previous</button>
       <button id="nextBtn">⏭ Next</button>
@@ -143,62 +78,94 @@ footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; m
 
   <div class="sections" id="sectionsList"></div>
 
-  <footer>Tap any part to open it and listen to it separately</footer>
+  <footer>Tap any section to open it and listen separately</footer>
 </div>
 
 <script>
 const sections = [
   {
-    "title": "Introduction — building a learner-friendly environment",
-    "text": "Today we study Learner-Friendly Environment. Building on early identification of special needs and the Individualised Education Plan, this chapter looks at the physical, emotional and social needs that make up a child's holistic development. It explores positive, inclusive and motivating teaching strategies, adapts teaching methods to meet diverse needs, and identifies learning barriers faced by children with special needs along with strategies to address them, so every child can learn according to their ability and blossom their inherent potential."
+    title: "Introduction — Tools for Understanding Every Learner",
+    text: "Today's lesson covers the tools and techniques of assessment. Assessment doesn't just measure progress; it informs instruction and supports overall development. Beyond traditional tests, teachers now use observation tools, performance tasks and self and peer assessment. Analysing children's responses helps tailor teaching, while documenting and communicating outcomes tracks growth for teachers, parents and learners. Formats like 360-degree progress reports, portfolios, qualitative narratives and initiatives such as PARAKH focus on personal growth, skills and attitudes, not just academic scores."
   },
   {
-    "title": "Learning outcomes",
-    "text": "After this chapter, the learner will explain the holistic developmental needs of children, including physical, emotional, social and learning aspects, apply positive, inclusive and motivating teaching strategies, adapt teaching methods to create inclusive learning environments, and identify learning barriers faced by children with special needs while designing appropriate support strategies."
+    title: "Learning Outcomes",
+    text: "After this chapter, you'll be able to use suitable tools for assessing skills, knowledge and attitudes, and apply appropriate methods to document learning across classroom situations. You'll communicate assessment outcomes effectively to students, parents and the school, and develop performance reports using 360-degree progress reports, portfolios, PARAKH formats and qualitative observations."
   },
   {
-    "title": "What is a learner-friendly environment?",
-    "text": "A learner-friendly environment is an atmosphere where learners feel comfortable, encouraged and inspired to learn, explore and continue lifelong learning. Teachers must be aware of children's psychological needs, especially those tied to their cognitive and developmental stage. Its prominent characteristics include inclusivity, welcoming all children regardless of emotional, mental or physical health; safety and support, so children can study without fear; proper use of instructional materials, technology and special education help; use of an Individualised Education Plan with specific objectives for every child; encouragement that acknowledges children's accomplishments; differentiated teaching tailored to each child's needs, whether visual, auditory or activity-based; and early intervention to identify and assist learning impairments in a timely manner."
+    title: "Methods of Assessment — Quantitative and Qualitative",
+    text: "Methods are the techniques for collecting information about learning, chosen intentionally based on outcomes, grade level and context. There are two broad categories. Quantitative methods give measurable, numerical data and are objective, structured and standardised, ideal for grading, comparison and summative or diagnostic use. Tools include MCQs, auto-graded through Google Forms; true-false and matching questions; short answers; rating scales and checklists for co-scholastic areas; and standardised tests like Olympiads. Qualitative methods are descriptive, personalised and focus on the learning process, suiting formative and competency-based assessment. They include anecdotal records, portfolios, observation, reflective journals, interviews and oral exams, and open-ended questions, such as asking Class 5 students to write a diary entry as a village sarpanch."
   },
   {
-    "title": "Inclusive education, and how it differs from a learner-friendly environment",
-    "text": "Inclusive education is an educational approach ensuring all children, regardless of learning styles, abilities or disabilities, especially children with special needs, join the general classroom and receive education tailored to their needs. Its main features are equal opportunity for all children, early intervention for learning disabilities, and the importance of an Individualised Education Plan setting goals and modifications. While related, a learner-friendly environment and inclusive education differ: a learner-friendly environment is a component of classroom instruction, focused on providing students a welcoming, secure and engaging space to study without fear, using instructional strategies and materials suited to learning preferences. Inclusive education is a broader, complete strategy guaranteeing that all children, regardless of talents or limitations, may learn in the same classroom, seeking social equality and education for all. In short, inclusive education aims to include all students regardless of ability, while a learner-friendly environment concentrates on improving the classroom learning environment itself; inclusive education can include a learner-friendly environment, but its scope is wider."
+    title: "Comparing Quantitative and Qualitative Methods",
+    text: "Quantitative assessment uses marks and scores, structured tools, fixed answer keys, and focuses on outcomes and factual recall. It suits summative exams and ranking, but only partly aligns with NEP 2020 because it may encourage rote learning, and it may not accommodate diverse needs. The teacher acts mainly as an examiner. Qualitative assessment uses descriptive data, portfolios, journals and interviews, needs professional judgment, emphasises process, critical thinking, creativity and emotional and social development, suits formative assessment and remediation, and strongly aligns with NEP 2020. It caters to all learners, including differently abled students, and the teacher becomes a mentor, guide and facilitator."
   },
   {
-    "title": "Holistic development — physical and emotional needs",
-    "text": "Holistic development covers a child's all-around growth, physical, cognitive, emotional and social, to help them reach their full potential as an integrated individual, recognising that these aspects are interconnected. For instance, adequate nutrition aids cognitive brain function, and a supportive environment promotes self-esteem and social skills. Physical needs, foundational for all other development, include nutrition for cognitive advancement and immune response, sleep for development and emotional well-being, with recommended hours varying by age, physical activity for motor skills and psychological well-being, and health and safety through regular checkups and a secure environment. Emotional needs include secure attachment through caring relationships, emotional validation, a sense of belonging to family or friendship circles, autonomy through age-appropriate choices, and emotional security through stable routines, with needs varying by age, temperament and cultural context."
+    title: "Aligning Methods to Goals and Using Mixed Methods",
+    text: "Each learning goal should be paired with a suitable method. Recalling facts suits MCQs; analysing a literary text suits an essay or long answer; demonstrating science experiment skills suits an observation checklist or rubric; reflecting on learning suits a reflective journal. A blend of quantitative and qualitative methods gives objectivity and depth. The Class 4 lesson Going to School shows how: a diagnostic pre-test with pictures of ways children travel to school; a formative check using Flipgrid video responses; a main project making posters of school journeys across India; a summative test combining MCQs and written explanation; and a student reflection journal on their own journey. This supports multiple intelligences and diverse learners."
   },
   {
-    "title": "Holistic development — social and learning needs",
-    "text": "Social needs play a significant role in holistic development. These include positive relationships with family, peers and role models that foster trust and empathy, social exchanges and games that build communication and problem-solving skills, a sense of community through cultural or family events, communication skills including verbal and nonverbal expression, and secure, inclusive environments that safeguard against bullying. Learning, or cognitive, needs are crucial for a child's capacity to think, reason and solve problems, including cognitive stimulation through age-appropriate challenges like puzzles, access to quality education and resources, language growth through rich verbal exchange, critical thinking through problem-solving opportunities, and creativity through art or role-play. Across all these domains, needs differ by age, ability and socioeconomic or cultural factors, so caregivers should stimulate curiosity, support education, advance language, cultivate problem-solving, and inspire creativity."
+    title: "Categories of Assessment Tools — Paper-Pencil and Performance-Based",
+    text: "Assessment tools are the instruments for systematically gathering evidence of learning, behaviour and attitudes. They fall into four groups. Paper-pencil tools include class tests, quizzes, worksheets, MCQs, fill-in-the-blanks and short answers. In a Class 4 lesson on eating together, a worksheet might match foods to occasions and ask students to describe a time they ate with others. They're easy to score but limited for higher-order thinking and creativity. Performance-based tools assess how students apply knowledge in projects, presentations and practical tasks. A rubric is a scoring guide with criteria and levels, such as creativity, accuracy, teamwork and presentation for a renewable energy project. A checklist is binary, tracking whether specific behaviours were shown, like correct pronunciation in reading fluency."
   },
   {
-    "title": "Strategies for a learner-friendly environment, part one",
-    "text": "Many teaching strategies support a learner-friendly environment. Being an effective listener helps solve children's problems rather than offering sympathy or criticism. Avoiding labelling or criticising a child preserves the possibility of improvement. Handling truancy tactfully means expressing gratitude when a child returns after an absence rather than reprimanding them. Identifying children early, watching for poor attention span, negative self-image, or limited classroom expression, allows a plan of action to be developed. Tackling poor self-esteem means recognising students and planning ahead for written assignments, outlining objectives and emphasising the value of their work. The VAKT approach, Visual, Auditory, Kinaesthetic and Tactile, first presented by Grace Fernald, teaches through a child's strengths to build confidence. Using all senses simultaneously, ears, eyes, voice, fingers and muscles together, helps students who struggle to combine these skills naturally."
+    title: "Observation Tools and Affective Domain Tools",
+    text: "Observation tools capture behavioural, social and emotional development in natural settings. Anecdotal records are short, factual notes, like recording a Class 3 child helping a peer clean a spill under collaboration and empathy. Running records are more structured and continuous, used in early literacy to note how a child handles decoding, punctuation and expression while reading aloud. They're especially valuable in inclusive classrooms. The affective domain covers attitudes, values, interests, emotions and motivation. Attitude scales use Likert ratings like I enjoy learning mathematics; interest inventories reveal what students are drawn to; and sociometry asks whom students would choose to work with, revealing peer relationships. These tools help build emotionally supportive classrooms."
   },
   {
-    "title": "Strategies for a learner-friendly environment, part two",
-    "text": "More strategies include incorporating thinking skills lessons, such as observing a set of objects briefly then recalling details. Applying task analysis appropriately means breaking work into sequential parts, such as teaching one alphabet at a time through matching, identifying and naming in the right order. Making math teaching fun uses games and relates math to everyday experience, without assuming mental arithmetic is too hard for slow learners. Improving unacceptable behaviour requires understanding how problem behaviour is learned and managed. Peer tutoring pairs a child with a more accomplished peer, chosen carefully and trained until the relationship works well, with rewards for successful completion. Being an effective support teacher means collaborating with mainstream colleagues across classrooms. Cooperative learning divides students into small mixed-skill groups working together, building social skills alongside academics. And proper use of teaching and learning materials means introducing them step by step, from simple to complex, without overloading the child. Teachers should also stay fit, taking time for stress-relieving activities like yoga or meditation, since a teacher's well-being shapes the quality of teaching."
+    title: "Digital Tools for Engaging Formative Assessment",
+    text: "Digital tools bring instant feedback, automated grading, remote access and real-time analytics, and are key to the formative assessment promoted by NEP 2020. Kahoot offers game-like quizzes with leaderboards. Google Forms builds auto-graded quizzes with analytics. Quizizz offers self-paced quizzes. Edpuzzle inserts questions into videos. Mentimeter handles live polls and word clouds. Socrative supports exit tickets and quick quizzes. Nearpod makes presentations interactive. Classkick lets teachers see student work live and give hints. And Ziplet enables quick, anonymous emotional check-ins about confidence or understanding."
   },
   {
-    "title": "Team teaching, peer tutoring and other methods",
-    "text": "Team teaching has teachers of different subjects collaborate on one topic so students see it from multiple perspectives. Peer tutoring, where a student serves as tutor and another as tutee, follows steps including evaluating each student's performance, choosing tutors based on strength, preparing modified materials, training tutors briefly, giving clear instructions, providing a comfortable workspace, tracking progress, and getting parental consent, since both tutor and tutee learn best together. Cooperative learning has groups work together toward a shared objective. Language learning combines speaking, writing, listening and reading, drawing content from the child's own thoughts and experiences; children with locomotor disabilities may speak normally, while children with cerebral palsy or hearing impairment may need learning connected to their own experience. The multisensory approach presents knowledge through visual, auditory, kinaesthetic and tactile modalities together. Programmed breakthrough to literacy has children recount experiences, which become word and letter cards, read aloud and repeated until independent, breaking work into manageable sequenced parts. And modifying materials and activities includes vocabulary activities, graphic organisers, previewing reading, independent study skills, note-taking practice, and inquiry approaches like field visits to historical places and museums."
+    title: "AI-Based Tools for Inclusive Assessment",
+    text: "AI-based tools use machine learning to adapt content to each student's responses, offering personalised learning paths, instant corrective feedback and data-driven insights. They identify learning gaps, tailor resources to individual needs, reduce teachers' workload and promote inclusion. They shift assessment from one-size-fits-all to responsive, student-centred evaluation, making it a continuous, engaging part of learning. The chapter's check-your-progress notes that Edpuzzle suits real-time feedback during video lessons, Kahoot is known for game-based quizzes, Seesaw works as a digital portfolio, and Socratic scans a question and gives step-by-step solutions."
   },
   {
-    "title": "Understanding needs and educational planning",
-    "text": "Creating a learner-friendly environment starts with identifying each student's diverse needs, with parental input providing valuable insight. Needs fall into two categories: learning or academic needs, both curricular and co-curricular, and supportive needs, such as medical or assistive aids. A child with sensory loss may not communicate typically, and a child with a learning disability may need more time to acquire skills, so teachers must determine learning needs in relation to the curriculum, while supportive measures may need parents or community resource teachers. Educational planning should start from the child's strengths rather than weaknesses; a child who is slow in academic subjects may excel in sports or cultural activities. Planning should focus on curriculum objectives and learning gaps, not medical diagnosis, using the teacher's understanding of subject competencies to create a baseline and pinpoint gaps. Peer support helps a child build confidence, since children with special needs often rely on peer assistance. And it is important to pinpoint existing resources in the school and community, including government schemes, NGOs and health centres, along with facilities and adjustments to buildings and materials that support attendance and learning."
+    title: "Analysing Children's Responses — Observation, Concept Maps and Reflection",
+    text: "Children show understanding not just through test answers but through gestures, body language, conversations and creative work. Teachers should observe verbal and non-verbal responses: lack of eye contact, fidgeting or hesitation may signal confusion, allowing gentle support. Concept maps make thinking visible, since a missing link or wrongly drawn cause and effect reveals misconceptions in real time. Peer and self-assessment with rubrics and reflection sheets build ownership, critical thinking and accountability. Reflective journals give a safe space to note what was understood and what puzzled them, and when teachers reply, they become dialogue notebooks, a quiet written conversation that builds trust, especially for children who don't raise their hands."
   },
   {
-    "title": "Barriers to inclusive education",
-    "text": "Despite large-scale efforts to include children with special needs, many challenges persist. Reliable tools for assessing understanding are scarce for mainstream teachers, who often lack the time special educators have for remedial work. Communication difficulties can lead to behaviours misaligned with peers, causing frustration, anxiety and declining self-esteem. Several specific barriers exist. Pedagogical barriers arise when teaching approaches, like lecture-only formats, don't accommodate diverse learning styles. Structural barriers are physical, like buildings lacking ramps or elevators. Attitudinal barriers come from negative stereotypes or unconscious bias, such as assuming students with disabilities cannot meet high standards. Instructional barriers involve inflexible curricula or materials in limited formats, such as text-only online courses inaccessible to students using screen readers. Physical barriers include inaccessible restrooms, narrow doors or poor lighting. Social barriers stem from broader issues like poverty and limited access to healthcare or technology. And the digital divide means unequal access to computers and reliable internet creates a digital cliff, where online learning does not provide equal conditions for all students."
+    title: "Feedback Loops with Flipgrid, Padlet and Seesaw",
+    text: "Flipgrid lets students respond to prompts with short videos instead of written answers or live presentations, ideal for storytelling, reflection and fluency. Teachers can reply by video or voice. One quiet Class 4 student with a speech delay recorded a touching story about sharing lunch, and the teacher's warm reply gave the child courage and confidence. Seesaw acts as a living portfolio where children upload drawings, voice notes and videos, and teachers give feedback, assign follow-ups and share moments with families. In a Class 2 storytelling session, a child uploaded a drawing of a wise bird with a voice note, and the teacher's encouragement led the child to draw a follow-up scene the next day."
   },
   {
-    "title": "Strategies to address the needs of children with special needs",
-    "text": "Several strategies help address these needs. Eliminating lecture monologue means using diverse teaching styles, interactive tasks, science experiments, discussions and teamwork-based projects, and promoting group discussion so students learn from each other. Ensuring learning materials are accessible means offering audiobooks, captioned videos, dyslexia-friendly fonts, text-to-speech PDFs, screen readers, and tactile diagrams or Braille materials for visual impairments. Shifting mindsets and promoting acceptance means holding workshops on unconscious bias and building a culture that celebrates diversity through literature, guest speakers and classroom projects. Reducing physical barriers means providing accessible furniture with adjustable heights, unobstructed pathways and grab bars. Overcoming the digital divide means exploring collaborations with community centres or libraries for free internet and computer access. Teaming up for achievement means open communication between teachers, parents and specialists like occupational or speech therapists through regular meetings. And celebrating differences means incorporating cultural festivities and activities into the curriculum for both online and in-person classrooms."
+    title: "Inclusive Response Analysis",
+    text: "Not all learners process, express or communicate in the same way. Students with autism, ADHD, dyslexia, dyspraxia or sensory differences may need alternative formats, and traditional tools that prize speed, writing and verbal fluency can unintentionally exclude them. Inclusive strategies include visual prompts like symbols and colour codes; accepting alternative responses such as recordings, gestures, drawings or typed answers; flexible timing; and assistive technology like text-to-speech and dictation. In a Class 4 healthy-eating activity, a non-verbal child with autism was given a feelings chart. The child circled the helping hand and drew a banana on the group's plate, which the teacher read as contributing to the discussion, then built on it by encouraging the child to name one symbol aloud."
   },
   {
-    "title": "Summary — what we learned today",
-    "text": "Let us recap. First, a learner-friendly environment is one where learners feel comfortable, safe and inspired, built through inclusivity, safety, resource use, an Individualised Education Plan, encouragement, differentiated teaching and early intervention. Second, inclusive education is a broader strategy guaranteeing all children can learn together, while a learner-friendly environment focuses on the classroom experience itself. Third, holistic development covers physical, emotional, social and learning needs, all interconnected and shaping a child's overall growth. Fourth, many strategies support a learner-friendly classroom, including effective listening, avoiding labelling, the VAKT multisensory approach, task analysis, peer tutoring, team teaching, cooperative learning, and programmed literacy approaches. Fifth, educational planning should start from a child's strengths and focus on curriculum gaps rather than medical diagnosis, supported by peer assistance and community resources. Sixth, inclusive education faces pedagogical, structural, attitudinal, instructional, physical, social and digital barriers. And finally, strategies like accessible materials, reducing physical barriers, bridging the digital divide, and celebrating diversity help create truly inclusive, learner-friendly classrooms. Thank you, that is all for today!"
+    title: "Documenting and Communicating Assessment",
+    text: "Documenting assessment means systematically collecting, recording, analysing and communicating evidence of learning over time. It has several purposes. It tracks continuous progress, like a writing portfolio from Term 1 to Term 4. It guides instruction and remediation, for example moving to hands-on experiments if students struggle with application questions. It empowers learners through self-awareness, using learning diaries, checklists and student-led conferences. It informs parents transparently, with comments like applies concepts creatively but needs consistency, instead of just a B plus. It supports equity by capturing varied strengths, and it serves as a legal and institutional record for promotion, certification and policy."
+  },
+  {
+    title: "360-Degree Progress Reports",
+    text: "A 360-degree progress report is a comprehensive, multi-source tool introduced under NEP 2020, giving a rounded picture of academic, personal, emotional, social and ethical development. It builds on continuous and comprehensive evaluation, adding multi-stakeholder feedback and qualitative insight, collected from teachers, parents, peers and the student. It covers five dimensions: academic performance, including competencies, problem-solving and creativity; life skills and values, like resilience, leadership, empathy and honesty; emotional and social development; co-curricular involvement in art, music, sports and theatre; and multi-stakeholder feedback. Evidence is documented using rubrics, checklists, narrative observations and student artifacts."
+  },
+  {
+    title: "Tools for 360-Degree Reporting",
+    text: "A range of tools supports these reports. Rubrics define criteria and performance levels, bringing transparency and consistency. Anecdotal records capture behaviours like Riya assigning roles and respecting everyone's ideas. Portfolios curate work over time, and may be working, showcase or digital, using tools like Book Creator, Seesaw, Google Sites and ClassDojo. Self-assessment tools use rating scales, I-can statements and reflection prompts. Peer feedback forms build empathy and constructive communication. Parent feedback sheets bring in home perspectives through diaries, WhatsApp groups or portals. Digital dashboards and learning management systems like DIKSHA and Google Classroom aggregate data. Observation checklists list behaviours like waits for their turn. And audio-visual evidence, photos, videos and recordings, captures non-verbal and performance skills."
+  },
+  {
+    title: "Student Portfolios — Evidence of Learning Over Time",
+    text: "A portfolio is an intentionally curated collection of student work, artifacts and reflections showing effort, progress and competencies across domains. Unlike a report card's one-time summary, it shows how understanding and skills develop. Portfolios make learning visible, build self-awareness, ownership, goal setting and metacognition, support multimodal expression, and give teachers insight for differentiated instruction. They match NEP 2020's call for holistic, 360-degree report cards including peer and self-assessment, and support competency-based goals. There are three types. A working portfolio shows a story's drafts, comments and revisions. A showcase portfolio holds a child's best work with reflections on why each was chosen. An assessment portfolio gathers evidence of mastery, like ecosystem worksheets, field reports and rubric evaluations."
+  },
+  {
+    title: "Digital and Inclusive Portfolios",
+    text: "Digital portfolios add real-time access for teachers, students and parents, multimedia integration, better organisation, and collaborative sharing and peer review, especially useful in blended and remote learning. Portfolios are also powerful for inclusion, aligning with Universal Design for Learning, because they allow written narratives, audio, diagrams, photographs, videos and mind maps. This supports learners with dyslexia, ADHD or autism, language learners who express better through illustrations or speech, and students from under-resourced backgrounds, as portfolios can be kept in physical or digital form. For example, a student with dyslexia can submit an audio narration, a visual storyboard and a mind map instead of a written essay."
+  },
+  {
+    title: "PARAKH — India's National Assessment Regulator",
+    text: "Before NEP 2020, India's assessment relied heavily on summative exams, with learning outcomes varying across boards and little measurement of critical thinking, creativity or emotional intelligence. NEP Section 4.35 recommended PARAKH, which stands for Performance Assessment, Review, and Analysis of Knowledge for Holistic Development, as India's first national assessment regulator. Announced in 2022, it functions within NCERT. Its roles include standard-setting across states and boards, developing competency-based frameworks, and promoting transparency, inclusivity and fairness. Its objectives are to shift from rote learning to competency-based assessment, define national and state performance benchmarks, support state and central boards, and promote assessment of twenty-first-century skills like collaboration, problem-solving and creativity."
+  },
+  {
+    title: "Qualitative Reporting — Beyond Numbers",
+    text: "Qualitative reporting gives narrative, descriptive feedback on learning, behaviour and competencies, instead of or alongside numbers, focusing on depth, context and process. It's especially valuable in early childhood, life skills, arts and inclusive settings, where marks often fail to show real learning, and it fosters communication among teachers, parents and learners. Its components are anecdotal notes, short objective records of observations; narrative feedback, a holistic summary of progress, strengths and areas to improve; reflective comments, where students express what they learned and want to improve; and descriptive indicators like Emerging, Developing, Proficient and Advanced, linked to competencies."
+  },
+  {
+    title: "Integrating Methods and Conclusion",
+    text: "No single method can give a fair, inclusive, competency-based picture, so teachers should integrate 360-degree reports, portfolios, qualitative reporting and frameworks like PARAKH into one assessment ecosystem. This reflects development across academic, personal, emotional and social domains, and supports continuous feedback, personalised pathways and data-informed decisions. Assessment is more than assigning grades; it nurtures holistic development and shapes teaching. From MCQs to portfolios, dialogue notebooks and AI-based adaptive tools, techniques should always be tied to learning goals, and observing verbal and non-verbal responses, collaboration and creativity reveals potential that exams cannot."
+  },
+  {
+    title: "Let Us Sum Up",
+    text: "To sum up: assessment methods are quantitative or qualitative, and both are essential. Comparing methods helps choose the right format for formative, summative or diagnostic purposes. Tools include standardised and teacher-made tests, performance tasks, observation checklists and affective domain tools. Digital and AI-based tools make assessment dynamic, inclusive and real-time. Analysing responses through observation, peer and self-assessment, journals and platforms like Padlet, Flipgrid and Seesaw supports responsive, inclusive teaching. Systematic documentation helps track progress and communicate with stakeholders. And NEP 2020 emphasises 360-degree progress reports, portfolios, qualitative reporting and PARAKH for a competency-based, learner-centric culture. Thank you, and that's all for today!"
   }
 ];
 
@@ -214,27 +181,31 @@ const voiceNote = document.getElementById('voiceNote');
 
 let currentIndex = -1;
 let isPaused = false;
-let enVoice = null;
+let selectedVoice = null;
 let playQueueActive = false;
 
-function pickEnglishVoice() {
+function pickVoice() {
   const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-  enVoice = voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-') === 'en-in')
-    || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en'))
-    || null;
-  if (enVoice) {
-    voiceNote.textContent = "Voice: " + enVoice.name;
+  const norm = v => (v.lang || '').toLowerCase().replace('_', '-');
+  selectedVoice =
+    voices.find(v => norm(v) === 'en-in') ||
+    voices.find(v => /india/i.test(v.name) && norm(v).startsWith('en')) ||
+    voices.find(v => norm(v).startsWith('en')) || null;
+  if (selectedVoice && norm(selectedVoice) === 'en-in') {
+    voiceNote.textContent = "Voice: " + selectedVoice.name + " (English – India)";
+  } else if (selectedVoice) {
+    voiceNote.textContent = "Voice: " + selectedVoice.name + " — no Indian English voice found on this device, using the closest English voice.";
   } else if (voices.length) {
-    voiceNote.textContent = "No English voice found on this device — the default voice will be used.";
+    voiceNote.textContent = "No English voice found on this device — using the default voice.";
   } else {
     voiceNote.textContent = "";
   }
 }
 if ('speechSynthesis' in window) {
-  pickEnglishVoice();
-  window.speechSynthesis.onvoiceschanged = pickEnglishVoice;
+  pickVoice();
+  window.speechSynthesis.onvoiceschanged = pickVoice;
 } else {
-  voiceNote.textContent = "This browser does not support read-aloud.";
+  voiceNote.textContent = "This browser does not support text-to-speech.";
   playAllBtn.disabled = true;
 }
 
@@ -249,7 +220,7 @@ function buildList() {
         '<span class="section-num">Part ' + (i + 1) + '</span>' +
       '</div>' +
       '<div class="section-text">' + sec.text + '</div>' +
-      '<div class="play-icon">▶ Listen to this part</div>';
+      '<div class="play-icon">▶ Play this part separately</div>';
     div.addEventListener('click', () => {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       div.classList.add('active');
@@ -278,19 +249,19 @@ function speakSection(i, continueQueue) {
   highlightSection(i);
   nowPlayingEl.textContent = "🔊 Now playing: Part " + (i + 1) + " — " + sections[i].title;
   const utter = new SpeechSynthesisUtterance(sections[i].text);
-  utter.lang = 'en-IN';
-  if (enVoice) utter.voice = enVoice;
+  utter.lang = (selectedVoice && selectedVoice.lang) || 'en-IN';
+  if (selectedVoice) utter.voice = selectedVoice;
   utter.rate = parseFloat(rateSelect.value);
   utter.onend = () => {
     if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
       speakSection(currentIndex + 1, true);
     } else if (continueQueue && playQueueActive) {
       playQueueActive = false;
-      nowPlayingEl.textContent = "✅ Lesson finished";
-      playAllLabel.textContent = "▶ Play full lesson";
+      nowPlayingEl.textContent = "✅ Lesson complete";
+      playAllLabel.textContent = "▶ Play Full Lesson";
     } else {
       nowPlayingEl.textContent = "⏹ Part " + (i + 1) + " finished";
-      playAllLabel.textContent = "▶ Play full lesson";
+      playAllLabel.textContent = "▶ Play Full Lesson";
     }
   };
   window.speechSynthesis.speak(utter);
@@ -302,7 +273,7 @@ playAllBtn.addEventListener('click', () => {
   if (window.speechSynthesis.speaking && isPaused) {
     window.speechSynthesis.resume();
     isPaused = false;
-    playAllLabel.textContent = "▶ Play full lesson";
+    playAllLabel.textContent = "▶ Play Full Lesson";
     return;
   }
   playQueueActive = true;
@@ -315,7 +286,7 @@ pauseBtn.addEventListener('click', () => {
   if (window.speechSynthesis.speaking && !isPaused) {
     window.speechSynthesis.pause();
     isPaused = true;
-    nowPlayingEl.textContent = "⏸ Paused — press Play to continue";
+    nowPlayingEl.textContent = "⏸ Paused — press play again to continue";
   }
 });
 
