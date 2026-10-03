@@ -3,112 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Learning Theories — Audio Lesson</title>
+<title>Learning Through Play — Audio Lesson</title>
 <style>
 :root {
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  --bg: #f5faf8;
-  --card: #ffffff;
-  --text: #202824;
-  --text-secondary: #5f6b64;
-  --accent: #1a7a5e;
-  --accent-bg: #dcf0e8;
-  --border: #dbe7e0;
-  --active-bg: #e7f5ef;
+  --bg: #f5faf8; --card: #ffffff; --text: #202824; --text-secondary: #5f6b64;
+  --accent: #1a7a5e; --accent-bg: #dcf0e8; --border: #dbe7e0; --active-bg: #e7f5ef;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #131a17;
-    --card: #1c2521;
-    --text: #e9f1ec;
-    --text-secondary: #a3b3ab;
-    --accent: #4fcba0;
-    --accent-bg: #1c3a2e;
-    --border: #2c3a33;
-    --active-bg: #1e3329;
+    --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+    --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #131a17;
-  --card: #1c2521;
-  --text: #e9f1ec;
-  --text-secondary: #a3b3ab;
-  --accent: #4fcba0;
-  --accent-bg: #1c3a2e;
-  --border: #2c3a33;
-  --active-bg: #1e3329;
+  --bg: #131a17; --card: #1c2521; --text: #e9f1ec; --text-secondary: #a3b3ab;
+  --accent: #4fcba0; --accent-bg: #1c3a2e; --border: #2c3a33; --active-bg: #1e3329;
 }
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
 * { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
-  line-height: 1.7;
-}
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.7; }
 .wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
 header { text-align: center; margin-bottom: 1.25rem; }
-header h1 { font-size: 1.25rem; margin: 0 0 0.25rem; font-weight: 700; }
+header h1 { font-size: 1.2rem; margin: 0 0 0.25rem; font-weight: 700; }
 header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
-.player {
-  position: sticky;
-  top: env(safe-area-inset-top, 0px);
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 0.9rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-  z-index: 10;
-}
+.player { position: sticky; top: env(safe-area-inset-top, 0px); background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); z-index: 10; }
 .now-playing { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; min-height: 1.2em; }
 .controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-button {
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  border-radius: 10px;
-  padding: 0.55rem 0.8rem;
-  font-size: 0.95rem;
-  cursor: pointer;
-  min-height: 44px;
-}
-button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 0.55rem 0.8rem; font-size: 0.95rem; cursor: pointer; min-height: 44px; }
 button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; flex: 1; }
 button:active { transform: scale(0.97); }
 .speed-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--text-secondary); }
-select {
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  border-radius: 8px;
-  padding: 0.3rem 0.4rem;
-  min-height: 36px;
-}
+select { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; padding: 0.3rem 0.4rem; min-height: 36px; }
 .voice-note { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.5rem; }
 .sections { display: flex; flex-direction: column; gap: 0.7rem; }
-.section {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 0.9rem 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
+.section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; cursor: pointer; transition: background 0.2s; }
 .section.active { background: var(--active-bg); border-color: var(--accent); }
 .section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
 .section-title { font-weight: 600; font-size: 1rem; }
-.section-num {
-  font-size: 0.78rem;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border-radius: 999px;
-  padding: 0.1rem 0.55rem;
-  white-space: nowrap;
-}
+.section-num { font-size: 0.78rem; color: var(--accent); background: var(--accent-bg); border-radius: 999px; padding: 0.1rem 0.55rem; white-space: nowrap; }
 .section-text { font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.5rem; display: none; }
 .section.active .section-text { display: block; color: var(--text); }
 .play-icon { font-size: 0.8rem; color: var(--accent); }
@@ -118,14 +53,14 @@ footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; m
 <body>
 <div class="wrap">
   <header>
-    <h1>Learning Theories</h1>
-    <p>Audio lesson — listen and read along</p>
+    <h1>Learning Through Play</h1>
+    <p>Unit 3 · Curriculum, Pedagogy and Assessment — Audio Lesson</p>
   </header>
 
   <div class="player">
-    <div class="now-playing" id="nowPlaying">▶️ Press "Play full lesson" to start listening</div>
+    <div class="now-playing" id="nowPlaying">▶️ Press "Play Full Lesson" to start listening</div>
     <div class="controls">
-      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ Play full lesson</span></button>
+      <button class="primary" id="playAllBtn"><span id="playAllLabel">▶ Play Full Lesson</span></button>
       <button id="pauseBtn">⏸ Pause</button>
       <button id="prevBtn">⏮ Previous</button>
       <button id="nextBtn">⏭ Next</button>
@@ -143,74 +78,74 @@ footer { text-align: center; color: var(--text-secondary); font-size: 0.78rem; m
 
   <div class="sections" id="sectionsList"></div>
 
-  <footer>Tap any part to open it and listen to it separately</footer>
+  <footer>Tap any section to open it and listen separately</footer>
 </div>
 
 <script>
 const sections = [
   {
-    "title": "Introduction — teaching for joyful learning",
-    "text": "Today we study Learning Theories. In line with the National Education Policy 2020 and the National Curriculum Framework for the Foundational Stage 2022, classroom practices must shift from rote, textbook-driven instruction to teaching that is experiential, engaging, inclusive and joyful. This chapter equips primary teachers with a range of developmentally appropriate approaches: experiential learning, toy-based pedagogy, art-integrated learning, guided inquiry, problem-solving, promoting learner autonomy, and redefining the teacher's role as a facilitator and co-explorer. These approaches are meant to help teachers build classrooms where children actively construct knowledge and grow into confident, creative and compassionate individuals."
+    title: "Introduction — Why Play Matters",
+    text: "Today's lesson is about learning through play. Children learn best when they are actively engaged and invested, and play naturally creates that engagement. Think of a mother turning tidying up into a game of sorting colours or beat the clock, or setting the table into playing restaurant. The child learns organisation, responsibility and cooperation, without pressure. NCF-FS 2022 places play at the heart of early learning, viewing it not as a break from learning, but as learning itself, whether physical, social, symbolic make-believe or constructive."
   },
   {
-    "title": "Learning outcomes",
-    "text": "After this chapter, the learner will design experiential learning activities aligned with the curriculum, integrate active pedagogies like toy-based and art-integrated learning to boost engagement and holistic development, apply guided inquiry and problem-solving through well-crafted questions, promote learner autonomy through independent learning and self-regulation, and facilitate a learner-centred environment by shifting from direct instruction to inquiry, dialogue and critical thinking."
+    title: "Learning Outcomes",
+    text: "After this chapter, you'll recognise why play-based learning matters at the preparatory stage, and illustrate forms of play for language and numeracy. You'll use conversation and storytelling to support language development, listening and acquisition, create art and craft activities that encourage creativity and integrate literacy and numeracy, and design a play-based learning plan that combines different methods."
   },
   {
-    "title": "Five categories of learning theories",
-    "text": "Learning theories help educators understand how students learn and inform classroom practice. Behaviourist theory, associated with Skinner and Pavlov, says learning is shaped by external reinforcement and punishment, supporting the use of rewards, tokens, praise, classroom rules and drills. Cognitive theory, from Piaget and Bruner, sees learning as an internal process of acquiring and organising knowledge, supporting concept mapping and scaffolding. Constructivist theory, from Vygotsky and Piaget, says learners actively build understanding through experience, reflection and social interaction, supporting inquiry-based learning and group projects. Social learning theory, from Bandura, says behaviour is learned by observing, modelling and imitating others, supporting peer tutoring and cooperative learning. And humanistic theory, from Maslow and Rogers, focuses on holistic development and personal growth, saying learning occurs when learners feel safe, valued and motivated to self-actualise, supporting emotionally supportive environments and student choice. Applied together, these theories offer a comprehensive strategy: behaviourism supports discipline and routine, cognitive and constructivist approaches build understanding and critical thinking, social learning builds cooperation, and humanistic theories nurture emotional and motivational needs."
+    title: "The Concept of Play — Why Learning Through Play Works",
+    text: "Learners of any age do best when activities are meaningful, enjoyable, self-directed, imaginative and exploratory. Several factors make play so effective. Active engagement: children manipulate objects, explore and interact, strengthening cognitive and motor skills. Intrinsic motivation: play is done for its own sake, out of curiosity. Imagination and creativity: role-play and problem-solving build flexible thinking. Social interaction: collaboration, negotiation and turn-taking build empathy. Iterative learning: children test ideas, make mistakes and try again, developing resilience. And relevance: play draws on real life, which improves understanding and retention."
   },
   {
-    "title": "Experiential learning — learning by doing",
-    "text": "Experiential learning emphasises active engagement through direct, hands-on experience rather than passively receiving information. Learners construct understanding by doing, reflecting and applying knowledge in real-life contexts, which David Kolb described as a cycle: concrete experience, reflective observation, abstract conceptualisation, and active experimentation. This connects with several theories: Piaget's constructivism, where learners build knowledge through active engagement with the environment; Vygotsky's sociocultural theory, including the Zone of Proximal Development; Gardner's Multiple Intelligences, supporting varied modalities like visual and bodily-kinesthetic activities; and Bruner's theory of instruction, moving through enactive, or doing, iconic, or seeing, and symbolic, or thinking, stages. Effective hands-on activities should have real-world relevance, active engagement, room for exploration and inquiry, time for reflection, child-centred flexibility, and developmental appropriateness."
+    title: "Principles of Play",
+    text: "Nine principles guide classroom planning. First, a safe, stimulating, clean and well-lit environment with joyful, multi-sensory activities. Second, play is central, whether free, guided or structured, including conversations, stories, music, movement, arts, crafts, toys and games, with outdoor play encouraged. Third, nurturing teacher-child relationships, listening carefully and being fully present. Fourth, physical development through gross and fine motor activity. Fifth, each child learns at their own pace. Sixth, home language is the base, with gentle transition into school languages. Seventh, learning connects to children's lives, using local stories, rhymes and games. Eighth, new learning builds on previous understanding, moving from simple to complex. Ninth, all domains of development stay in balance."
   },
   {
-    "title": "Sample hands-on activities across subjects",
-    "text": "Several activities show experiential learning in practice. In science, Melting Ice Explorers has children predict and observe which material melts ice fastest, engaging Kolb's cycle and Piaget's constructivism. In environmental studies, Grow a Bean Plant has each child plant a seed and journal its growth over two weeks. In mathematics, Seed Arrays has children create arrays with seeds to learn multiplication as repeated addition, drawing on Gardner's bodily-kinesthetic intelligence and Vygotsky's sociocultural theory. In language development, Story Stones uses painted stones with images so children create and tell their own stories, combining Gardner's linguistic and visual-spatial intelligences with Vygotsky's view of storytelling as culturally mediated learning. This kind of experiential learning fosters critical thinking, problem-solving and social skills, and helps children build conceptual understanding through interaction, collaboration and experimentation."
+    title: "Conversations as a Tool for Learning",
+    text: "Conversations help children connect with the world, build trust and confidence, and develop language. NCF-FS describes two kinds. Free conversations: the teacher gathers a few children to talk about their day, journey to school or anything they want to share, using simple prompts. Structured conversations: planned by the teacher, often during morning assembly, on familiar topics such as daily routines or feelings. A classic activity is picture talking. Richa, a Class 2 teacher, shows a picture of children playing tug of war and asks guided questions: what do you see, how many children on each side, what are they doing, have you played this game? Children describe, count, recall their own experiences and reason about why both sides have equal numbers."
   },
   {
-    "title": "Building concepts through experience — classroom examples",
-    "text": "Concept formation is how learners categorise objects, ideas or experiences by shared attributes, building abstract thinking. In the primary years, this is rooted in hands-on exploration, pattern recognition and language use. Sample activities include sorting and classifying natural materials like leaves and stones by shape, size or colour, reflecting Piaget's constructivism and Bruner's enactive stage; Water Explorers, comparing how solids and liquids behave, reflecting Kolb's experiential cycle and Vygotsky's social theory; measuring classroom objects with non-standard units like hand spans, reflecting constructivism and Bruner's iconic representation; a market role-play for buying and selling that builds understanding of money and arithmetic through social role-play, reflecting Vygotsky and Kolb; and mapping the classroom to build spatial awareness and vocabulary like left, right, behind and beside, reflecting Bruner's move from visual to abstract representation and constructivism. The teacher's role is to design meaningful contexts, facilitate reflection with open-ended questions like what did you notice, encourage peer learning, and document children's progress, letting children express their findings through words, pictures or stories."
+    title: "More Conversation Activities — Pass the Bag and the Vegetable Market",
+    text: "In Pass the Bag, the teacher fills a bag with everyday objects like a ball, toothbrush, small biscuit box or kitchen-set toys. As the bag circulates, guided prompts help children name, describe and relate objects to their own lives, building language and concepts like shape and texture. In the classroom vegetable market, children play shopkeepers and customers, with fruits and vegetables, real or toy, labelled with names and prices like Apple, five rupees. Questions such as what would you like to buy, can you help me read the price tag, which is cheaper, or how many items are in your bag build conversation, reading, numeracy and real-world understanding, all through play."
   },
   {
-    "title": "Toy-based pedagogy — why toys matter",
-    "text": "Toy-based pedagogy is a structured approach that uses toys and manipulatives intentionally to achieve specific learning outcomes, distinct from unstructured free play. Rooted in experiential and constructivist theories, it supports concept formation, problem-solving and contextual understanding, making abstract ideas tangible and enhancing multi-sensory engagement, creativity, persistence and collaboration. Types of toys suit different purposes: manipulatives like beads and number rods for visualising math and logic; mechanical toys like gears and pulleys for understanding motion and cause and effect; balancing toys like traditional scales for exploring measurement and weight; sequencing toys like picture puzzles for building logical thinking and language skills; and patterning toys like rangoli sets for enhancing observation and early math. Sample activities include math with beads and number rods for counting and place value, story sequencing with picture tiles for narrative structure, a traditional balance scale for weight comparison, spinning tops for exploring motion, and pattern creation with rangoli pegs. The teacher's role includes being a curator who selects age-appropriate toys, a facilitator who poses guiding questions, an observer who documents strategies, and a reflector who encourages children to articulate their thinking."
+    title: "Stories as a Tool for Learning",
+    text: "Storytelling develops language, imagination and thinking, and builds listening, speaking and comprehension. Stories also introduce sequence, logic and quantity joyfully, teach about relationships, ethical choices, emotions and life skills, and even help children with short attention spans focus for longer. They connect children to culture, and repeated hearing deepens understanding. Teachers should know the story well and use voice modulation and expressions, with puppets, flashcards as sequencing cards, charts and posters. Children should tell stories too, perhaps completing one the teacher begins. Choose stories that are age-appropriate, in familiar language, connected to what's being taught, and anchored in the Indian context, like the Panchatantra, Jataka and Hitopadesha. Afterwards, ask what, whom, why, where, how and what if, and extend with drawing, role-play and dramatisation."
   },
   {
-    "title": "Toy-based pedagogy and learning theories",
-    "text": "Toy-based pedagogy aligns closely with several learning theories. Piaget's cognitive development theory: building blocks, puzzles and sequencing games support symbolic thinking and concrete operations, while sorting toys promote classification. Vygotsky's sociocultural theory: collaborative play with toys encourages peer learning within the Zone of Proximal Development, with teachers as facilitators. Gardner's Multiple Intelligences: toys cater to different intelligences, such as musical toys for musical intelligence and role-play kits for interpersonal intelligence. Bruner's constructivist theory: manipulatives promote active learning where children discover principles through exploration, such as balancing toys helping children grasp weight and equilibrium. And Maria Montessori's philosophy: self-correcting toys like bead chains and sandpaper letters support independent learning, such as using colour-coded rods to build understanding of length and sequencing. When guided by sound theory, toy-based pedagogy transforms passive learning into joyful, active exploration that supports holistic growth."
+    title: "Story Activities — The Cap Seller and the Monkeys",
+    text: "The chapter illustrates storytelling with the cap seller story from the Class 1 English book, Mridang. The teacher sets the background and narrates with picture cards: a cap seller rests under a tree on a hot day, monkeys take his caps, and he gets them back by throwing his own cap down, because the monkeys imitate him. Follow-up activities include reordering the pictures in correct sequence, which teaches beginning, middle and end; Together Let's Write, where children say and write labelled words like tree, monkey, cap and basket; a cap sorting and counting activity; and My World thinking prompts such as what else could the cap seller have done, or what would you replace the caps with. These build vocabulary, comprehension and cognitive skills."
   },
   {
-    "title": "Foundations of integrated learning",
-    "text": "Integrated learning connects concepts and skills from multiple subjects into unified, meaningful experiences, rather than teaching subjects in isolation. It revolves around themes or real-life contexts, for example teaching math through stories or exploring seasons through songs, drawings and science. This supports cognitive development, social-emotional growth, language enrichment, creativity and physical coordination, and is endorsed by NEP 2020 and the National Curriculum Framework. Several subjects can be meaningfully integrated: The World Around Us can combine with language and math and art in a project on plants, drawing on Piaget's constructivism and inquiry-based learning; mathematics can combine with music and movement and stories, drawing on Gardner's Multiple Intelligences and Bruner's spiral curriculum; language can combine with environmental studies, art and drama through reading and acting out a folk tale, drawing on Vygotsky's social constructivism and dramatic play; and art education can combine with all subjects, such as creating puppets to tell a science story, drawing on Dewey's experiential learning and the Reggio Emilia approach."
+    title: "Toys as a Tool for Learning",
+    text: "NCF-FS highlights toys as powerful tools that make learning joyful and meaningful, developing thinking, language, movement and social skills. Children learn best with real objects and first-hand experience, and every child's environment offers local toys that teachers should use. Stacking blocks teaches balance and cause and effect, puzzles teach patterns and problem-solving, pretend toys spark stories, board games build rules, language and maths, and craft materials support creativity. Balls, beanbags and skipping ropes build confidence and motor skills. Examples include the wooden Channapatna ring set puzzle from Karnataka, which supports fine and gross motor skills, colour and shape awareness and seriation; Dhingli, traditional Gujarati cotton dolls used for dramatic play and comfort; and the Rasoi kitchen set found across India."
   },
   {
-    "title": "Art forms as learning tools",
-    "text": "Art forms such as visual arts, music, dance, drama and crafts are powerful pedagogical tools supporting diverse learning styles and holistic development. Drawing and clay work enhance creativity and spatial awareness; music supports memory, listening and emotional balance; dance and drama foster coordination, empathy and communication; and crafts build fine motor skills and patience. Mapped to subjects: visual arts support observing and representing patterns, plants and seasons, linked to Piaget's constructivism and Gardner's visual-spatial intelligence. Music and rhythm support recognising patterns and expressing moods, linked to Gardner's musical intelligence and Bruner's pattern recognition. Dance and movement support body awareness and interpreting emotions through movement, linked to Gardner's bodily-kinesthetic intelligence and Dewey's learning by doing. Drama and role-play support enacting stories and practising empathy, linked to Vygotsky's Zone of Proximal Development and Gardner's interpersonal intelligence. And crafts and hands-on art support measuring, folding and identifying shapes, linked to Piaget's concrete operational stage and the Montessori approach. This framework helps teachers build interdisciplinary connections and cater to diverse learner needs."
+    title: "Toy Activities — Castles and Joyful Mathematics",
+    text: "In the wooden blocks activity, the teacher begins with a story prompt, asking children if they're ready to build castles. Each child or group builds, experimenting with shapes and heights, while the teacher asks what shape the base is, whether they can build a tower with triangle blocks, and how many blocks they used. Afterwards, conversation prompts follow: who lives in your castle, what are its parts, what's magical about it. Two examples from the Class 2 maths book, Joyful Mathematics, show toys teaching numbers: stacking blocks to measure how tall toy animals are, and a path activity where children choose the longest or shortest path, verifying with thread, which builds critical thinking."
   },
   {
-    "title": "Guided inquiry and age-appropriate problem-solving",
-    "text": "Guided inquiry is a structured, child-centred approach where learners explore meaningful questions with active teacher support, unlike free exploration, which provides a clear framework aligned with developmental needs. Teachers act as facilitators, offering resources, prompting questions and guiding reflection without directing outcomes. The typical inquiry cycle is ask, explore, create, discuss and reflect, rooted in Vygotsky's social constructivism, Bruner's discovery learning and Piaget's constructivism. Good inquiry questions use age-appropriate language, connect to daily life, and encourage multiple possible answers, such as what do plants need to grow, or how can we reduce waste in our school. For problem-solving, activities like conserving water or maintaining classroom cleanliness should match children's concrete operational thinking, fostering logical reasoning and civic responsibility. Collaborative tasks like group discussions support Vygotsky's social constructivist view, and inclusive strategies like visual aids and flexible expression formats reflect Gardner's Multiple Intelligences, so that problem-solving nurtures critical thinking, creativity, empathy and collaboration for all learners."
+    title: "Music and Rhymes as a Tool for Learning",
+    text: "Music brings happiness, and it strongly stimulates brain development and synaptic connections. So singing, simple instruments and keeping the beat should be promoted, with claps and rhythms on a tin box, khanjari or manjira, along with movement. Teachers can sing and have children repeat with actions, let them sing alone, in pairs or groups, play guess-the-melody games, hum tunes, and even compose simple songs. Per NCF-FS, songs, rhymes and rhythms are culturally rooted and foundational for oral language, early literacy and numeracy. They expand vocabulary, build phonological awareness, which is crucial for reading, teach sentence structure, strengthen memory and sequencing, and teach counting."
   },
   {
-    "title": "Implementing integrated and inquiry-based classrooms",
-    "text": "Implementing art-integrated and inquiry-based learning requires thoughtful planning of lessons, materials, space and time. Lessons should begin with engaging, age-appropriate questions and incorporate activities like collage, drama or mapping, supporting Dewey's experiential learning. These activities follow the inquiry cycle of ask, explore, create, discuss, reflect, aligning with Piaget's constructivist and Bruner's discovery learning approaches. A flexible, student-centred environment with open materials and creative displays encourages autonomy and mirrors the Reggio Emilia and Montessori philosophies, where the environment acts as a third teacher. In low-resource settings, using local, low-cost materials like clay or natural objects supports cultural relevance and sustainability, consistent with Vygotsky's idea of cultural tools. Integrating art and inquiry into subject blocks, such as combining math with pattern art or language with puppetry, caters to diverse learning styles as proposed by Gardner's theory, fostering curiosity, collaboration and deeper engagement."
+    title: "Learning with Rhymes — Two Little Hands",
+    text: "The chapter's example is the action rhyme Two Little Hands, which names body parts and their functions: hands to clap, legs to walk, eyes to see. The teacher recites it with voice modulation, gestures and rhythm, and children perform matching actions, reinforcing word-meaning links. The rhythm and repetition make new words and sentence patterns easy to remember. The chapter also shows the Class 2 English poem It Is Fun, about hopping like a frog and climbing like a cat. Teachers can have children recite poems and compose short rhymes of their own."
   },
   {
-    "title": "Fostering learner autonomy",
-    "text": "Fostering learner autonomy means creating an environment where children are empowered to make choices, express themselves freely and take ownership of their learning. Learner autonomy is a child's growing ability to make choices, set goals, reflect and express ideas with confidence, supported by Piaget's view of logical thinking in the concrete operational stage, Vygotsky's scaffolding within the Zone of Proximal Development, and Montessori's focus on child-led, choice-based learning. A choice-driven learning environment lets children have a say in how, what and with whom they learn, while maintaining clear learning goals, for example choosing between drawing, storytelling or role play. Self-expression is central to a child's identity, emotional growth and creativity, and can be supported through art, storytelling, movement and discussion, drawing on Gardner's Multiple Intelligences and Vygotsky's view of symbolic tools. Self-advocacy, the ability to express needs and ask for help, is supported by Bandura's theory of self-efficacy, and can be built through role play, group discussions and peer collaboration."
+    title: "Art and Craft as a Tool for Learning",
+    text: "Children love experimenting with colours and making things. Art and craft let them express ideas, emotions and feelings, strengthen fine motor skills and connect with their cultural traditions. In Activity 1, children draw objects they love, write the spellings and read them phonetically, building vocabulary and sound-letter links. In Activity 2, the family tree worksheet, they paste family photos, write names and one-word feelings, developing print awareness and linking literacy to identity. Drawing can be done on paper, slates, blackboards or floors. Painting includes thumb, palm, vegetable and bottle-cap printing, plus finger painting, and pasting uses sand, sawdust, dry mud or paper."
   },
   {
-    "title": "Classroom strategies for autonomy, and their challenges",
-    "text": "Several classroom strategies build learner autonomy. Choice boards and learning menus let students select tasks from a structured menu based on interests, drawing on Gardner's Multiple Intelligences, Bruner's constructivism, and Deci and Ryan's Self-Determination Theory. Personal learning projects let learners choose a topic to explore and present in their preferred format, building ownership and curiosity. Self-assessment checklists let learners evaluate their own effort, drawing on Flavell's metacognitive theory and Bandura's self-efficacy. Reflection journals let students document thoughts and learning moments, enhancing emotional expression and self-awareness. Group work with defined roles builds communication and teamwork, drawing on Vygotsky's social constructivism. And shared decision-making in groups builds social agency, drawing on Bandura's social learning theory and Dewey's democratic education. Common challenges include balancing freedom with structure, which structured autonomy like choice boards can address; ensuring equal participation, which differentiated tasks and rotating group roles can address; and time constraints, which small practices like reflection journals embedded in daily routines, and the gradual release of responsibility model of I do, we do, you do, can address."
+    title: "Clay, Toran and Puppets",
+    text: "In letter formation with clay, children roll clay snakes and shape letters like S, saying the sound and thinking of words such as S is for Sun, then showing their letters aloud to build confidence. In the toran activity, children arrange mango leaves in patterns and string them to hang above a door, counting leaves, making big-and-small patterns and exploring cultural significance. In the puppet activity, groups of four or five name their puppet, decide what it likes, describe its feelings and favourite food or hobby, then present it to the class. This builds oral language and socio-emotional learning."
   },
   {
-    "title": "The teacher as facilitator and co-explorer",
-    "text": "Facilitating child-centred and flexible pedagogy requires the teacher to shift from being a sole knowledge provider to becoming a facilitator and co-explorer, creating a supportive environment where children's interests and questions guide learning. Six principles guide this pedagogy. Active learning and constructivism, from Piaget, where the teacher provides meaningful contexts for discovery rather than transmitting knowledge. Social interaction, from Vygotsky's sociocultural theory and the Zone of Proximal Development, incorporating collaborative learning and scaffolded support. Differentiation and Multiple Intelligences, from Gardner, designing activities for varied strengths. Motivation and self-determination, from Deci and Ryan, supporting autonomy, competence and relatedness. Emotional engagement and experiential learning, from Kolb's cycle, connecting feelings with cognition through stories and real-world connections. And flexibility and responsiveness, where teachers continuously observe, listen and adjust instruction as a co-explorer alongside children. Strategies for flexible teaching include differentiated instruction tailored to diverse needs, formative assessment and feedback to guide learning, flexible grouping based on interests or goals, choice-based activities, responsive questioning using the Socratic method, reflective practice to build metacognition, and adapting the physical or virtual learning environment for accessibility."
+    title: "Things to Keep in Mind During Arts and Crafts",
+    text: "Five cautions guide arts work. First, allow uninhibited expression, avoiding notions of right and wrong, and celebrating different viewpoints. Second, encourage exploration of materials and tools, like a brush used as a prop or musical instrument. Third, build observation of surroundings and of one's own feelings and behaviour. Fourth, keep conversation and dialogue inclusive, with the teacher listening to spoken and unspoken communication. Fifth, hold regular discussions on aesthetic appreciation, with the teacher participating without judging, keeping them to about eight to ten minutes. Other activities include making face masks, or joining dots to draw a rangoli."
   },
   {
-    "title": "Summary — what we learned today",
-    "text": "Let us recap. First, five categories of learning theories, behaviourist, cognitive, constructivist, social learning and humanistic, together offer a comprehensive strategy for the classroom. Second, experiential learning, built on Kolb's cycle of concrete experience, reflection, conceptualisation and experimentation, builds concept formation through hands-on activities across subjects. Third, toy-based pedagogy uses manipulatives, mechanical toys, balancing toys, sequencing toys and patterning toys to make abstract ideas tangible, aligning with Piaget, Vygotsky, Gardner, Bruner and Montessori. Fourth, integrated learning connects subjects through themes, and art forms like visual arts, music, dance, drama and crafts deepen understanding across the curriculum. Fifth, guided inquiry follows the cycle of ask, explore, create, discuss and reflect, and supports age-appropriate problem-solving. Sixth, fostering learner autonomy through choice boards, personal projects, self-assessment, reflection journals and group work builds confidence and self-direction. And finally, the teacher's role shifts from instructor to facilitator and co-explorer, creating a flexible, child-centred, responsive classroom. Thank you, that is all for today!"
+    title: "Let Us Sum Up",
+    text: "To sum up: play is a natural, powerful medium for learning that fosters curiosity, imagination and engagement across all domains, and NCF-FS places it at the centre of holistic learning. Conversations, free and structured, build vocabulary, confidence and oral expression. Stories develop listening, comprehension, sequencing, moral reasoning and empathy. Toy-based pedagogy builds hands-on exploration, numeracy and problem-solving. Music and rhymes develop rhythm, memory, language and numeracy. Art and craft nurture creativity, fine motor skills and cultural connection. When teachers plan intentional, inclusive, culturally relevant play, children learn better and develop a lifelong love for learning. Thank you, and that's all for today!"
   }
 ];
 
@@ -226,27 +161,31 @@ const voiceNote = document.getElementById('voiceNote');
 
 let currentIndex = -1;
 let isPaused = false;
-let enVoice = null;
+let selectedVoice = null;
 let playQueueActive = false;
 
-function pickEnglishVoice() {
+function pickVoice() {
   const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-  enVoice = voices.find(v => v.lang && v.lang.toLowerCase().replace('_', '-') === 'en-in')
-    || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en'))
-    || null;
-  if (enVoice) {
-    voiceNote.textContent = "Voice: " + enVoice.name;
+  const norm = v => (v.lang || '').toLowerCase().replace('_', '-');
+  selectedVoice =
+    voices.find(v => norm(v) === 'en-in') ||
+    voices.find(v => /india/i.test(v.name) && norm(v).startsWith('en')) ||
+    voices.find(v => norm(v).startsWith('en')) || null;
+  if (selectedVoice && norm(selectedVoice) === 'en-in') {
+    voiceNote.textContent = "Voice: " + selectedVoice.name + " (English – India)";
+  } else if (selectedVoice) {
+    voiceNote.textContent = "Voice: " + selectedVoice.name + " — no Indian English voice found on this device, using the closest English voice.";
   } else if (voices.length) {
-    voiceNote.textContent = "No English voice found on this device — the default voice will be used.";
+    voiceNote.textContent = "No English voice found on this device — using the default voice.";
   } else {
     voiceNote.textContent = "";
   }
 }
 if ('speechSynthesis' in window) {
-  pickEnglishVoice();
-  window.speechSynthesis.onvoiceschanged = pickEnglishVoice;
+  pickVoice();
+  window.speechSynthesis.onvoiceschanged = pickVoice;
 } else {
-  voiceNote.textContent = "This browser does not support read-aloud.";
+  voiceNote.textContent = "This browser does not support text-to-speech.";
   playAllBtn.disabled = true;
 }
 
@@ -261,7 +200,7 @@ function buildList() {
         '<span class="section-num">Part ' + (i + 1) + '</span>' +
       '</div>' +
       '<div class="section-text">' + sec.text + '</div>' +
-      '<div class="play-icon">▶ Listen to this part</div>';
+      '<div class="play-icon">▶ Play this part separately</div>';
     div.addEventListener('click', () => {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       div.classList.add('active');
@@ -290,19 +229,19 @@ function speakSection(i, continueQueue) {
   highlightSection(i);
   nowPlayingEl.textContent = "🔊 Now playing: Part " + (i + 1) + " — " + sections[i].title;
   const utter = new SpeechSynthesisUtterance(sections[i].text);
-  utter.lang = 'en-IN';
-  if (enVoice) utter.voice = enVoice;
+  utter.lang = (selectedVoice && selectedVoice.lang) || 'en-IN';
+  if (selectedVoice) utter.voice = selectedVoice;
   utter.rate = parseFloat(rateSelect.value);
   utter.onend = () => {
     if (continueQueue && playQueueActive && currentIndex < sections.length - 1) {
       speakSection(currentIndex + 1, true);
     } else if (continueQueue && playQueueActive) {
       playQueueActive = false;
-      nowPlayingEl.textContent = "✅ Lesson finished";
-      playAllLabel.textContent = "▶ Play full lesson";
+      nowPlayingEl.textContent = "✅ Lesson complete";
+      playAllLabel.textContent = "▶ Play Full Lesson";
     } else {
       nowPlayingEl.textContent = "⏹ Part " + (i + 1) + " finished";
-      playAllLabel.textContent = "▶ Play full lesson";
+      playAllLabel.textContent = "▶ Play Full Lesson";
     }
   };
   window.speechSynthesis.speak(utter);
@@ -314,7 +253,7 @@ playAllBtn.addEventListener('click', () => {
   if (window.speechSynthesis.speaking && isPaused) {
     window.speechSynthesis.resume();
     isPaused = false;
-    playAllLabel.textContent = "▶ Play full lesson";
+    playAllLabel.textContent = "▶ Play Full Lesson";
     return;
   }
   playQueueActive = true;
@@ -327,7 +266,7 @@ pauseBtn.addEventListener('click', () => {
   if (window.speechSynthesis.speaking && !isPaused) {
     window.speechSynthesis.pause();
     isPaused = true;
-    nowPlayingEl.textContent = "⏸ Paused — press Play to continue";
+    nowPlayingEl.textContent = "⏸ Paused — press play again to continue";
   }
 });
 
