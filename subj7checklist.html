@@ -1,136 +1,261 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>School Experience Checklist</title>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><title>School Experience Planner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap">
 <style>
 /* Layout: slim sticky progress strip, four meters, then day cards grouped in four phases of five days (a 20-day practicum). Every label is English followed by Hindi in brackets. */
 :root {
-  --bg: #F1F4F3;
-  --surface: #FFFFFF;
-  --fg: #14232B;
-  --muted: #55676E;
-  --line: #D3DCDE;
-  --accent: #0F6B66;
-  --accent-soft: #DAEDEB;
-  --mark: #9A6410;
-  --mark-soft: #F5E8CC;
-  --plum: #5A4A8C;
-  --plum-soft: #E6E1F3;
-  --slate-soft: #E3E9EB;
+  --bg: #f3f6f4;
+  --bg-2: #eaf4f3;
+  --surface: #ffffff;
+  --surface-strong: #edf7f6;
+  --fg: #1b2c31;
+  --muted: #536a70;
+  --line: #d7e0e3;
+  --accent: #0f6d66;
+  --accent-strong: #104d48;
+  --accent-soft: #dff1ee;
+  --mark: #b57517;
+  --mark-soft: #f8efd7;
+  --plum: #5b4a8f;
+  --plum-soft: #eee8ff;
+  --slate-soft: #e7eef0;
+  --shadow: 0 18px 38px rgba(18, 32, 37, 0.08);
   --font-display: "Bricolage Grotesque", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
   --font-body: "Source Sans 3", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", "Noto Sans Devanagari", ui-monospace, Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0E181C;
-    --surface: #152429;
-    --fg: #E5EDEF;
-    --muted: #94A6AC;
-    --line: #28383E;
-    --accent: #52C2B8;
-    --accent-soft: #143A39;
-    --mark: #E5B563;
-    --mark-soft: #392E16;
-    --plum: #B9AAEA;
-    --plum-soft: #2B2548;
-    --slate-soft: #223238;
+    --bg: #0f1d22;
+    --bg-2: #132d32;
+    --surface: #152d33;
+    --surface-strong: #18373b;
+    --fg: #ebf3f4;
+    --muted: #a3b7ba;
+    --line: #2f4349;
+    --accent: #5ec8bf;
+    --accent-strong: #80efe4;
+    --accent-soft: #1b3d3a;
+    --mark: #e8bb5e;
+    --mark-soft: #3d2d1d;
+    --plum: #c7b8ff;
+    --plum-soft: #2d2747;
+    --slate-soft: #21383f;
+    --shadow: 0 18px 38px rgba(0, 0, 0, 0.24);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0E181C;
-  --surface: #152429;
-  --fg: #E5EDEF;
-  --muted: #94A6AC;
-  --line: #28383E;
-  --accent: #52C2B8;
-  --accent-soft: #143A39;
-  --mark: #E5B563;
-  --mark-soft: #392E16;
-  --plum: #B9AAEA;
-  --plum-soft: #2B2548;
-  --slate-soft: #223238;
+  --bg: #0f1d22;
+  --bg-2: #132d32;
+  --surface: #152d33;
+  --surface-strong: #18373b;
+  --fg: #ebf3f4;
+  --muted: #a3b7ba;
+  --line: #2f4349;
+  --accent: #5ec8bf;
+  --accent-strong: #80efe4;
+  --accent-soft: #1b3d3a;
+  --mark: #e8bb5e;
+  --mark-soft: #3d2d1d;
+  --plum: #c7b8ff;
+  --plum-soft: #2d2747;
+  --slate-soft: #21383f;
+  --shadow: 0 18px 38px rgba(0, 0, 0, 0.24);
   color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body {
-  background: var(--bg);
+  margin: 0;
+  background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 24%, var(--bg) 100%);
   color: var(--fg);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.55;
-  padding-inline: 16px;
-  padding-block: 0 56px;
+  padding: 0 16px 56px;
 }
-.wrap { max-width: 1040px; margin-inline: auto; }
+.wrap { max-width: 1120px; margin-inline: auto; }
 .hi { color: var(--muted); font-weight: 400; letter-spacing: 0; text-transform: none; }
 
-header { padding-block: 32px 20px; display: grid; gap: 14px; }
+header {
+  padding: 28px 0 18px;
+}
+.hero {
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(223,241,238,0.8));
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: clamp(20px, 3vw, 32px);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -20% 52% auto auto;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: rgba(15,109,102,0.08);
+  filter: blur(10px);
+}
 h1 {
+  position: relative;
+  z-index: 1;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.9rem, 5vw, 2.7rem);
-  line-height: 1.12;
-  letter-spacing: -0.015em;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.018em;
   margin: 0;
+  max-width: 760px;
   text-wrap: balance;
 }
-h1 .hi { display: block; font-size: 0.55em; font-weight: 600; margin-top: 6px; letter-spacing: 0; }
-.lede { margin: 0; color: var(--fg); max-width: 66ch; }
+h1 .hi { display: block; font-size: 0.52em; font-weight: 600; margin-top: 8px; letter-spacing: 0; }
+.lede { position: relative; z-index: 1; margin: 14px 0 0; color: var(--fg); max-width: 72ch; font-size: 1.02rem; }
 .lede .hi { display: block; margin-top: 6px; }
-.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 8px 22px; padding: 0; margin: 0; list-style: none; font-size: 0.86rem; color: var(--muted); }
-.facts li { min-width: 0; }
-.facts b { color: var(--fg); font-family: var(--font-mono); font-weight: 500; }
+.facts {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: 10px 18px;
+  padding: 0;
+  margin: 20px 0 0;
+  list-style: none;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.facts li {
+  background: rgba(255,255,255,0.5);
+  border: 1px solid rgba(125,149,156,0.22);
+  border-radius: 12px;
+  padding: 10px 12px;
+  min-width: 0;
+}
+.facts b { color: var(--fg); font-family: var(--font-mono); font-weight: 600; }
 
 .strip {
   position: sticky;
   top: env(safe-area-inset-top, 0px);
   z-index: 5;
-  background: var(--bg);
+  background: rgba(243,246,244,0.9);
   border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(12px);
   margin-inline: -16px;
   padding: 10px 16px;
 }
-.strip-in { max-width: 1040px; margin-inline: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
-.strip .label { font-size: 0.82rem; font-variant-numeric: tabular-nums; }
-.bar { flex: 1; height: 8px; background: var(--slate-soft); border-radius: 99px; overflow: hidden; min-width: 120px; }
-.bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width 0.25s ease; }
+.strip-in { max-width: 1120px; margin-inline: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.strip .label { font-size: 0.82rem; font-variant-numeric: tabular-nums; color: var(--fg); }
+.bar { flex: 1; height: 10px; background: var(--slate-soft); border-radius: 999px; overflow: hidden; min-width: 120px; box-shadow: inset 0 0 0 1px rgba(20,31,35,0.04); }
+.bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-strong)); transition: width 0.25s ease; }
 
-.meters { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; padding-block: 20px 8px; }
-.meter { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; display: grid; gap: 8px; min-width: 0; align-content: start; }
-.meter .m-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 8px; }
-.meter .m-name { font-size: 0.86rem; min-width: 0; }
-.meter .m-num { font-family: var(--font-mono); font-size: 1.05rem; font-variant-numeric: tabular-nums; }
-.meter .m-sub { font-size: 0.78rem; color: var(--muted); }
-.meter .bar { height: 6px; min-width: 0; }
-.meter[data-k="lesson"] .bar > i { background: var(--accent); }
-.meter[data-k="report"] .bar > i { background: var(--mark); }
-.meter[data-k="journal"] .bar > i { background: var(--muted); }
-.meter[data-k="portfolio"] .bar > i { background: var(--plum); }
-.lesson-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.lesson-link { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--fg); font: 600 0.76rem/1.2 var(--font-body); text-decoration: none; transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease; }
-.lesson-link:hover { border-color: var(--accent); background: var(--accent-soft); transform: translateY(-1px); }
-.lesson-link.placeholder { opacity: 0.75; cursor: not-allowed; }
-.lesson-link.placeholder:hover { transform: none; }
+.meters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 14px;
+  padding-block: 18px 8px;
+}
+.meter {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 16px 12px;
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  align-content: start;
+  box-shadow: 0 8px 20px rgba(17, 33, 38, 0.03);
+}
+.meter .m-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 10px; }
+.meter .m-name { font-size: 0.9rem; min-width: 0; font-weight: 600; }
+.meter .m-num { font-family: var(--font-mono); font-size: 1.06rem; font-variant-numeric: tabular-nums; }
+.meter .m-sub { font-size: 0.8rem; color: var(--muted); }
+.meter .bar { height: 8px; min-width: 0; }
+.meter[data-k="lesson"] .bar > i { background: linear-gradient(90deg, var(--accent), #2aa1a5); }
+.meter[data-k="report"] .bar > i { background: linear-gradient(90deg, var(--mark), #efc75f); }
+.meter[data-k="journal"] .bar > i { background: linear-gradient(90deg, #5c6f78, #7f8d95); }
+.meter[data-k="portfolio"] .bar > i { background: linear-gradient(90deg, var(--plum), #8c7ae0); }
+.lesson-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 4px;
+}
+.lesson-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--surface), var(--surface-strong));
+  color: var(--fg);
+  font: 600 0.77rem/1.2 var(--font-body);
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 5px 12px rgba(22, 40, 42, 0.04);
+}
+.lesson-link:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(15, 109, 102, 0.12);
+}
+.lesson-link.placeholder {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+.lesson-link.placeholder:hover { transform: none; box-shadow: 0 5px 12px rgba(22, 40, 42, 0.04); }
 
-.note { margin-block: 14px 4px; padding: 12px 14px; border: 1px dashed var(--line); border-radius: 6px; font-size: 0.92rem; }
+.note {
+  margin-block: 18px 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.45);
+  font-size: 0.96rem;
+}
 .note b { font-weight: 600; }
 .note p { margin: 0; }
 .note p + p { margin-top: 8px; }
 
-.phase { padding-block: 28px 0; }
+.phase { padding-block: 26px 0; }
 .phase-head { display: grid; gap: 2px; margin-bottom: 14px; }
-.phase-head h2 { font-family: var(--font-display); font-size: 1.35rem; line-height: 1.25; margin: 0; letter-spacing: -0.01em; }
+.phase-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2vw, 1.75rem);
+  line-height: 1.2;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
 .phase-head h2 .hi { font-size: 0.8em; font-weight: 600; }
-.phase-head p { margin: 0; color: var(--muted); font-size: 0.92rem; }
-.phase-head .rng { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.phase-head p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+.phase-head .rng { font-family: var(--font-mono); font-size: 0.76rem; color: var(--muted); }
 
 .days { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 14px; align-items: start; }
-.day { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; min-width: 0; }
-.day-h { display: grid; grid-template-columns: 1fr auto; align-items: baseline; padding: 11px 14px; border-bottom: 1px solid var(--line); gap: 2px 10px; }
+.day {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  min-width: 0;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(17, 33, 38, 0.03);
+}
+.day-h {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  gap: 2px 10px;
+  background: rgba(237,247,246,0.55);
+}
 .day-h h3 { font-family: var(--font-display); font-size: 1.1rem; margin: 0; }
 .day-h h3 .hi { font-size: 0.85em; font-weight: 600; }
 .day-h .title { grid-column: 1; color: var(--fg); font-size: 0.88rem; min-width: 0; }
@@ -138,16 +263,37 @@ h1 .hi { display: block; font-size: 0.55em; font-weight: 600; margin-top: 6px; l
 .day.done .day-h { background: var(--accent-soft); }
 .day.done .cnt { color: var(--accent); }
 
-ul.items { list-style: none; margin: 0; padding: 4px 0; }
+ul.items { list-style: none; margin: 0; padding: 0; }
 .items li + li { border-top: 1px solid var(--line); }
-.item { display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 10px 14px; cursor: pointer; align-items: start; }
-.item input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--accent); cursor: pointer; }
+.item {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  align-items: start;
+}
+.item input {
+  width: 18px;
+  height: 18px;
+  margin: 3px 0 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
 .item input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .item .tx { min-width: 0; display: grid; gap: 3px; }
 .item .main { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
 .item .main > .t { min-width: 0; font-weight: 500; }
 .item .sub { color: var(--muted); font-size: 0.86rem; }
-.chip { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.04em; text-transform: uppercase; padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
+.chip {
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
 .chip .hi { color: inherit; }
 .chip.lesson { background: var(--accent-soft); color: var(--accent); }
 .chip.activity, .chip.report { background: var(--mark-soft); color: var(--mark); }
@@ -156,31 +302,71 @@ ul.items { list-style: none; margin: 0; padding: 4px 0; }
 .chip.admin { background: transparent; color: var(--muted); border: 1px solid var(--line); }
 .item.on .t, .item.on .sub { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
 
-.foot { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 0.86rem; }
-.foot p { margin: 0; max-width: 66ch; color: var(--muted); }
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 36px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 0.88rem;
+}
+.foot p { margin: 0; max-width: 68ch; color: var(--muted); }
 button.reset {
-  font: inherit; font-size: 0.86rem; color: var(--fg); background: var(--surface);
-  border: 1px solid var(--line); border-radius: 6px; padding: 7px 14px; cursor: pointer; text-align: left;
+  font: inherit;
+  font-size: 0.88rem;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  text-align: left;
 }
 button.reset:hover { border-color: var(--muted); }
 button.reset:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 button.reset.armed { border-color: var(--mark); color: var(--mark); }
 button.reset.armed .hi { color: inherit; }
 
-@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+@media (max-width: 720px) {
+  body { padding-inline: 12px; }
+  .hero { border-radius: 16px; }
+  .lesson-actions { grid-template-columns: 1fr; }
+  .meter { padding: 12px 13px; }
+  .day-h { grid-template-columns: 1fr; }
+  .day-h .cnt { grid-column: 1; }
+  .foot { align-items: flex-start; }
+}
+
+@media (max-width: 520px) {
+  .strip { padding-inline: 12px; }
+  .strip-in { gap: 8px; }
+  .facts { grid-template-columns: 1fr; }
+  .meter .m-top { align-items: flex-start; }
+  .item { grid-template-columns: 18px 1fr; }
+  .item .main { gap: 4px 6px; }
+  .chip { font-size: 0.58rem; }
+  .note { padding: 12px 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) { .bar > i, .lesson-link { transition: none; } }
 </style>
 
 <div class="wrap">
   <header>
-    <h1>School Experience Planner <span class="hi">(विद्यालय अनुभव योजनाकार)</span></h1>
-    <p class="lede">A day-by-day checklist for Course 7 of the NIOS Six-Month Certificate (Bridge) in Primary Teacher Education. Two lessons a day cover all 40 lessons. Tick items as you finish them.
-      <span class="hi">(प्राथमिक शिक्षक शिक्षा में एनआईओएस छह माह के प्रमाणपत्र (ब्रिज) पाठ्यक्रम के कोर्स 7 की दिन-प्रतिदिन की जाँच-सूची। रोज़ दो पाठ पढ़ाने से सभी 40 पाठ पूरे हो जाते हैं। काम पूरा होते ही टिक करें।)</span></p>
-    <ul class="facts">
-      <li><b>100</b> marks, 4 credits <span class="hi">(100 अंक, 4 क्रेडिट)</span></li>
-      <li><b>20</b> school days <span class="hi">(20 विद्यालय दिवस)</span></li>
-      <li><b>80%</b> attendance minimum <span class="hi">(न्यूनतम 80% उपस्थिति)</span></li>
-      <li><b>50%</b> to pass the practicum <span class="hi">(प्रायोगिक में उत्तीर्ण होने के लिए 50%)</span></li>
-    </ul>
+    <div class="hero">
+      <h1>School Experience Planner <span class="hi">(विद्यालय अनुभव योजनाकार)</span></h1>
+      <p class="lede">A day-by-day checklist for Course 7 of the NIOS Six-Month Certificate (Bridge) in Primary Teacher Education. Two lessons a day cover all 40 lessons. Tick items as you finish them.
+        <span class="hi">(प्राथमिक शिक्षक शिक्षा में एनआईओएस छह माह के प्रमाणपत्र (ब्रिज) पाठ्यक्रम के कोर्स 7 की दिन-प्रतिदिन की जाँच-सूची। रोज़ दो पाठ पढ़ाने से सभी 40 पाठ पूरे हो जाते हैं। काम पूरा होते ही टिक करें।)</span></p>
+      <ul class="facts">
+        <li><b>100</b> marks, 4 credits <span class="hi">(100 अंक, 4 क्रेडिट)</span></li>
+        <li><b>20</b> school days <span class="hi">(20 विद्यालय दिवस)</span></li>
+        <li><b>80%</b> attendance minimum <span class="hi">(न्यूनतम 80% उपस्थिति)</span></li>
+        <li><b>50%</b> to pass the practicum <span class="hi">(प्रायोगिक में उत्तीर्ण होने के लिए 50%)</span></li>
+      </ul>
+    </div>
   </header>
 </div>
 
@@ -393,7 +579,8 @@ button.reset.armed .hi { color: inherit; }
     if (m.k === 'lesson') {
       return '<div class="meter" data-k="' + m.k + '"><div class="m-top"><span class="m-name">' + bi(m.en, m.hi) + '</span><span class="m-num"></span></div><div class="bar"><i></i></div><span class="m-sub">' + bi(m.se, m.sh) + '</span><div class="lesson-actions"><a class="lesson-link" href="https://raw.githubusercontent.com/ExamQuiz/Bridge-Course/main/documents/hindi/SchoolExperience/English_Lesson_Plans_Class3.docx" target="_blank" rel="noopener">English lesson plans</a><a class="lesson-link" href="https://raw.githubusercontent.com/ExamQuiz/Bridge-Course/main/documents/hindi/SchoolExperience/Hindi_Lesson_Plans_Class3.docx" target="_blank" rel="noopener">Hindi lesson plans</a><button class="lesson-link placeholder" type="button" disabled>World Around Us lesson plans (coming soon)</button><button class="lesson-link placeholder" type="button" disabled>Mathematics lesson plans (coming soon)</button></div></div>';
     }
-    return '<div class="meter" data-k="' + m.k + '"><div class="m-top"><span class="m-name">' + bi(m.en, m.hi) + '</span><span class="m-num"></span></div><div class="bar"><i></i></div><span class="m-sub">' + bi(m.se, m.sh) + '</span></div>';
+    var placeholder = m.k === 'report' ? 'Activity reports' : m.k === 'journal' ? 'Journals' : 'Portfolio';
+    return '<div class="meter" data-k="' + m.k + '"><div class="m-top"><span class="m-name">' + bi(m.en, m.hi) + '</span><span class="m-num"></span></div><div class="bar"><i></i></div><span class="m-sub">' + bi(m.se, m.sh) + '</span><div class="lesson-actions"><button class="lesson-link placeholder" type="button" disabled>' + placeholder + ' (coming soon)</button></div></div>';
   }).join('');
 
   function refresh() {
