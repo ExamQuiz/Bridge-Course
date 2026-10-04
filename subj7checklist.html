@@ -592,10 +592,17 @@ button.reset.armed .hi { color: inherit; }
   ];
   var englishLessonPlan = 'https://examquiz.github.io/Bridge-Course/documents/hindi/SchoolExperience/English_Lesson_Plans_Class3.html';
   var hindiLessonPlan = 'https://examquiz.github.io/Bridge-Course/documents/hindi/SchoolExperience/Hindi_Lesson_Plans_Class3.html';
+  var englishMathematicsLessonPlan = 'https://examquiz.github.io/Bridge-Course/documents/english/Schoolexperience/Mathematics_Lesson_Plans_Class3.html';
+  var hindiMathematicsLessonPlan = 'https://examquiz.github.io/Bridge-Course/documents/hindi/SchoolExperience/Mathematics_Lesson_Plans_Class3_Hindi.html';
+  var englishWorldAroundUsLessonPlan = 'https://examquiz.github.io/Bridge-Course/documents/english/Schoolexperience/World_Around_Us_Lesson_Plans_Class3_English.html';
+  var hindiWorldAroundUsLessonPlan = 'https://examquiz.github.io/Bridge-Course/documents/hindi/SchoolExperience/World_Around_Us_Lesson_Plans_Class3_Hindi.html';
+  var isEnglishMedium = new URLSearchParams(window.location.search).get('medium') === 'english';
+  var mathematicsLessonPlan = isEnglishMedium ? englishMathematicsLessonPlan : hindiMathematicsLessonPlan;
+  var worldAroundUsLessonPlan = isEnglishMedium ? englishWorldAroundUsLessonPlan : hindiWorldAroundUsLessonPlan;
   var metersEl = document.getElementById('meters');
   metersEl.innerHTML = METERS.map(function (m) {
     if (m.k === 'lesson') {
-      return '<div class="meter" data-k="' + m.k + '"><div class="m-top"><span class="m-name">' + bi(m.en, m.hi) + '</span><span class="m-num"></span></div><div class="bar"><i></i></div><span class="m-sub">' + bi(m.se, m.sh) + '</span><div class="lesson-actions"><a class="lesson-link" href="' + englishLessonPlan + '" target="_blank" rel="noopener">English lesson plans</a><a class="lesson-link" href="' + hindiLessonPlan + '" target="_blank" rel="noopener">Hindi lesson plans</a><button class="lesson-link placeholder" type="button" disabled>World Around Us lesson plans (coming soon)</button><button class="lesson-link placeholder" type="button" disabled>Mathematics lesson plans (coming soon)</button></div></div>';
+      return '<div class="meter" data-k="' + m.k + '"><div class="m-top"><span class="m-name">' + bi(m.en, m.hi) + '</span><span class="m-num"></span></div><div class="bar"><i></i></div><span class="m-sub">' + bi(m.se, m.sh) + '</span><div class="lesson-actions"><a class="lesson-link" href="' + englishLessonPlan + '" target="_blank" rel="noopener">English lesson plans</a><a class="lesson-link" href="' + hindiLessonPlan + '" target="_blank" rel="noopener">Hindi lesson plans</a><a class="lesson-link" href="' + worldAroundUsLessonPlan + '" target="_blank" rel="noopener">World Around Us lesson plans</a><a class="lesson-link" href="' + mathematicsLessonPlan + '" target="_blank" rel="noopener">Mathematics lesson plans</a></div></div>';
     }
     var placeholder = m.k === 'report' ? 'Activity reports' : m.k === 'journal' ? 'Journals' : 'Portfolio';
     return '<div class="meter" data-k="' + m.k + '"><div class="m-top"><span class="m-name">' + bi(m.en, m.hi) + '</span><span class="m-num"></span></div><div class="bar"><i></i></div><span class="m-sub">' + bi(m.se, m.sh) + '</span><div class="lesson-actions"><button class="lesson-link placeholder" type="button" disabled>' + placeholder + ' (coming soon)</button></div></div>';
