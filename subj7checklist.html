@@ -1,128 +1,100 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><title>School Experience Planner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap">
 <style>
 /* Layout: slim sticky progress strip, four meters, then day cards grouped in four phases of five days (a 20-day practicum). Every label is English followed by Hindi in brackets. */
 :root {
-  --bg: #f3f6f4;
-  --bg-2: #eaf4f3;
+  --bg: #f4f7f3;
   --surface: #ffffff;
-  --surface-strong: #edf7f6;
-  --fg: #1b2c31;
+  --surface-strong: #d5f0e5;
+  --fg: #18343b;
   --muted: #536a70;
-  --line: #d7e0e3;
-  --accent: #0f6d66;
-  --accent-strong: #104d48;
-  --accent-soft: #dff1ee;
-  --mark: #b57517;
-  --mark-soft: #f8efd7;
-  --plum: #5b4a8f;
-  --plum-soft: #eee8ff;
-  --slate-soft: #e7eef0;
-  --shadow: 0 18px 38px rgba(18, 32, 37, 0.08);
-  --font-display: "Bricolage Grotesque", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
-  --font-body: "Source Sans 3", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
+  --line: #dbe8e2;
+  --accent: #087f82;
+  --accent-strong: #075e61;
+  --accent-soft: #d5f0e5;
+  --mark: #a36019;
+  --mark-soft: #fff0df;
+  --plum: #69509a;
+  --plum-soft: #eee8fa;
+  --slate-soft: #e9eee7;
+  --warm: #f6e5d6;
+  --warm-line: #dfbea5;
+  --navy: #102f36;
+  --shadow: 0 22px 60px rgba(16, 47, 54, 0.12);
+  color-scheme: light;
+  --font-display: "Space Grotesk", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
+  --font-body: "DM Sans", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", "Noto Sans Devanagari", ui-monospace, Menlo, monospace;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0f1d22;
-    --bg-2: #132d32;
-    --surface: #152d33;
-    --surface-strong: #18373b;
-    --fg: #ebf3f4;
-    --muted: #a3b7ba;
-    --line: #2f4349;
-    --accent: #5ec8bf;
-    --accent-strong: #80efe4;
-    --accent-soft: #1b3d3a;
-    --mark: #e8bb5e;
-    --mark-soft: #3d2d1d;
-    --plum: #c7b8ff;
-    --plum-soft: #2d2747;
-    --slate-soft: #21383f;
-    --shadow: 0 18px 38px rgba(0, 0, 0, 0.24);
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0f1d22;
-  --bg-2: #132d32;
-  --surface: #152d33;
-  --surface-strong: #18373b;
-  --fg: #ebf3f4;
-  --muted: #a3b7ba;
-  --line: #2f4349;
-  --accent: #5ec8bf;
-  --accent-strong: #80efe4;
-  --accent-soft: #1b3d3a;
-  --mark: #e8bb5e;
-  --mark-soft: #3d2d1d;
-  --plum: #c7b8ff;
-  --plum-soft: #2d2747;
-  --slate-soft: #21383f;
-  --shadow: 0 18px 38px rgba(0, 0, 0, 0.24);
-  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 24%, var(--bg) 100%);
+  min-height: 100vh;
+  background: radial-gradient(circle at 8% 4%, #dff2e9 0, transparent 27%), radial-gradient(circle at 94% 22%, #ffe4d8 0, transparent 22%), var(--bg);
   color: var(--fg);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.55;
   padding: 0 16px 56px;
 }
-.wrap { max-width: 1120px; margin-inline: auto; }
+.wrap { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
 .hi { color: var(--muted); font-weight: 400; letter-spacing: 0; text-transform: none; }
 
-header {
-  padding: 28px 0 18px;
-}
-.hero {
-  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(223,241,238,0.8));
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  box-shadow: var(--shadow);
-  padding: clamp(20px, 3vw, 32px);
+ .site-header {
   position: relative;
   overflow: hidden;
+  color: #ffffff;
+  background: linear-gradient(135deg, #102f36 0%, #17484a 58%, #226b69 100%);
 }
-.hero::before {
-  content: "";
+.site-header::after {
   position: absolute;
-  inset: -20% 52% auto auto;
-  width: 220px;
-  height: 220px;
+  right: -80px;
+  bottom: -120px;
+  width: 330px;
+  height: 330px;
+  border: 1px solid rgba(255,255,255,.14);
   border-radius: 50%;
-  background: rgba(15,109,102,0.08);
-  filter: blur(10px);
+  content: "";
+  box-shadow: 0 0 0 28px rgba(255,255,255,.035), 0 0 0 58px rgba(255,255,255,.025);
+  pointer-events: none;
 }
+.header-inner { position: relative; z-index: 1; width: min(1120px, calc(100% - 40px)); margin: auto; padding: 22px 0 32px; }
+.topline { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { color: #ffffff; font: 700 20px "Space Grotesk", sans-serif; text-decoration: none; }
+.brand span { color: #ef806b; }
+.header-link {
+  padding: 9px 12px;
+  color: #d9f0e8;
+  background: transparent;
+  border: 1px solid #55717b;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.header-link:hover { color: #ffffff; border-color: #ffffff; background: #294358; }
+.eyebrow { margin: 32px 0 9px; color: #b7e8d3; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 h1 {
-  position: relative;
-  z-index: 1;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 1.1;
-  letter-spacing: -0.018em;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.08;
+  letter-spacing: -.04em;
   margin: 0;
   max-width: 760px;
   text-wrap: balance;
 }
-h1 .hi { display: block; font-size: 0.52em; font-weight: 600; margin-top: 8px; letter-spacing: 0; }
-.lede { position: relative; z-index: 1; margin: 14px 0 0; color: var(--fg); max-width: 72ch; font-size: 1.02rem; }
-.lede .hi { display: block; margin-top: 6px; }
+h1 .hi { display: block; color: #b7e8d3; font-size: .52em; font-weight: 600; margin-top: 8px; letter-spacing: 0; }
+.lede { margin: 14px 0 0; color: #e2eeeb; max-width: 72ch; font-size: 1rem; }
+.lede .hi { display: block; margin-top: 6px; color: #bcd0ca; }
 .facts {
-  position: relative;
-  z-index: 1;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
-  gap: 10px 18px;
+  gap: 9px;
   padding: 0;
   margin: 20px 0 0;
   list-style: none;
@@ -130,19 +102,21 @@ h1 .hi { display: block; font-size: 0.52em; font-weight: 600; margin-top: 8px; l
   color: var(--muted);
 }
 .facts li {
-  background: rgba(255,255,255,0.5);
-  border: 1px solid rgba(125,149,156,0.22);
-  border-radius: 12px;
-  padding: 10px 12px;
+  color: #e2eeeb;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 6px;
+  padding: 9px 11px;
   min-width: 0;
 }
-.facts b { color: var(--fg); font-family: var(--font-mono); font-weight: 600; }
+.facts b { color: #ffffff; font-family: var(--font-mono); font-weight: 600; }
+.facts .hi { color: #bcd0ca; }
 
 .strip {
   position: sticky;
   top: env(safe-area-inset-top, 0px);
   z-index: 5;
-  background: rgba(243,246,244,0.9);
+  background: rgba(244,247,243,.94);
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(12px);
   margin-inline: -16px;
@@ -160,18 +134,19 @@ h1 .hi { display: block; font-size: 0.52em; font-weight: 600; margin-top: 8px; l
   padding-block: 18px 8px;
 }
 .meter {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 14px 16px 12px;
+  background: var(--warm);
+  border: 2px solid var(--warm-line);
+  border-radius: 14px;
+  padding: 15px 16px 13px;
   display: grid;
   gap: 10px;
   min-width: 0;
   align-content: start;
-  box-shadow: 0 8px 20px rgba(17, 33, 38, 0.03);
+  box-shadow: 0 7px 18px rgba(22,42,58,.06);
 }
 .meter .m-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 10px; }
 .meter .m-name { font-size: 0.9rem; min-width: 0; font-weight: 600; }
+.meter .m-name, .meter .m-num { color: var(--navy); }
 .meter .m-num { font-family: var(--font-mono); font-size: 1.06rem; font-variant-numeric: tabular-nums; }
 .meter .m-sub { font-size: 0.8rem; color: var(--muted); }
 .meter .bar { height: 8px; min-width: 0; }
@@ -191,34 +166,41 @@ h1 .hi { display: block; font-size: 0.52em; font-weight: 600; margin-top: 8px; l
   justify-content: center;
   min-height: 38px;
   padding: 8px 10px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: linear-gradient(180deg, var(--surface), var(--surface-strong));
-  color: var(--fg);
-  font: 600 0.77rem/1.2 var(--font-body);
+  border: 1px solid #b9e2d0;
+  border-radius: 5px;
+  background: var(--surface-strong);
+  color: #000000;
+  font: 700 0.78rem/1.25 var(--font-body);
   text-decoration: none;
+  text-align: center;
+  overflow-wrap: anywhere;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 5px 12px rgba(22, 40, 42, 0.04);
 }
 .lesson-link:hover {
-  border-color: var(--accent);
-  background: var(--accent-soft);
+  border-color: #82c9a7;
+  background: #b7e8d3;
+  color: #000000;
   transform: translateY(-1px);
   box-shadow: 0 8px 16px rgba(15, 109, 102, 0.12);
 }
 .lesson-link.placeholder {
-  opacity: 0.75;
+  opacity: 1;
+  color: #18343b;
+  background: #ffe08a;
+  border-color: #e5bf4e;
+  -webkit-text-fill-color: #18343b;
   cursor: not-allowed;
 }
-.lesson-link.placeholder:hover { transform: none; box-shadow: 0 5px 12px rgba(22, 40, 42, 0.04); }
+.lesson-link.placeholder:hover { transform: none; box-shadow: 0 5px 12px rgba(22, 40, 42, 0.04); background: #ffe08a; }
 
 .note {
   margin-block: 18px 4px;
   padding: 14px 16px;
-  border: 1px solid var(--line);
+  border: 2px solid var(--warm-line);
   border-left: 4px solid var(--accent);
   border-radius: 16px;
-  background: rgba(255,255,255,0.45);
+  background: var(--warm);
   font-size: 0.96rem;
 }
 .note b { font-weight: 600; }
@@ -241,11 +223,11 @@ h1 .hi { display: block; font-size: 0.52em; font-weight: 600; margin-top: 8px; l
 .days { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 14px; align-items: start; }
 .day {
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 16px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
   min-width: 0;
   overflow: hidden;
-  box-shadow: 0 8px 20px rgba(17, 33, 38, 0.03);
+  box-shadow: 0 6px 18px rgba(22,42,58,.035);
 }
 .day-h {
   display: grid;
@@ -254,7 +236,7 @@ h1 .hi { display: block; font-size: 0.52em; font-weight: 600; margin-top: 8px; l
   padding: 12px 14px;
   border-bottom: 1px solid var(--line);
   gap: 2px 10px;
-  background: rgba(237,247,246,0.55);
+  background: #e2f4ed;
 }
 .day-h h3 { font-family: var(--font-display); font-size: 1.1rem; margin: 0; }
 .day-h h3 .hi { font-size: 0.85em; font-weight: 600; }
@@ -272,7 +254,9 @@ ul.items { list-style: none; margin: 0; padding: 0; }
   padding: 10px 14px;
   cursor: pointer;
   align-items: start;
+  background: #ffffff;
 }
+.items li + li .item { background: #fbfdfb; }
 .item input {
   width: 18px;
   height: 18px;
@@ -330,9 +314,16 @@ button.reset:focus-visible { outline: 2px solid var(--accent); outline-offset: 2
 button.reset.armed { border-color: var(--mark); color: var(--mark); }
 button.reset.armed .hi { color: inherit; }
 
+.site-footer { margin-top: 20px; color: #d5e7e1; background: #102f36; }
+.footer-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; width: min(820px, calc(100% - 40px)); margin: auto; padding: 24px 0 18px; }
+.footer-heading { margin: 0 0 10px; color: #9ed7c6; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.footer-details { margin: 0; color: #d5e7e1; font-size: 13px; line-height: 1.65; }
+.footer-details a, .footer-bottom a { color: #b7e8d3; }
+.footer-bottom { width: min(820px, calc(100% - 40px)); margin: auto; padding: 12px 0 16px; border-top: 1px solid rgba(213,231,225,.16); color: #91aca8; font-size: 12px; }
+
 @media (max-width: 720px) {
-  body { padding-inline: 12px; }
-  .hero { border-radius: 16px; }
+  .wrap { width: min(100% - 24px, 1120px); }
+  .header-inner { width: min(100% - 24px, 1120px); }
   .lesson-actions { grid-template-columns: 1fr; }
   .meter { padding: 12px 13px; }
   .day-h { grid-template-columns: 1fr; }
@@ -341,6 +332,12 @@ button.reset.armed .hi { color: inherit; }
 }
 
 @media (max-width: 520px) {
+  .header-inner { padding: 18px 0 24px; }
+  .brand { font-size: 17px; }
+  .header-link { padding: 8px 9px; font-size: 12px; }
+  .eyebrow { margin-top: 25px; font-size: 10px; }
+  h1 { font-size: clamp(2rem, 10vw, 2.8rem); }
+  .lede { font-size: .9rem; }
   .strip { padding-inline: 12px; }
   .strip-in { gap: 8px; }
   .facts { grid-template-columns: 1fr; }
@@ -349,26 +346,31 @@ button.reset.armed .hi { color: inherit; }
   .item .main { gap: 4px 6px; }
   .chip { font-size: 0.58rem; }
   .note { padding: 12px 13px; }
+  .footer-inner { width: min(100% - 24px, 820px); grid-template-columns: 1fr; gap: 18px; }
+  .footer-bottom { width: min(100% - 24px, 820px); }
 }
 
 @media (prefers-reduced-motion: reduce) { .bar > i, .lesson-link { transition: none; } }
 </style>
 
-<div class="wrap">
-  <header>
-    <div class="hero">
-      <h1>School Experience Planner <span class="hi">(विद्यालय अनुभव योजनाकार)</span></h1>
-      <p class="lede">A day-by-day checklist for Course 7 of the NIOS Six-Month Certificate (Bridge) in Primary Teacher Education. Two lessons a day cover all 40 lessons. Tick items as you finish them.
-        <span class="hi">(प्राथमिक शिक्षक शिक्षा में एनआईओएस छह माह के प्रमाणपत्र (ब्रिज) पाठ्यक्रम के कोर्स 7 की दिन-प्रतिदिन की जाँच-सूची। रोज़ दो पाठ पढ़ाने से सभी 40 पाठ पूरे हो जाते हैं। काम पूरा होते ही टिक करें।)</span></p>
-      <ul class="facts">
-        <li><b>100</b> marks, 4 credits <span class="hi">(100 अंक, 4 क्रेडिट)</span></li>
-        <li><b>20</b> school days <span class="hi">(20 विद्यालय दिवस)</span></li>
-        <li><b>80%</b> attendance minimum <span class="hi">(न्यूनतम 80% उपस्थिति)</span></li>
-        <li><b>50%</b> to pass the practicum <span class="hi">(प्रायोगिक में उत्तीर्ण होने के लिए 50%)</span></li>
-      </ul>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="topline">
+      <a class="brand" href="index.html">ExamQuiz <span>for BridgeCourse</span></a>
+      <a class="header-link" href="index.html">← All subjects</a>
     </div>
-  </header>
-</div>
+    <p class="eyebrow">Course 7 · Practicum Planner</p>
+    <h1>School Experience Planner <span class="hi">(विद्यालय अनुभव योजनाकार)</span></h1>
+    <p class="lede">A day-by-day checklist for Course 7 of the NIOS Six-Month Certificate (Bridge) in Primary Teacher Education. Two lessons a day cover all 40 lessons. Tick items as you finish them.
+      <span class="hi">(प्राथमिक शिक्षक शिक्षा में एनआईओएस छह माह के प्रमाणपत्र (ब्रिज) पाठ्यक्रम के कोर्स 7 की दिन-प्रतिदिन की जाँच-सूची। रोज़ दो पाठ पढ़ाने से सभी 40 पाठ पूरे हो जाते हैं। काम पूरा होते ही टिक करें।)</span></p>
+    <ul class="facts">
+      <li><b>100</b> marks, 4 credits <span class="hi">(100 अंक, 4 क्रेडिट)</span></li>
+      <li><b>20</b> school days <span class="hi">(20 विद्यालय दिवस)</span></li>
+      <li><b>80%</b> attendance minimum <span class="hi">(न्यूनतम 80% उपस्थिति)</span></li>
+      <li><b>50%</b> to pass the practicum <span class="hi">(प्रायोगिक में उत्तीर्ण होने के लिए 50%)</span></li>
+    </ul>
+  </div>
+</header>
 
 <div class="strip"><div class="strip-in">
   <span class="label" id="overallLabel"></span>
@@ -390,6 +392,20 @@ button.reset.armed .hi { color: inherit; }
     <button class="reset" id="reset" type="button"></button>
   </div>
 </div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-heading">About Developer</p>
+      <p class="footer-details">शिक्षा के क्षेत्र में योगदान देने के प्रति उत्साहित!<br>आप जूनियर और सीनियर स्टूडेंट्स को पढ़ाने के लिए मेरे फ्री लर्निंग ऐप को डाउनलोड कर सकते है, ऐप Google Play Store पर उपलब्ध है :)<br><a href="https://play.google.com/store/apps/details?id=com.smartkid.explorer&amp;pcampaignid=web_share" target="_blank" rel="noopener">Smart Kid Explorer on Google Play</a></p>
+    </div>
+    <div>
+      <p class="footer-heading">Vision</p>
+      <p class="footer-details">To help Bridge Course aspirants prepare with confidence, improve their learning progress, and succeed in the examination through accessible, self-paced practice.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">Email: <a href="mailto:examquizpreparation@gmail.com">examquizpreparation@gmail.com</a></div>
+</footer>
 
 <script>
 (function () {
@@ -574,10 +590,13 @@ button.reset.armed .hi { color: inherit; }
     { k: 'journal', en: 'Journal', hi: 'जर्नल', se: '20 entries and a summary', sh: '20 प्रविष्टियाँ और सारांश' },
     { k: 'portfolio', en: 'Portfolio', hi: 'पोर्टफोलियो', se: '5 best practices', sh: '5 सर्वोत्तम प्रथाएँ' }
   ];
+  var wordViewer = 'https://view.officeapps.live.com/op/view.aspx?src=';
+  var englishLessonPlan = 'https://raw.githubusercontent.com/ExamQuiz/Bridge-Course/main/documents/hindi/SchoolExperience/English_Lesson_Plans_Class3.docx';
+  var hindiLessonPlan = 'https://raw.githubusercontent.com/ExamQuiz/Bridge-Course/main/documents/hindi/SchoolExperience/Hindi_Lesson_Plans_Class3.docx';
   var metersEl = document.getElementById('meters');
   metersEl.innerHTML = METERS.map(function (m) {
     if (m.k === 'lesson') {
-      return '<div class="meter" data-k="' + m.k + '"><div class="m-top"><span class="m-name">' + bi(m.en, m.hi) + '</span><span class="m-num"></span></div><div class="bar"><i></i></div><span class="m-sub">' + bi(m.se, m.sh) + '</span><div class="lesson-actions"><a class="lesson-link" href="https://raw.githubusercontent.com/ExamQuiz/Bridge-Course/main/documents/hindi/SchoolExperience/English_Lesson_Plans_Class3.docx" target="_blank" rel="noopener">English lesson plans</a><a class="lesson-link" href="https://raw.githubusercontent.com/ExamQuiz/Bridge-Course/main/documents/hindi/SchoolExperience/Hindi_Lesson_Plans_Class3.docx" target="_blank" rel="noopener">Hindi lesson plans</a><button class="lesson-link placeholder" type="button" disabled>World Around Us lesson plans (coming soon)</button><button class="lesson-link placeholder" type="button" disabled>Mathematics lesson plans (coming soon)</button></div></div>';
+      return '<div class="meter" data-k="' + m.k + '"><div class="m-top"><span class="m-name">' + bi(m.en, m.hi) + '</span><span class="m-num"></span></div><div class="bar"><i></i></div><span class="m-sub">' + bi(m.se, m.sh) + '</span><div class="lesson-actions"><a class="lesson-link" href="' + wordViewer + encodeURIComponent(englishLessonPlan) + '" target="_blank" rel="noopener">English lesson plans</a><a class="lesson-link" href="' + wordViewer + encodeURIComponent(hindiLessonPlan) + '" target="_blank" rel="noopener">Hindi lesson plans</a><button class="lesson-link placeholder" type="button" disabled>World Around Us lesson plans (coming soon)</button><button class="lesson-link placeholder" type="button" disabled>Mathematics lesson plans (coming soon)</button></div></div>';
     }
     var placeholder = m.k === 'report' ? 'Activity reports' : m.k === 'journal' ? 'Journals' : 'Portfolio';
     return '<div class="meter" data-k="' + m.k + '"><div class="m-top"><span class="m-name">' + bi(m.en, m.hi) + '</span><span class="m-num"></span></div><div class="bar"><i></i></div><span class="m-sub">' + bi(m.se, m.sh) + '</span><div class="lesson-actions"><button class="lesson-link placeholder" type="button" disabled>' + placeholder + ' (coming soon)</button></div></div>';
