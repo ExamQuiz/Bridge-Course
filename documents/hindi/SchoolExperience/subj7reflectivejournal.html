@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reflective Journal – Course 7 | Bridge Course</title>
+<style>
+:root{--teal:#0F6B66;--grey:#55676E;--line:#A9B8BB;--soft:#E4F1EF;--paper:#F3F6F5}
+*{box-sizing:border-box}
+body{margin:0;background:#E3E9E8;font:10.5pt/1.5 "Noto Sans Devanagari","Mangal","Nirmala UI",Arial,sans-serif;color:#000}
+.nav{max-width:210mm;margin:12px auto 0;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:0 4px;font-size:10pt}
+.nav a{color:var(--teal);font-weight:bold}
+.sheet{max-width:210mm;margin:12px auto;background:#fff;padding:0.7in;box-shadow:0 1px 4px rgba(20,35,43,.18)}
+h1{color:var(--teal);font-size:19pt;margin:0 0 2pt;line-height:1.3}
+h2{color:var(--teal);font-size:13.5pt;margin:14pt 0 4pt;line-height:1.35}
+h3{color:var(--teal);font-size:10.5pt;margin:8pt 0 3pt}
+.hi{display:block;color:var(--grey);font-size:9.5pt;font-weight:normal}
+.k{color:var(--grey);font-size:11pt;margin:0}
+p{margin:0 0 5pt}.note{color:var(--grey);font-size:9.5pt}
+.brief{background:var(--paper);padding:5pt 8pt;border:.5pt solid var(--line);margin:6pt 0}
+table{width:100%;border-collapse:collapse;table-layout:fixed;margin:0 0 4pt}
+th,td{border:.5pt solid var(--line);padding:3.5pt 5.5pt;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+th{background:var(--soft);color:var(--teal)}
+.f{min-height:22pt;outline:none}
+div.f{border:.5pt solid var(--line);padding:3.5pt 5.5pt;min-height:48pt;white-space:pre-wrap}
+.f:focus{box-shadow:inset 0 0 0 1.5px var(--teal)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:10pt 0}
+button{font:inherit;font-size:10pt;padding:7px 14px;border:1px solid var(--line);background:#fff;border-radius:4px;cursor:pointer}
+button.p{background:var(--teal);color:#fff;border-color:var(--teal)}
+details{border:.5pt solid var(--line);margin:0 0 6pt}
+summary{cursor:pointer;background:var(--soft);padding:6pt 8pt;font-weight:bold;color:var(--teal);display:flex;justify-content:space-between;gap:8px}
+summary .st{font-weight:normal;color:var(--grey)}
+.body{padding:6pt 8pt 8pt}
+label.c{display:inline-block;margin:0 12pt 3pt 0}
+input[type=checkbox]{width:16px;height:16px;accent-color:var(--teal);vertical-align:middle}
+.tot{font-weight:bold;text-align:right}
+@media(max-width:820px){.sheet{padding:16px 14px}}
+@page{size:A4;margin:.7in}
+@media print{body{background:#fff}.np{display:none!important}.sheet{box-shadow:none;padding:0;margin:0}
+details{break-inside:avoid}summary{background:var(--soft)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}#sm{break-before:page}div.f{border-color:#777}tr{break-inside:avoid}}
+</style>
+</head>
+<body>
+<nav class="nav np"><a href="index.html">ExamQuiz for BridgeCourse</a><a href="subj7checklist.html">← School Experience Planner</a></nav>
+<main class="sheet">
+<p class="k">School Experience (Course 7) · Reflective Journal</p>
+<h1>Reflective Journal<span class="hi">चिंतनशील डायरी</span></h1>
+<p class="note">As per the NIOS Programme Guide (Annexure 2): make <b>one entry every day for 20 days</b> (20 marks) and an <b>overall summary report</b> (5 marks): 25 marks, 1 credit. Entries should include some description and more reflection and analysis. Marks also reflect your growth over time, how you respond to your supervisor’s comments, and regular submission.<span class="hi">गाइड के अनुसार 20 दिन तक रोज़ एक प्रविष्टि (20 अंक) और एक समग्र सारांश रिपोर्ट (5 अंक) लिखें: कुल 25 अंक, 1 क्रेडिट। वर्णन कम और चिंतन व विश्लेषण अधिक हो।</span></p>
+<div class="brief"><b>Each entry answers three questions (हर प्रविष्टि में तीन प्रश्न):</b> <b>What</b> is new or different from my earlier understanding? <b>Why</b> were my observations about instruction, classroom management or parent interaction the same or different? <b>How</b> might they change my practice? Link your day to the theory courses you studied.<span class="hi">क्या नया या अलग लगा? ऐसा क्यों हुआ? इससे मेरे शिक्षण में क्या बदलाव आएगा? अपने दिन को सैद्धांतिक पाठ्यक्रमों से जोड़ें।</span></div>
+<div class="bar np"><button class="p" onclick="window.print()">Print / Save as PDF (प्रिंट / PDF)</button><button id="op">Open all (सब खोलें)</button><button id="cl">Collapse all (सब बंद करें)</button><button id="clr">Clear all (सब हटाएँ)</button></div>
+<p class="note np">Entries are saved in this browser only. Save the PDF and upload it through your dashboard on bridge.nios.ac.in; confirm the upload format there. (प्रविष्टियाँ केवल इसी ब्राउज़र में सहेजी जाती हैं। PDF सहेजकर डैशबोर्ड से अपलोड करें।)</p>
+<table id="det"></table>
+<p class="note np" id="cnt"></p>
+<h2>Daily entries <span class="hi">दैनिक प्रविष्टियाँ (दिन 1–20)</span></h2>
+<div id="days"></div>
+<section id="sm"><h2>Overall summary report <span class="hi">समग्र सारांश रिपोर्ट (5 अंक)</span></h2><div id="sumq"></div>
+<table><tr><th style="width:34%">Teacher’s signature and date<span class="hi">शिक्षक के हस्ताक्षर और दिनांक</span></th><td class="f" contenteditable data-k="sg"></td></tr><tr><th>Supervisor’s remarks<span class="hi">पर्यवेक्षक की टिप्पणी</span></th><td class="f" contenteditable data-k="sv"></td></tr><tr><th>Summary marks /5<span class="hi">सारांश के अंक (5 में से)</span></th><td class="f" contenteditable data-k="ms"></td></tr><tr><th>Total /25 (entries + summary)<span class="hi">कुल अंक (25 में से)</span></th><td id="tot" class="tot">0</td></tr></table></section>
+</main>
+<script>
+var L=function(e,h){return e+'<span class="hi">'+h+'</span>'};
+var KEY='bridge7_reflective_journal',S={f:{},c:{}};
+try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&s.f)S=s}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function F(k,t){return t?'<td class="f" contenteditable data-k="'+k+'"></td>':'<div class="f" contenteditable role="textbox" aria-multiline="true" data-k="'+k+'"></div>'}
+document.getElementById('det').innerHTML=[["Teacher’s name","शिक्षक का नाम"],["Enrolment number","नामांकन संख्या"],["School and UDISE code","विद्यालय और यू-डायस कोड"],["Class(es) taught","पढ़ाई गई कक्षाएँ"],["Supervisor / DIET","पर्यवेक्षक / डाइट"]].map(function(x,i){return '<tr><th style="width:34%">'+L(x[0],x[1])+'</th>'+F('d'+i,1)+'</tr>'}).join('');
+var Q=[["Description: what happened today in my teaching, classroom management, and any psychological or social issues I noticed","वर्णन: आज शिक्षण, कक्षा प्रबंधन और मनोवैज्ञानिक या सामाजिक मुद्दों के बारे में क्या हुआ"],
+["WHAT is new or different from my earlier understanding?","क्या: मेरी पहले की समझ से क्या नया या अलग लगा?"],
+["WHY were my observations on instruction, classroom management or parent/PTA interaction the same or different? What did I do in class and why?","क्यों: शिक्षण, कक्षा प्रबंधन या अभिभावक से बातचीत के अवलोकन समान या अलग क्यों रहे? मैंने कक्षा में क्या किया और क्यों?"],
+["HOW might this lead to criticism of my practice and change in it? What will I do tomorrow?","कैसे: इससे मेरे अभ्यास की समीक्षा और बदलाव कैसे होगा? कल मैं क्या करूँगा/करूँगी?"]];
+var C=[["Child Development","बाल विकास"],["Curriculum, Pedagogy, Assessment","पाठ्यचर्या, शिक्षणशास्त्र, आकलन"],["Language-I","भाषा-I"],["Language-II","भाषा-II"],["Mathematics","गणित"],["World Around Us","हमारे आसपास की दुनिया"]];
+var h='';
+for(var i=0;i<20;i++){
+ h+='<details id="dy'+i+'"><summary><span>Day '+(i+1)+' (दिन '+(i+1)+')</span><span class="st" id="st'+i+'">Not started</span></summary><div class="body"><table><tr><th style="width:34%">'+L('Date','तिथि')+'</th>'+F('j'+i+'dt',1)+'</tr><tr><th>'+L('Lessons / activities today','आज के पाठ / गतिविधियाँ')+'</th>'+F('j'+i+'ls',1)+'</tr></table>'
+ +Q.map(function(q,j){return '<h3>'+L(q[0],q[1])+'</h3>'+F('j'+i+'q'+j)}).join('')
+ +'<h3>'+L('Linked theory courses','जुड़े सैद्धांतिक पाठ्यक्रम')+'</h3><p>'+C.map(function(c,j){return '<label class="c"><input type="checkbox" data-k="j'+i+'c'+j+'"> '+c[0]+' ('+c[1]+')</label>'}).join('')+'</p>'
+ +'<table><tr><th style="width:34%">'+L('Supervisor’s comment','पर्यवेक्षक की टिप्पणी')+'</th>'+F('j'+i+'sv',1)+'</tr><tr><th>'+L('My response to the comment','टिप्पणी पर मेरी प्रतिक्रिया')+'</th>'+F('j'+i+'rs',1)+'</tr><tr><th>'+L('Marks /1','अंक (1 में से)')+'</th>'+F('j'+i+'mk',1)+'</tr></table></div></details>'}
+document.getElementById('days').innerHTML=h;
+var SQ=[["Overview of my 20 school days","मेरे 20 विद्यालय दिवसों का अवलोकन"],["What I learned about children, including developmental and socio-cultural influences","बच्चों के बारे में मैंने क्या सीखा (विकासात्मक और सामाजिक-सांस्कृतिक प्रभावों सहित)"],["How my teaching and classroom management changed from Day 1 to Day 20","पहले दिन से बीसवें दिन तक मेरे शिक्षण और कक्षा प्रबंधन में क्या बदलाव आया"],["How I responded to my supervisor’s comments","मैंने पर्यवेक्षक की टिप्पणियों पर कैसे कार्य किया"],["Links I found between pedagogy and the theory courses","शिक्षणशास्त्र और सैद्धांतिक पाठ्यक्रमों के बीच जो संबंध मिले"],["Challenges that remain and my plan for future practice","जो चुनौतियाँ बाकी हैं और आगे के अभ्यास की मेरी योजना"]];
+document.getElementById('sumq').innerHTML=SQ.map(function(q,j){return '<h3>'+L(q[0],q[1])+'</h3>'+F('sm'+j)}).join('');
+function sync(){var n=0,t=0;for(var i=0;i<20;i++){var any=false;document.querySelectorAll('#dy'+i+' .f').forEach(function(e){if((S.f[e.dataset.k]||'').trim())any=true});
+ if(any)n++;t+=parseFloat(S.f['j'+i+'mk'])||0;
+ document.getElementById('st'+i).textContent=any?'✓ Started (शुरू)':'Not started'}
+ t+=parseFloat(S.f.ms)||0;document.getElementById('tot').textContent=t;
+ document.getElementById('cnt').textContent='Entries started: '+n+' of 20. / शुरू की गई प्रविष्टियाँ: '+n+' (20 में से)।'}
+document.querySelectorAll('.f').forEach(function(e){e.innerText=S.f[e.dataset.k]||''});
+document.querySelectorAll('input[data-k]').forEach(function(c){c.checked=!!S.c[c.dataset.k]});
+document.addEventListener('input',function(ev){var e=ev.target;if(e.classList.contains('f')){S.f[e.dataset.k]=e.innerText;save();sync()}});
+document.addEventListener('change',function(ev){var c=ev.target;if(c.type==='checkbox'){if(c.checked)S.c[c.dataset.k]=1;else delete S.c[c.dataset.k];save()}});
+var all=function(o){document.querySelectorAll('details').forEach(function(d){d.open=o})},was=[];
+document.getElementById('op').onclick=function(){all(true)};document.getElementById('cl').onclick=function(){all(false)};
+window.addEventListener('beforeprint',function(){was=[].map.call(document.querySelectorAll('details'),function(d){return d.open});all(true)});
+window.addEventListener('afterprint',function(){document.querySelectorAll('details').forEach(function(d,i){d.open=was[i]})});
+document.getElementById('clr').onclick=function(){if(confirm('Clear everything you have entered? (आपकी सभी प्रविष्टियाँ हट जाएँगी?)')){try{localStorage.removeItem(KEY)}catch(e){}location.reload()}};
+document.getElementById('dy0').open=true;sync();
+</script>
+</body>
+</html>
