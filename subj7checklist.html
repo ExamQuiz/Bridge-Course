@@ -1,0 +1,462 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>School Experience Checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap">
+<style>
+/* Layout: slim sticky progress strip, four meters, then day cards grouped in four phases of five days (a 20-day practicum). Every label is English followed by Hindi in brackets. */
+:root {
+  --bg: #F1F4F3;
+  --surface: #FFFFFF;
+  --fg: #14232B;
+  --muted: #55676E;
+  --line: #D3DCDE;
+  --accent: #0F6B66;
+  --accent-soft: #DAEDEB;
+  --mark: #9A6410;
+  --mark-soft: #F5E8CC;
+  --plum: #5A4A8C;
+  --plum-soft: #E6E1F3;
+  --slate-soft: #E3E9EB;
+  --font-display: "Bricolage Grotesque", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Source Sans 3", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "Noto Sans Devanagari", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E181C;
+    --surface: #152429;
+    --fg: #E5EDEF;
+    --muted: #94A6AC;
+    --line: #28383E;
+    --accent: #52C2B8;
+    --accent-soft: #143A39;
+    --mark: #E5B563;
+    --mark-soft: #392E16;
+    --plum: #B9AAEA;
+    --plum-soft: #2B2548;
+    --slate-soft: #223238;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E181C;
+  --surface: #152429;
+  --fg: #E5EDEF;
+  --muted: #94A6AC;
+  --line: #28383E;
+  --accent: #52C2B8;
+  --accent-soft: #143A39;
+  --mark: #E5B563;
+  --mark-soft: #392E16;
+  --plum: #B9AAEA;
+  --plum-soft: #2B2548;
+  --slate-soft: #223238;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  padding-inline: 16px;
+  padding-block: 0 56px;
+}
+.wrap { max-width: 1040px; margin-inline: auto; }
+.hi { color: var(--muted); font-weight: 400; letter-spacing: 0; text-transform: none; }
+
+header { padding-block: 32px 20px; display: grid; gap: 14px; }
+h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 5vw, 2.7rem);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 .hi { display: block; font-size: 0.55em; font-weight: 600; margin-top: 6px; letter-spacing: 0; }
+.lede { margin: 0; color: var(--fg); max-width: 66ch; }
+.lede .hi { display: block; margin-top: 6px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 8px 22px; padding: 0; margin: 0; list-style: none; font-size: 0.86rem; color: var(--muted); }
+.facts li { min-width: 0; }
+.facts b { color: var(--fg); font-family: var(--font-mono); font-weight: 500; }
+
+.strip {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 5;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  margin-inline: -16px;
+  padding: 10px 16px;
+}
+.strip-in { max-width: 1040px; margin-inline: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.strip .label { font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+.bar { flex: 1; height: 8px; background: var(--slate-soft); border-radius: 99px; overflow: hidden; min-width: 120px; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width 0.25s ease; }
+
+.meters { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; padding-block: 20px 8px; }
+.meter { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; display: grid; gap: 8px; min-width: 0; align-content: start; }
+.meter .m-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 8px; }
+.meter .m-name { font-size: 0.86rem; min-width: 0; }
+.meter .m-num { font-family: var(--font-mono); font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.meter .m-sub { font-size: 0.78rem; color: var(--muted); }
+.meter .bar { height: 6px; min-width: 0; }
+.meter[data-k="lesson"] .bar > i { background: var(--accent); }
+.meter[data-k="report"] .bar > i { background: var(--mark); }
+.meter[data-k="journal"] .bar > i { background: var(--muted); }
+.meter[data-k="portfolio"] .bar > i { background: var(--plum); }
+.lesson-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.lesson-link { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--fg); font: 600 0.76rem/1.2 var(--font-body); text-decoration: none; transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease; }
+.lesson-link:hover { border-color: var(--accent); background: var(--accent-soft); transform: translateY(-1px); }
+.lesson-link.placeholder { opacity: 0.75; cursor: not-allowed; }
+.lesson-link.placeholder:hover { transform: none; }
+
+.note { margin-block: 14px 4px; padding: 12px 14px; border: 1px dashed var(--line); border-radius: 6px; font-size: 0.92rem; }
+.note b { font-weight: 600; }
+.note p { margin: 0; }
+.note p + p { margin-top: 8px; }
+
+.phase { padding-block: 28px 0; }
+.phase-head { display: grid; gap: 2px; margin-bottom: 14px; }
+.phase-head h2 { font-family: var(--font-display); font-size: 1.35rem; line-height: 1.25; margin: 0; letter-spacing: -0.01em; }
+.phase-head h2 .hi { font-size: 0.8em; font-weight: 600; }
+.phase-head p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+.phase-head .rng { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+
+.days { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 14px; align-items: start; }
+.day { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; min-width: 0; }
+.day-h { display: grid; grid-template-columns: 1fr auto; align-items: baseline; padding: 11px 14px; border-bottom: 1px solid var(--line); gap: 2px 10px; }
+.day-h h3 { font-family: var(--font-display); font-size: 1.1rem; margin: 0; }
+.day-h h3 .hi { font-size: 0.85em; font-weight: 600; }
+.day-h .title { grid-column: 1; color: var(--fg); font-size: 0.88rem; min-width: 0; }
+.day-h .cnt { grid-column: 2; grid-row: 1; font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.day.done .day-h { background: var(--accent-soft); }
+.day.done .cnt { color: var(--accent); }
+
+ul.items { list-style: none; margin: 0; padding: 4px 0; }
+.items li + li { border-top: 1px solid var(--line); }
+.item { display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 10px 14px; cursor: pointer; align-items: start; }
+.item input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--accent); cursor: pointer; }
+.item input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.item .tx { min-width: 0; display: grid; gap: 3px; }
+.item .main { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+.item .main > .t { min-width: 0; font-weight: 500; }
+.item .sub { color: var(--muted); font-size: 0.86rem; }
+.chip { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.04em; text-transform: uppercase; padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
+.chip .hi { color: inherit; }
+.chip.lesson { background: var(--accent-soft); color: var(--accent); }
+.chip.activity, .chip.report { background: var(--mark-soft); color: var(--mark); }
+.chip.journal { background: var(--slate-soft); color: var(--muted); }
+.chip.portfolio { background: var(--plum-soft); color: var(--plum); }
+.chip.admin { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+.item.on .t, .item.on .sub { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+
+.foot { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 0.86rem; }
+.foot p { margin: 0; max-width: 66ch; color: var(--muted); }
+button.reset {
+  font: inherit; font-size: 0.86rem; color: var(--fg); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 6px; padding: 7px 14px; cursor: pointer; text-align: left;
+}
+button.reset:hover { border-color: var(--muted); }
+button.reset:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.reset.armed { border-color: var(--mark); color: var(--mark); }
+button.reset.armed .hi { color: inherit; }
+
+@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>School Experience Planner <span class="hi">(विद्यालय अनुभव योजनाकार)</span></h1>
+    <p class="lede">A day-by-day checklist for Course 7 of the NIOS Six-Month Certificate (Bridge) in Primary Teacher Education. Two lessons a day cover all 40 lessons. Tick items as you finish them.
+      <span class="hi">(प्राथमिक शिक्षक शिक्षा में एनआईओएस छह माह के प्रमाणपत्र (ब्रिज) पाठ्यक्रम के कोर्स 7 की दिन-प्रतिदिन की जाँच-सूची। रोज़ दो पाठ पढ़ाने से सभी 40 पाठ पूरे हो जाते हैं। काम पूरा होते ही टिक करें।)</span></p>
+    <ul class="facts">
+      <li><b>100</b> marks, 4 credits <span class="hi">(100 अंक, 4 क्रेडिट)</span></li>
+      <li><b>20</b> school days <span class="hi">(20 विद्यालय दिवस)</span></li>
+      <li><b>80%</b> attendance minimum <span class="hi">(न्यूनतम 80% उपस्थिति)</span></li>
+      <li><b>50%</b> to pass the practicum <span class="hi">(प्रायोगिक में उत्तीर्ण होने के लिए 50%)</span></li>
+    </ul>
+  </header>
+</div>
+
+<div class="strip"><div class="strip-in">
+  <span class="label" id="overallLabel"></span>
+  <div class="bar"><i id="overallBar"></i></div>
+</div></div>
+
+<div class="wrap">
+  <section class="meters" id="meters" aria-label="Progress by component"></section>
+
+  <div class="note">
+    <p><b>How the days map to your calendar.</b> Day 1 is your first practicum day, not a date. The guide allows the 20 days to fall within about 8 weeks, so use them in order but keep your own dates. Only 5 of the 10 lessons in each subject are assessed, so plan and file all 40. The activity picks below are Music, Play, Fitness, Visual Arts and Yoga; swap in any of the other three tasks if they suit your school better.</p>
+    <p class="hi"><b>(दिनों को अपने कैलेंडर से कैसे जोड़ें।)</b> दिन 1 आपका पहला प्रायोगिक दिन है, कोई तारीख़ नहीं। गाइड के अनुसार 20 दिन लगभग 8 सप्ताह के भीतर पूरे किए जा सकते हैं, इसलिए दिनों को क्रम से करें पर तारीख़ें अपनी रखें। प्रत्येक विषय के 10 में से केवल 5 पाठों का मूल्यांकन होता है, इसलिए सभी 40 की योजना बनाकर फ़ाइल में रखें। नीचे संगीत, खेल, फिटनेस, दृश्य कला और योग चुने गए हैं; आपके विद्यालय के अनुकूल हो तो शेष तीन कार्यों में से किसी को भी बदल सकते हैं।</p>
+  </div>
+
+  <div id="phases"></div>
+
+  <div class="foot">
+    <p>Ticks are saved in this browser only. Your actual files, reports and uploads go through your dashboard on bridge.nios.ac.in; confirm the upload format there. <span class="hi">(टिक केवल इसी ब्राउज़र में सहेजे जाते हैं। आपकी वास्तविक फ़ाइलें, रिपोर्ट और अपलोड bridge.nios.ac.in पर आपके डैशबोर्ड से होते हैं; अपलोड का प्रारूप वहीं पुष्टि करें।)</span></p>
+    <button class="reset" id="reset" type="button"></button>
+  </div>
+</div>
+
+<script>
+(function () {
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  /* English followed by Hindi in brackets */
+  function bi(en, hi) { return esc(en) + (hi ? ' <span class="hi">(' + esc(hi) + ')</span>' : ''); }
+
+  var SUBJ = {
+    L1: ['Language-I (Hindi / Regional)', 'भाषा-I, हिंदी/क्षेत्रीय'],
+    L2: ['Language-II (English)', 'भाषा-II, अंग्रेज़ी'],
+    M:  ['Mathematics', 'गणित'],
+    W:  ['The World Around Us', 'हमारे आस-पास की दुनिया']
+  };
+  var KIND = {
+    lesson: ['Lesson', 'पाठ'],
+    activity: ['Activity', 'गतिविधि'],
+    report: ['Report', 'रिपोर्ट'],
+    journal: ['Journal', 'जर्नल'],
+    portfolio: ['Portfolio', 'पोर्टफोलियो'],
+    admin: ['Setup', 'तैयारी']
+  };
+
+  /* item: kind, title EN, title HI, detail EN, detail HI */
+  function I(k, te, th, se, sh) { return { k: k, te: te, th: th, se: se, sh: sh }; }
+
+  function lessons(d) {
+    var k = d % 2 ? (d + 1) / 2 : d / 2;
+    var codes = d % 2 ? ['L1', 'M'] : ['L2', 'W'];
+    return codes.map(function (c) {
+      return I('lesson',
+        SUBJ[c][0] + ' lesson ' + k + ' of 10',
+        SUBJ[c][1] + ': 10 में से पाठ ' + k,
+        'Write the plan in its own file, then teach the class.',
+        'योजना अलग फ़ाइल में लिखें, फिर कक्षा में पढ़ाएँ।');
+    });
+  }
+  function journal(d) {
+    return I('journal',
+      'Journal entry for Day ' + d, 'दिन ' + d + ' की जर्नल प्रविष्टि',
+      'What was new, why it differed or matched what you expected, and how it changes your practice.',
+      'क्या नया था, अपेक्षा से अलग या समान क्यों रहा, और यह आपके शिक्षण को कैसे बदलेगा।');
+  }
+
+  var extras = {
+    1: { title: ['Settle in', 'शुरुआत'],
+      pre: [
+        I('admin', 'Meet your supervisor', 'अपने पर्यवेक्षक से मिलें',
+          'Confirm who monitors you, DIET or the nominated Principal, and how attendance and sign-off are recorded.',
+          'पुष्टि करें कि आपकी निगरानी कौन करेगा (डायट या नामित प्रधानाचार्य) और उपस्थिति तथा हस्ताक्षर कैसे दर्ज होंगे।'),
+        I('admin', 'Get your timetable, textbooks and class allotment', 'समय-सारणी, पाठ्यपुस्तकें और कक्षा आवंटन लें',
+          'Classes I to V; note which classes you will teach each subject in.',
+          'कक्षा I से V; प्रत्येक विषय किन कक्षाओं में पढ़ाएँगे, यह नोट करें।'),
+        I('admin', 'Set up your files', 'अपनी फ़ाइलें तैयार करें',
+          'Four lesson-plan files, one per subject, a journal notebook and a portfolio folder.',
+          'चार पाठ-योजना फ़ाइलें, प्रति विषय एक, एक जर्नल नोटबुक और एक पोर्टफोलियो फ़ोल्डर।'),
+        I('admin', 'Confirm your 5 activity tasks', 'अपने 5 गतिविधि कार्य तय करें',
+          'Choose from the 8 listed in the guide.',
+          'गाइड में दिए 8 कार्यों में से चुनें।')
+      ] },
+    2: { title: ['Music begins', 'संगीत की शुरुआत'], post: [
+      I('activity', 'Music: pick 10 poems or rhymes that fit your textbook lessons', 'संगीत: पाठ्यपुस्तक के पाठों से मेल खाती 10 कविताएँ या बाल-गीत चुनें',
+        'Use 2 of them today.', 'आज इनमें से 2 का उपयोग करें।') ] },
+    3: { title: ['Music and play design', 'संगीत और खेल की रूपरेखा'], post: [
+      I('activity', 'Music: use 3 more rhymes', 'संगीत: 3 और बाल-गीत इस्तेमाल करें',
+        '5 of 10 done.', '10 में से 5 पूरे।'),
+      I('activity', 'Play: design two play-based activities', 'खेल: दो खेल-आधारित गतिविधियाँ तैयार करें',
+        'Aim at cooperation, sharing and communication.', 'सहयोग, साझा करने और संवाद पर ध्यान दें।') ] },
+    4: { title: ['First play activity', 'पहली खेल गतिविधि'], post: [
+      I('activity', 'Play: conduct activity 1', 'खेल: गतिविधि 1 कराएँ',
+        'Note how shy children and Divyang children took part.', 'ध्यान दें कि संकोची और दिव्यांग बच्चों ने कैसे भाग लिया।'),
+      I('admin', 'Keep two student work samples', 'विद्यार्थियों के दो कार्य-नमूने रखें',
+        'Photos and notebook pages for the portfolio later.', 'बाद में पोर्टफोलियो के लिए फ़ोटो और कॉपी के पन्ने।') ] },
+    5: { title: ['Music continues', 'संगीत जारी'], post: [
+      I('activity', 'Music: use 3 more rhymes', 'संगीत: 3 और बाल-गीत इस्तेमाल करें',
+        '8 of 10 done.', '10 में से 8 पूरे।') ] },
+    6: { title: ['Music report', 'संगीत रिपोर्ट'], post: [
+      I('activity', 'Music: use the last 2 rhymes', 'संगीत: अंतिम 2 बाल-गीत इस्तेमाल करें',
+        '10 of 10 done.', '10 में से 10 पूरे।'),
+      I('report', 'Music report', 'संगीत रिपोर्ट',
+        'Reflect on bringing music into a subject and what the children did.', 'किसी विषय में संगीत लाने और बच्चों की प्रतिक्रिया पर विचार लिखें।') ] },
+    7: { title: ['Fitness tests', 'फ़िटनेस परीक्षण'], post: [
+      I('activity', 'Fitness: run the tests with a group', 'फ़िटनेस: समूह के साथ परीक्षण कराएँ',
+        'Short run, distance run, sit-ups, push-ups, vertical and standing broad jump. Record results.', 'छोटी दौड़, लंबी दौड़, सिट-अप, पुश-अप, ऊर्ध्वाधर कूद और खड़े होकर लंबी कूद। परिणाम दर्ज करें।') ] },
+    8: { title: ['Fitness report, second play', 'फ़िटनेस रिपोर्ट, दूसरी खेल गतिविधि'], post: [
+      I('report', 'Fitness report', 'फ़िटनेस रिपोर्ट',
+        'State the objectives and benefits of each test.', 'प्रत्येक परीक्षण के उद्देश्य और लाभ लिखें।'),
+      I('activity', 'Play: conduct activity 2', 'खेल: गतिविधि 2 कराएँ',
+        'Collect the children’s feedback as you go.', 'साथ-साथ बच्चों की प्रतिक्रिया इकट्ठा करें।') ] },
+    9: { title: ['Play report', 'खेल रिपोर्ट'], post: [
+      I('report', 'Play report', 'खेल रिपोर्ट',
+        'Children’s feedback, how you included every child, and how you judged whether the play helped learning.', 'बच्चों की प्रतिक्रिया, हर बच्चे को कैसे शामिल किया, और खेल से सीखने में मदद मिली या नहीं, इसका आकलन कैसे किया।') ] },
+    10: { title: ['Midpoint check', 'मध्य बिंदु जाँच'], pre: [
+      I('admin', 'Check progress', 'प्रगति जाँचें',
+        'Ten days done: 20 lesson plans filed, 10 journal entries written, attendance on track for 80%.', 'दस दिन पूरे: 20 पाठ-योजनाएँ फ़ाइल में, 10 जर्नल प्रविष्टियाँ लिखी गईं, 80% उपस्थिति की राह पर।') ],
+      post: [
+      I('activity', 'Visual arts: collect 5 of your own art samples', 'दृश्य कला: अपनी बनाई 5 कलाकृतियाँ इकट्ठा करें',
+        'Drawings, charts or posters tied to one subject.', 'किसी एक विषय से जुड़े चित्र, चार्ट या पोस्टर।') ] },
+    11: { title: ['Visual arts in class', 'कक्षा में दृश्य कला'], post: [
+      I('activity', 'Visual arts: use the 5 samples in one subject', 'दृश्य कला: 5 नमूनों का एक विषय में उपयोग करें',
+        'Note how the children responded.', 'बच्चों की प्रतिक्रिया नोट करें।') ] },
+    12: { title: ['Art report, yoga plan', 'कला रिपोर्ट, योग योजना'], post: [
+      I('report', 'Visual arts report', 'दृश्य कला रिपोर्ट',
+        'Reflect on how art worked inside the subject.', 'विषय के भीतर कला कैसे काम आई, इस पर विचार लिखें।'),
+      I('activity', 'Yoga: plan three short sessions', 'योग: तीन छोटे सत्र तय करें',
+        'Asanas, pranayam, Surya Namaskar and meditation, pitched for primary children.', 'आसन, प्राणायाम, सूर्य नमस्कार और ध्यान, प्राथमिक बच्चों के अनुकूल।') ] },
+    13: { title: ['Yoga sessions', 'योग सत्र'], post: [
+      I('activity', 'Yoga: session 1, asanas', 'योग: सत्र 1, आसन',
+        'Keep brief notes on what children found easy or hard.', 'बच्चों को क्या आसान या कठिन लगा, इसके संक्षिप्त नोट रखें।') ] },
+    14: { title: ['Yoga sessions', 'योग सत्र'], post: [
+      I('activity', 'Yoga: session 2, pranayam and Surya Namaskar', 'योग: सत्र 2, प्राणायाम और सूर्य नमस्कार',
+        'Add to your notes.', 'अपने नोट में जोड़ें।') ] },
+    15: { title: ['Yoga report', 'योग रिपोर्ट'], post: [
+      I('activity', 'Yoga: session 3, meditation', 'योग: सत्र 3, ध्यान',
+        'Short and simple for this age.', 'इस उम्र के लिए छोटा और सरल।'),
+      I('report', 'Yoga report', 'योग रिपोर्ट',
+        'An experiential report covering asanas, pranayam, Surya Namaskar and meditation.', 'आसन, प्राणायाम, सूर्य नमस्कार और ध्यान पर अनुभव-आधारित रिपोर्ट।') ] },
+    16: { title: ['Build the portfolio', 'पोर्टफोलियो बनाएँ'], post: [
+      I('portfolio', 'Best practice 1', 'सर्वोत्तम प्रथा 1',
+        'One good practice with a work sample, photo and a line on why it worked.', 'एक अच्छी प्रथा, कार्य-नमूने, फ़ोटो और यह क्यों सफल रही, इस पर एक पंक्ति के साथ।'),
+      I('portfolio', 'Best practice 2', 'सर्वोत्तम प्रथा 2',
+        'Same format.', 'वही प्रारूप।') ] },
+    17: { title: ['Build the portfolio', 'पोर्टफोलियो बनाएँ'], post: [
+      I('portfolio', 'Best practice 3', 'सर्वोत्तम प्रथा 3',
+        'Same format.', 'वही प्रारूप।'),
+      I('portfolio', 'Best practice 4', 'सर्वोत्तम प्रथा 4',
+        'Same format.', 'वही प्रारूप।') ] },
+    18: { title: ['Finish the portfolio', 'पोर्टफोलियो पूरा करें'], post: [
+      I('portfolio', 'Best practice 5', 'सर्वोत्तम प्रथा 5',
+        'Then add your teacher profile and a short write-up of your professional journey.', 'फिर अपना शिक्षक परिचय और अपनी व्यावसायिक यात्रा का संक्षिप्त विवरण जोड़ें।') ] },
+    19: { title: ['Tidy and proofread', 'व्यवस्थित करें और जाँचें'], post: [
+      I('admin', 'Proofread plans and reports', 'योजनाओं और रिपोर्टों की जाँच करें',
+        'Make sure all 40 lesson plans are filed, each activity report is complete and the portfolio reads clearly.', 'सुनिश्चित करें कि सभी 40 पाठ-योजनाएँ फ़ाइल में हों, हर गतिविधि रिपोर्ट पूरी हो और पोर्टफोलियो स्पष्ट पढ़ा जा सके।') ] },
+    20: { title: ['Wrap up', 'समापन'], post: [
+      I('journal', 'Overall journal summary report', 'जर्नल का समग्र सारांश रिपोर्ट',
+        'Worth 5 marks. Look across all 20 entries and describe how your teaching changed.', '5 अंक। सभी 20 प्रविष्टियों को देखकर बताएँ कि आपका शिक्षण कैसे बदला।'),
+      I('admin', 'Final check and sign-off', 'अंतिम जाँच और हस्ताक्षर',
+        '40 plans, 5 reports, 5 best practices, 20 journal entries. Collect supervisor comments and upload as the dashboard asks.', '40 योजनाएँ, 5 रिपोर्ट, 5 सर्वोत्तम प्रथाएँ, 20 जर्नल प्रविष्टियाँ। पर्यवेक्षक की टिप्पणियाँ लें और डैशबोर्ड के निर्देशानुसार अपलोड करें।') ] }
+  };
+
+  var PHASES = [
+    { en: 'Settle in and start activities', hi: 'व्यवस्थित हों और गतिविधियाँ शुरू करें',
+      ne: 'Routine first, then music and play.', nh: 'पहले दिनचर्या, फिर संगीत और खेल।', from: 1, to: 5 },
+    { en: 'Midpoint', hi: 'मध्य बिंदु',
+      ne: 'Fitness, play reports and the halfway check.', nh: 'फ़िटनेस, खेल रिपोर्ट और आधे समय की जाँच।', from: 6, to: 10 },
+    { en: 'Arts and yoga', hi: 'कला और योग',
+      ne: 'Finish the last two activity tasks.', nh: 'अंतिम दो गतिविधि कार्य पूरे करें।', from: 11, to: 15 },
+    { en: 'Portfolio and wrap-up', hi: 'पोर्टफोलियो और समापन',
+      ne: 'Lessons continue while you assemble your evidence.', nh: 'प्रमाण जुटाते समय पाठ जारी रहेंगे।', from: 16, to: 20 }
+  ];
+
+  var days = [], all = [];
+  for (var d = 1; d <= 20; d++) {
+    var e = extras[d] || {};
+    var items = [].concat(e.pre || [], lessons(d), e.post || [], [journal(d)]);
+    items.forEach(function (it, i) { it.id = 'd' + d + '-' + i; all.push(it); });
+    days.push({ n: d, title: e.title || ['', ''], items: items });
+  }
+
+  var KEY = 'se-planner-v1';
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (err) { state = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (err) {} }
+
+  var phasesEl = document.getElementById('phases');
+  var html = '';
+  PHASES.forEach(function (p) {
+    html += '<section class="phase"><div class="phase-head"><h2>' + bi(p.en, p.hi) + '</h2><span class="rng">Days ' + p.from + '–' + p.to + ' (दिन ' + p.from + '–' + p.to + ')</span><p>' + bi(p.ne, p.nh) + '</p></div><div class="days">';
+    days.filter(function (x) { return x.n >= p.from && x.n <= p.to; }).forEach(function (day) {
+      html += '<article class="day" data-day="' + day.n + '"><div class="day-h"><h3>' + bi('Day ' + day.n, 'दिन ' + day.n) + '</h3><span class="cnt"></span><span class="title">' + bi(day.title[0], day.title[1]) + '</span></div><ul class="items">';
+      day.items.forEach(function (it) {
+        html += '<li><label class="item" data-id="' + it.id + '"><input type="checkbox" id="cb-' + it.id + '"><span class="tx"><span class="main"><span class="chip ' + it.k + '">' + bi(KIND[it.k][0], KIND[it.k][1]) + '</span><span class="t">' + bi(it.te, it.th) + '</span></span><span class="sub">' + bi(it.se, it.sh) + '</span></span></label></li>';
+      });
+      html += '</ul></article>';
+    });
+    html += '</div></section>';
+  });
+  phasesEl.innerHTML = html;
+
+  var METERS = [
+    { k: 'lesson', en: 'Lessons taught', hi: 'पढ़ाए गए पाठ', se: '10 each in four subjects', sh: 'चार विषयों में प्रत्येक के 10' },
+    { k: 'report', en: 'Activity reports', hi: 'गतिविधि रिपोर्ट', se: '5 tasks, 5 marks each', sh: '5 कार्य, प्रत्येक 5 अंक' },
+    { k: 'journal', en: 'Journal', hi: 'जर्नल', se: '20 entries and a summary', sh: '20 प्रविष्टियाँ और सारांश' },
+    { k: 'portfolio', en: 'Portfolio', hi: 'पोर्टफोलियो', se: '5 best practices', sh: '5 सर्वोत्तम प्रथाएँ' }
+  ];
+  var metersEl = document.getElementById('meters');
+  metersEl.innerHTML = METERS.map(function (m) {
+    if (m.k === 'lesson') {
+      return '<div class="meter" data-k="' + m.k + '"><div class="m-top"><span class="m-name">' + bi(m.en, m.hi) + '</span><span class="m-num"></span></div><div class="bar"><i></i></div><span class="m-sub">' + bi(m.se, m.sh) + '</span><div class="lesson-actions"><a class="lesson-link" href="https://raw.githubusercontent.com/ExamQuiz/Bridge-Course/main/documents/hindi/SchoolExperience/English_Lesson_Plans_Class3.docx" target="_blank" rel="noopener">English lesson plans</a><a class="lesson-link" href="https://raw.githubusercontent.com/ExamQuiz/Bridge-Course/main/documents/hindi/SchoolExperience/Hindi_Lesson_Plans_Class3.docx" target="_blank" rel="noopener">Hindi lesson plans</a><button class="lesson-link placeholder" type="button" disabled>World Around Us lesson plans (coming soon)</button><button class="lesson-link placeholder" type="button" disabled>Mathematics lesson plans (coming soon)</button></div></div>';
+    }
+    return '<div class="meter" data-k="' + m.k + '"><div class="m-top"><span class="m-name">' + bi(m.en, m.hi) + '</span><span class="m-num"></span></div><div class="bar"><i></i></div><span class="m-sub">' + bi(m.se, m.sh) + '</span></div>';
+  }).join('');
+
+  function refresh() {
+    var doneAll = 0;
+    all.forEach(function (it) { if (state[it.id]) doneAll++; });
+    document.getElementById('overallLabel').innerHTML = bi(doneAll + ' of ' + all.length + ' done', all.length + ' में से ' + doneAll + ' पूर्ण');
+    document.getElementById('overallBar').style.width = (all.length ? doneAll / all.length * 100 : 0) + '%';
+
+    METERS.forEach(function (m) {
+      var tot = 0, dn = 0;
+      all.forEach(function (it) { if (it.k === m.k) { tot++; if (state[it.id]) dn++; } });
+      var el = metersEl.querySelector('[data-k="' + m.k + '"]');
+      el.querySelector('.m-num').textContent = dn + ' / ' + tot;
+      el.querySelector('.bar > i').style.width = (tot ? dn / tot * 100 : 0) + '%';
+    });
+
+    days.forEach(function (day) {
+      var dn = 0;
+      day.items.forEach(function (it) { if (state[it.id]) dn++; });
+      var card = phasesEl.querySelector('[data-day="' + day.n + '"]');
+      card.querySelector('.cnt').textContent = dn + '/' + day.items.length;
+      card.classList.toggle('done', dn === day.items.length);
+    });
+
+    all.forEach(function (it) {
+      var lab = phasesEl.querySelector('[data-id="' + it.id + '"]');
+      lab.querySelector('input').checked = !!state[it.id];
+      lab.classList.toggle('on', !!state[it.id]);
+    });
+  }
+
+  phasesEl.addEventListener('change', function (ev) {
+    var lab = ev.target.closest('[data-id]');
+    if (!lab) return;
+    var id = lab.getAttribute('data-id');
+    if (ev.target.checked) state[id] = 1; else delete state[id];
+    save();
+    refresh();
+  });
+
+  var resetBtn = document.getElementById('reset');
+  var armTimer = null;
+  function disarm() {
+    clearTimeout(armTimer);
+    resetBtn.classList.remove('armed');
+    resetBtn.innerHTML = bi('Clear all ticks', 'सभी टिक हटाएँ');
+  }
+  resetBtn.addEventListener('click', function () {
+    if (!resetBtn.classList.contains('armed')) {
+      resetBtn.classList.add('armed');
+      resetBtn.innerHTML = bi('Click again to clear everything', 'सब हटाने के लिए फिर क्लिक करें');
+      armTimer = setTimeout(disarm, 4000);
+      return;
+    }
+    state = {};
+    save();
+    refresh();
+    disarm();
+  });
+
+  disarm();
+  refresh();
+})();
+</script>
+
+</body></html>
