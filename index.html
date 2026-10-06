@@ -262,6 +262,7 @@
     function questionRecords(data) { const collection=firstValue(data,["questions","mcqs","items","quiz","data"],null); if (Array.isArray(collection)) return collection; if (collection&&typeof collection==="object") return Object.values(collection).filter(item=>item&&typeof item==="object"); if (data.question||data.questionText||data.text||data.prompt) return [data]; return Object.values(data).filter(item=>item&&typeof item==="object"); }
     function normalizeQuestions(data) { return questionRecords(data).map(item=>{ const namedOptions=firstValue(item,["options","choices","answers"],null); const separateOptions=Object.entries(item).filter(([key])=>/^(option|choice|answer)[ _-]?[a-z0-9]+$/i.test(key)).sort(([first],[second])=>first.localeCompare(second,undefined,{numeric:true})).map(([,value])=>value); const options=normalizeOptions(namedOptions||separateOptions); const correctIndex=firstValue(item,["correctIndex","correct_index"],null); return { text:firstValue(item,["question","questionText","text","prompt"],"Untitled question"), options, correct:correctIndex===null?firstValue(item,["correctAnswer","correct_answer","answer","correct","correction"],""):Number(correctIndex), explanation:firstValue(item,["explanation","solution","reason"],"No explanation provided.") }; }).filter(item=>item.options.length>0); }
     function answerMatches(answer,selected,options) { if (String(answer).trim()===String(selected).trim()) return true; const index=Number(answer); return Number.isInteger(index)&&options[index]!==undefined&&options[index]===selected; }
+    function trackAnalyticsEvent(name) { if (typeof window.eqTrackEvent==="function") window.eqTrackEvent(name); }
     function escapeHtml(value) { return String(value).replace(/[&<>'"]/g,character=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[character])); }
     function readAttempts() { try { const stored=JSON.parse(localStorage.getItem(attemptStorageKey)||"[]"); return Array.isArray(stored)?stored:[]; } catch { return []; } }
     function shuffleQuestions(questions) { const shuffled=[...questions]; for (let index=shuffled.length-1;index>0;index-=1) { const swapIndex=Math.floor(Math.random()*(index+1)); [shuffled[index],shuffled[swapIndex]]=[shuffled[swapIndex],shuffled[index]]; } return shuffled; }
@@ -276,24 +277,54 @@
     async function checkForUpdates() { if (updateCheckInProgress) return; updateCheckInProgress=true; try { const checkUrl=new URL(window.location.href); checkUrl.searchParams.set("_update_check",String(Date.now())); const response=await fetch(checkUrl.href,{cache:"no-store"}); if (!response.ok) return; const source=await response.text(); if (!latestPageSource) { latestPageSource=source; if (applicationSignature(source)!==loadedApplicationSignature()) updateAvailable=true; } else if (source!==latestPageSource) { latestPageSource=source; updateAvailable=true; } if (updateAvailable) reloadForUpdate(); } catch {} finally { updateCheckInProgress=false; } }
     function showOnly(view) { mediumView.hidden=view!==mediumView; subjectsView.hidden=view!==subjectsView; chaptersView.hidden=view!==chaptersView; progressView.hidden=view!==progressView; quiz.hidden=view!==quiz; document.body.classList.toggle("is-inner-view",view!==mediumView); if (updateAvailable&&view&&view!==quiz) window.setTimeout(reloadForUpdate,0); }
     function renderMediums() { mediumsElement.innerHTML=mediumsCatalog.map((medium,index)=>`<button class="subject-card" data-slug="${medium.slug}" type="button"><span class="subject-index">0${index+1}</span><h3>${medium.name}</h3><p>Practice material in ${medium.name}</p></button>`).join(""); mediumsElement.querySelectorAll(".subject-card").forEach(card=>card.addEventListener("click",()=>selectMedium(mediumsCatalog.find(medium=>medium.slug===card.dataset.slug)))); }
-    function renderSubjects() { const mediumSlug=selectedMedium?.slug||"hindi"; subjectsElement.innerHTML=subjectsCatalog.map((subject,index)=>{ const isSchoolExperience=subject.slug==="school_experience", isHindiMedium=mediumSlug==="hindi", assignmentUrl=isHindiMedium?hindiAssignmentLinks[subject.slug]:"", schoolExperienceUrl=`subj7checklist.html?medium=${encodeURIComponent(mediumSlug)}`, assignment=isSchoolExperience?`<a class="assignment-link" href="${schoolExperienceUrl}">Click to get more details</a>`:selectedMedium&&!isHindiMedium?"":assignmentUrl?`<a class="assignment-link" href="${escapeHtml(assignmentUrl)}" target="_blank" rel="noopener">Assignment</a>`:`<button class="assignment-placeholder" type="button" disabled>Assignment will be added soon</button>`; return `<article class="subject-card subject-entry"><span class="subject-index">0${index+1}</span><button class="subject-select" data-slug="${subject.slug}" type="button"><h3>${escapeHtml(subject.name)}</h3>${isSchoolExperience?"":`<p>${subject.chapters} अध्याय · ~100 सवाल, हर क्विज़ सेट में 30 सवाल</p>`}</button>${assignment}</article>`; }).join(""); subjectsElement.querySelectorAll(".subject-select").forEach(button=>{ button.addEventListener("click",()=>{ const subject=subjectsCatalog.find(item=>item.slug===button.dataset.slug); if (!subject) return; if (subject.slug==="school_experience") { window.location.assign(`subj7checklist.html?medium=${encodeURIComponent(mediumSlug)}`); return; } selectSubject(subject); }); }); }
-    function selectMedium(medium) { selectedMedium=medium; const mediumLabel=medium.slug==="hindi"?"हिंदी":"अंग्रेजी"; document.querySelector("#medium-indicator").textContent=`आपने चुना है : ${mediumLabel} माध्यम`; document.querySelector("#subject-copy").textContent=`${medium.name} medium · seven subjects available`; renderSubjects(); showOnly(subjectsView); }
+    function renderSubjects() {
+      const mediumSlug=selectedMedium?.slug||"hindi";
+      subjectsElement.innerHTML=subjectsCatalog.map((subject,index)=>{
+        const isSchoolExperience=subject.slug==="school_experience", isHindiMedium=mediumSlug==="hindi", assignmentUrl=isHindiMedium?hindiAssignmentLinks[subject.slug]:"", schoolExperienceUrl=`subj7checklist.html?medium=${encodeURIComponent(mediumSlug)}`, assignment=isSchoolExperience?`<a class="assignment-link" href="${schoolExperienceUrl}">Click to get more details</a>`:selectedMedium&&!isHindiMedium?"":assignmentUrl?`<a class="assignment-link" href="${escapeHtml(assignmentUrl)}" target="_blank" rel="noopener">Assignment</a>`:`<button class="assignment-placeholder" type="button" disabled>Assignment will be added soon</button>`;
+        return `<article class="subject-card subject-entry"><span class="subject-index">0${index+1}</span><button class="subject-select" data-slug="${subject.slug}" type="button"><h3>${escapeHtml(subject.name)}</h3>${isSchoolExperience?"":`<p>${subject.chapters} अध्याय · ~100 सवाल, हर क्विज़ सेट में 30 सवाल</p>`}</button>${assignment}</article>`;
+      }).join("");
+      subjectsElement.querySelectorAll(".subject-select").forEach(button=>{
+        button.addEventListener("click",()=>{
+          const subject=subjectsCatalog.find(item=>item.slug===button.dataset.slug);
+          if (!subject) return;
+          trackAnalyticsEvent(`funnel/subject/${mediumSlug}/${subject.slug}`);
+          if (subject.slug==="school_experience") {
+            window.location.assign(`subj7checklist.html?medium=${encodeURIComponent(mediumSlug)}`);
+            return;
+          }
+          selectSubject(subject);
+        });
+      });
+    }
+    function selectMedium(medium) { selectedMedium=medium; trackAnalyticsEvent(`funnel/medium/${medium.slug}`); const mediumLabel=medium.slug==="hindi"?"हिंदी":"अंग्रेजी"; document.querySelector("#medium-indicator").textContent=`आपने चुना है : ${mediumLabel} माध्यम`; document.querySelector("#subject-copy").textContent=`${medium.name} medium · seven subjects available`; renderSubjects(); showOnly(subjectsView); }
     function contentMediumSlug(subject) { return subject.sharedMediumSlug||selectedMedium.slug; }
     function documentUrl(chapterNumber) { const folder=selectedSubject.documentSlug||selectedSubject.slug; return `${documentRoot}/${contentMediumSlug(selectedSubject)}/${folder}/chapter-${String(chapterNumber).padStart(2,"0")}.pdf`; }
     function chapterNameFor(subject,chapterNumber) { const chapterNames=subject.sharedMediumSlug?subject.chapterNames:(selectedMedium.slug==="english"?subject.englishChapterNames:subject.chapterNames); return chapterNames?.[chapterNumber-1]||`Chapter ${chapterNumber} name`; }
     function podcastUrl(subject,chapterNumber) { return podcastLinks[`${contentMediumSlug(subject)}|${subject.slug}|${chapterNumber}`]||""; }
-    function selectSubject(subject) { if (subject.slug==="school_experience") { window.location.assign(`subj7checklist.html?medium=${encodeURIComponent(selectedMedium?.slug||"hindi")}`); return; } selectedSubject=subject; const medium=selectedMedium; document.querySelector("#chapter-title").textContent=subject.name; const chapterNames=subject.sharedMediumSlug?subject.chapterNames:(medium.slug==="english"?subject.englishChapterNames:subject.chapterNames); chaptersElement.innerHTML=Array.from({length:subject.chapters},(_,index)=>{ const chapterNumber=index+1, chapterName=chapterNames?.[index]||`Chapter ${chapterNumber} name`, url=documentUrl(chapterNumber), linkKey=`${contentMediumSlug(subject)}|${subject.slug}|${chapterNumber}`, audioUrl=podcastLinks[linkKey]||"", textAudioUrl=textAudioLinks[linkKey]||"", translatedAudio=(linkKey.startsWith("hindi|childdev&educational_psychology|")&&chapterNumber>=4&&chapterNumber<=9)||(linkKey.startsWith("hindi|curriculum_pedagogy_assessment|")&&chapterNumber>=2&&chapterNumber<=9), textAudioLabel=translatedAudio?"Audio Lession: NIOS से जारी नहीं किया गया, अंग्रेज़ी पाठ्यक्रम से अनुवादित":"Play Audio Lesson", translatedAudioClass=translatedAudio?" translated-audio-link":"", chapterNameClass=translatedAudio?"translated-chapter-name":"", podcastLink=audioUrl?`<a class="document-link podcast-link" href="${escapeHtml(audioUrl)}" target="_blank" rel="noopener">Listen Podcast</a>`:"", textAudioLink=textAudioUrl?`<a class="document-link text-audio-link${translatedAudioClass}" href="${escapeHtml(textAudioUrl)}" target="_blank" rel="noopener" aria-label="${textAudioLabel}">${textAudioLabel}</a>`:`<button class="document-link podcast-link text-audio-placeholder" type="button" disabled title="Add this chapter URL to textAudioLinks">Audio Lession: NIOS से जारी नहीं किया गया, अंग्रेज़ी पाठ्यक्रम से अनुवादित</button>`, documentLink=translatedAudio?`<button class="document-link syllabus-unavailable" type="button">Read Chapter</button>`:`<a class="document-link" href="${url}" target="_blank" rel="noopener">Read Chapter</a>`; return `<article class="chapter-card"><button class="chapter-main" data-number="${chapterNumber}" type="button"><strong class="${chapterNameClass}">${escapeHtml(chapterName)}</strong><small>Open Quiz</small></button><div class="chapter-actions">${podcastLink}${textAudioLink}${documentLink}<span class="chapter-arrow" aria-hidden="true">→</span></div></article>`; }).join(""); chaptersElement.querySelectorAll(".chapter-main").forEach(card=>card.addEventListener("click",()=>loadQuiz(Number(card.dataset.number)))); chaptersElement.querySelectorAll(".syllabus-unavailable").forEach(button=>button.addEventListener("click",()=>window.alert("Syllabus NIOS से जारी नहीं किया गया."))); showOnly(chaptersView); }
+    function selectSubject(subject) { if (subject.slug==="school_experience") { window.location.assign(`subj7checklist.html?medium=${encodeURIComponent(selectedMedium?.slug||"hindi")}`); return; } selectedSubject=subject; const medium=selectedMedium; document.querySelector("#chapter-title").textContent=subject.name; const chapterNames=subject.sharedMediumSlug?subject.chapterNames:(medium.slug==="english"?subject.englishChapterNames:subject.chapterNames); chaptersElement.innerHTML=Array.from({length:subject.chapters},(_,index)=>{ const chapterNumber=index+1, chapterName=chapterNames?.[index]||`Chapter ${chapterNumber} name`, url=documentUrl(chapterNumber), linkKey=`${contentMediumSlug(subject)}|${subject.slug}|${chapterNumber}`, audioUrl=podcastLinks[linkKey]||"", textAudioUrl=textAudioLinks[linkKey]||"", translatedAudio=(linkKey.startsWith("hindi|childdev&educational_psychology|")&&chapterNumber>=4&&chapterNumber<=9)||(linkKey.startsWith("hindi|curriculum_pedagogy_assessment|")&&chapterNumber>=2&&chapterNumber<=9), textAudioLabel=translatedAudio?"Audio Lession: NIOS से जारी नहीं किया गया, अंग्रेज़ी पाठ्यक्रम से अनुवादित":"Play Audio Lesson", translatedAudioClass=translatedAudio?" translated-audio-link":"", chapterNameClass=translatedAudio?"translated-chapter-name":"", podcastLink=audioUrl?`<a class="document-link podcast-link" href="${escapeHtml(audioUrl)}" target="_blank" rel="noopener">Listen Podcast</a>`:"", textAudioLink=textAudioUrl?`<a class="document-link text-audio-link${translatedAudioClass}" href="${escapeHtml(textAudioUrl)}" target="_blank" rel="noopener" aria-label="${textAudioLabel}">${textAudioLabel}</a>`:`<button class="document-link podcast-link text-audio-placeholder" type="button" disabled title="Add this chapter URL to textAudioLinks">Audio Lession: NIOS से जारी नहीं किया गया, अंग्रेज़ी पाठ्यक्रम से अनुवादित</button>`, documentLink=translatedAudio?`<button class="document-link syllabus-unavailable" type="button">Read Chapter</button>`:`<a class="document-link" href="${url}" target="_blank" rel="noopener">Read Chapter</a>`; return `<article class="chapter-card" data-medium="${contentMediumSlug(subject)}" data-subject="${subject.slug}" data-chapter="${chapterNumber}"><button class="chapter-main" data-number="${chapterNumber}" type="button"><strong class="${chapterNameClass}">${escapeHtml(chapterName)}</strong><small>Open Quiz</small></button><div class="chapter-actions">${podcastLink}${textAudioLink}${documentLink}<span class="chapter-arrow" aria-hidden="true">→</span></div></article>`; }).join(""); chaptersElement.querySelectorAll(".chapter-main").forEach(card=>card.addEventListener("click",()=>{ const chapterNumber=Number(card.dataset.number); trackAnalyticsEvent(`funnel/chapter/${contentMediumSlug(subject)}/${subject.slug}/chapter-${chapterNumber}`); loadQuiz(chapterNumber); })); chaptersElement.querySelectorAll(".syllabus-unavailable").forEach(button=>button.addEventListener("click",()=>window.alert("Syllabus NIOS से जारी नहीं किया गया."))); showOnly(chaptersView); }
     document.addEventListener("click",event=>{ const audioLink=event.target.closest(".text-audio-link"); if (!audioLink) return; event.preventDefault(); window.location.assign(audioLink.href); });
     function stopSpeaking() { speechActive=false; readQuestion.textContent="🔊 Read aloud"; if ("speechSynthesis" in window) window.speechSynthesis.cancel(); }
     function speakQuestion(question) { if (!("speechSynthesis" in window)) return; stopSpeaking(); const text=`${question.text}. Options: ${question.options.map((option,index)=>`${String.fromCharCode(65+index)}. ${option}`).join(". ")}`; const utterance=new SpeechSynthesisUtterance(text); utterance.onend=()=>{ speechActive=false; readQuestion.textContent="🔊 Read aloud"; }; utterance.onerror=()=>window.setTimeout(()=>{ if (speechActive) stopSpeaking(); },500); speechActive=true; readQuestion.textContent="⏹ Stop reading"; window.speechSynthesis.speak(utterance); }
     function speakAnswerFeedback(question,selectedIndex) { if (!("speechSynthesis" in window)) return; const correct=answerMatches(question.correct,question.options[selectedIndex],question.options), acknowledgement=correct?"हाँ, यह सही उत्तर है।":"नहीं, यह सही उत्तर नहीं है।", explanation=question.explanation||"इस प्रश्न की कोई व्याख्या उपलब्ध नहीं है।"; const utterance=new SpeechSynthesisUtterance(`${acknowledgement} ${explanation}`); utterance.lang="hi-IN"; window.speechSynthesis.speak(utterance); }
     function showFeedback(card,question,selectedIndex) { const selected=question.options[selectedIndex], correct=answerMatches(question.correct,selected,question.options), correctOption=question.options.findIndex(option=>answerMatches(question.correct,option,question.options)), correctText=correctOption>=0?question.options[correctOption]:String(question.correct), feedback=card.querySelector(".feedback"), options=card.querySelectorAll(".option"); options.forEach(option=>option.classList.remove("is-correct","is-wrong")); options[selectedIndex].classList.add(correct?"is-correct":"is-wrong"); if (correctOption>=0) options[correctOption].classList.add("is-correct"); feedback.innerHTML=`<strong>${correct?"हाँ, यह सही है।":"यह गलत है।"}</strong>सही उत्तर: ${escapeHtml(correctText)}<br>${escapeHtml(question.explanation)}`; feedback.hidden=false; }
     function renderActiveQuestion(shouldSpeak=false) { const question=activeQuestions[activeQuestionIndex], chapterName=chapterNameFor(selectedSubject,activeChapterNumber); progress.textContent=`${selectedMedium.name} · ${selectedSubject.name} · ${chapterName} · Question ${activeQuestionIndex+1} of ${activeQuestions.length}`; questionsElement.innerHTML=`<article class="quiz-card"><div class="question-number">Question ${activeQuestionIndex+1}</div><h2>${escapeHtml(question.text)}</h2><div class="options">${question.options.map((option,optionIndex)=>`<label class="option"><input type="radio" name="question-${activeQuestionIndex}" value="${optionIndex}"> <span>${escapeHtml(option)}</span></label>`).join("")}</div><div class="feedback" hidden></div></article>`; const card=questionsElement.querySelector(".quiz-card"); if (question.selectedIndex!==undefined) { card.querySelector(`input[value="${question.selectedIndex}"]`).checked=true; showFeedback(card,question,question.selectedIndex); } card.querySelectorAll("input").forEach(input=>input.addEventListener("change",()=>{ stopSpeaking(); question.selectedIndex=Number(input.value); saveAttempt(question,question.selectedIndex); showFeedback(card,question,question.selectedIndex); speakAnswerFeedback(question,question.selectedIndex); })); previousQuestion.disabled=activeQuestionIndex===0; nextQuestion.textContent=activeQuestionIndex===activeQuestions.length-1?"Finish":"Next →"; if (shouldSpeak) speakQuestion(question); }
-    function renderQuiz(questions,chapterNumber) { activeQuestions=shuffleQuestions(questions).slice(0,30); activeQuestionIndex=0; activeChapterNumber=chapterNumber; activeAttemptId=`${Date.now()}-${Math.random().toString(36).slice(2)}`; showOnly(quiz); renderActiveQuestion(true); }
+    function renderQuiz(questions,chapterNumber) { activeQuestions=shuffleQuestions(questions).slice(0,30); activeQuestionIndex=0; activeChapterNumber=chapterNumber; activeAttemptId=`${Date.now()}-${Math.random().toString(36).slice(2)}`; trackAnalyticsEvent(`quiz/start/${contentMediumSlug(selectedSubject)}/${selectedSubject.slug}/chapter-${chapterNumber}`); showOnly(quiz); renderActiveQuestion(true); }
+    function finishQuiz() { stopSpeaking(); const answered=activeQuestions.filter(question=>question.selectedIndex!==undefined), context=`${contentMediumSlug(selectedSubject)}/${selectedSubject.slug}/chapter-${activeChapterNumber}`; trackAnalyticsEvent(`quiz/finished/${context}/answered-${answered.length}-of-${activeQuestions.length}`); if (answered.length===activeQuestions.length) { const correct=answered.filter(question=>answerMatches(question.correct,question.options[question.selectedIndex],question.options)).length, score=Math.round(correct/answered.length*100), scoreBand=score<40?"0-39":score<70?"40-69":"70-100"; trackAnalyticsEvent(`quiz/completed/${context}/score-${scoreBand}`); } showOnly(chaptersView); }
+    function exitQuiz() { const answered=activeQuestions.filter(question=>question.selectedIndex!==undefined), context=`${contentMediumSlug(selectedSubject)}/${selectedSubject.slug}/chapter-${activeChapterNumber}`; trackAnalyticsEvent(`quiz/exit/${context}/answered-${answered.length}-of-${activeQuestions.length}`); stopSpeaking(); showOnly(chaptersView); }
     async function loadQuiz(chapterNumber) { loading.hidden=false; error.hidden=true; showOnly(null); try { const quizMediumSlug=contentMediumSlug(selectedSubject), documentIds=[`bridge-course_${quizMediumSlug}_${selectedSubject.slug}_chapter${chapterNumber}`,`${quizMediumSlug}_${selectedSubject.slug}_chapter${chapterNumber}`]; let snapshot; for (const documentId of documentIds) { const candidate=await getDoc(doc(db,collectionName,documentId)); if (candidate.exists()) { snapshot=candidate; break; } } let quizData=snapshot?.data(); if (!quizData) { const subjectDocumentIds=[`bridge-course_${quizMediumSlug}_${selectedSubject.slug}`,`${quizMediumSlug}_${selectedSubject.slug}`]; for (const documentId of subjectDocumentIds) { const candidate=await getDoc(doc(db,collectionName,documentId)); if (!candidate.exists()) continue; const data=candidate.data(), chapterKeys=[`chapter${chapterNumber}`,`Chapter ${chapterNumber}`,`chapter_${chapterNumber}`,String(chapterNumber)]; quizData=firstValue(data,chapterKeys,null); if (!quizData&&data.chapters) quizData=firstValue(data.chapters,chapterKeys,null); if (quizData) break; } } if (!quizData) throw new Error(`No quiz has been added for ${selectedMedium.name}, ${selectedSubject.name}, Chapter ${chapterNumber} yet. Add it as quizzes/${documentIds[0]} or as a chapter${chapterNumber} field inside the subject document.`); const questions=normalizeQuestions(quizData); if(!questions.length) throw new Error("This chapter does not contain any MCQs yet."); renderQuiz(questions,chapterNumber); } catch(loadError) { errorMessage.textContent=loadError.message; error.hidden=false; showOnly(null); } loading.hidden=true; }
     function goHome() { error.hidden=true; document.querySelector("#medium-indicator").textContent="Bridge Course Preparation with Free MCQs and Audio Lessons"; showOnly(mediumView); }
     window.addEventListener("DOMContentLoaded",()=>{ restoreNavigationAfterUpdate(); checkForUpdates(); window.setInterval(checkForUpdates,60000); },{once:true});
-    document.querySelector("#back-to-mediums").onclick=goHome; document.querySelector("#back-to-mediums-from-chapters").onclick=goHome; document.querySelector("#back-to-subjects").onclick=()=>showOnly(subjectsView); document.querySelector("#home-top").onclick=goHome; document.querySelector("#progress-top").onclick=()=>{ stopSpeaking(); renderProgress(); showOnly(progressView); }; document.querySelector("#back-to-chapters").onclick=()=>{ stopSpeaking(); showOnly(chaptersView); }; errorBackToChapters.onclick=()=>{ error.hidden=true; showOnly(chaptersView); }; previousQuestion.onclick=()=>{ if (activeQuestionIndex>0) { activeQuestionIndex-=1; renderActiveQuestion(true); } }; nextQuestion.onclick=()=>{ if (activeQuestionIndex<activeQuestions.length-1) { activeQuestionIndex+=1; renderActiveQuestion(true); } else { stopSpeaking(); showOnly(chaptersView); } }; readQuestion.onclick=()=>{ if (speechActive||window.speechSynthesis?.speaking||window.speechSynthesis?.pending) stopSpeaking(); else speakQuestion(activeQuestions[activeQuestionIndex]); }; renderMediums(); renderSubjects(); renderProgress(); loading.hidden=true; showOnly(mediumView);
+    document.querySelector("#back-to-mediums").onclick=goHome;
+    document.querySelector("#back-to-mediums-from-chapters").onclick=goHome;
+    document.querySelector("#back-to-subjects").onclick=()=>showOnly(subjectsView);
+    document.querySelector("#home-top").onclick=goHome;
+    document.querySelector("#progress-top").onclick=()=>{ trackAnalyticsEvent("navigation/progress-open"); stopSpeaking(); renderProgress(); showOnly(progressView); };
+    document.querySelector("#back-to-chapters").onclick=exitQuiz;
+    errorBackToChapters.onclick=()=>{ error.hidden=true; showOnly(chaptersView); };
+    previousQuestion.onclick=()=>{ if (activeQuestionIndex>0) { activeQuestionIndex-=1; renderActiveQuestion(true); } };
+    nextQuestion.onclick=()=>{ if (activeQuestionIndex<activeQuestions.length-1) { activeQuestionIndex+=1; renderActiveQuestion(true); } else finishQuiz(); };
+    readQuestion.onclick=()=>{ if (speechActive||window.speechSynthesis?.speaking||window.speechSynthesis?.pending) stopSpeaking(); else speakQuestion(activeQuestions[activeQuestionIndex]); };
+    renderMediums(); renderSubjects(); renderProgress(); loading.hidden=true; showOnly(mediumView);
   </script>
  <script>
 window.goatcounter = {
@@ -302,6 +333,32 @@ window.goatcounter = {
     catch (e) { return location.pathname; }
   }
 };
+window.eqAnalyticsQueue = [];
+window.eqAnalyticsFailed = false;
+window.eqTrackEvent = function (name) {
+  try {
+    var counter = window.goatcounter;
+    if (counter && typeof counter.count === 'function') {
+      counter.count({ path: 'event/' + name, title: name, event: true });
+    } else if (!window.eqAnalyticsFailed && window.eqAnalyticsQueue.length < 100) {
+      window.eqAnalyticsQueue.push(name);
+    }
+  } catch (error) {
+    console.warn('GoatCounter could not record an event.', error);
+  }
+};
+window.addEventListener('load', function () {
+  var counter = window.goatcounter;
+  if (!counter || typeof counter.count !== 'function') {
+    window.eqAnalyticsFailed = true;
+    window.eqAnalyticsQueue.length = 0;
+    console.warn('GoatCounter did not load; queued analytics events were discarded.');
+    return;
+  }
+  window.eqAnalyticsQueue.splice(0).forEach(function (name) {
+    window.eqTrackEvent(name);
+  });
+});
 </script>
 <script data-goatcounter="https://examquiz.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>
@@ -309,11 +366,7 @@ window.goatcounter = {
 <script>
 (function () {
   function ev(name) {
-    try {
-      var gc = window.goatcounter;
-      if (gc && typeof gc.count === 'function')
-        gc.count({ path: 'event/' + name, title: name, event: true });
-    } catch (e) {}
+    window.eqTrackEvent(name);
   }
   function localDay() {
     var d = new Date();
@@ -322,8 +375,17 @@ window.goatcounter = {
 
   // 1. Daily / new / returning / loyalty (once per browser per day)
   function visitorEvents() {
+    var today = localDay();
     try {
-      var today = localDay();
+      if (localStorage.getItem('eq_metadata_seen') !== today) {
+        ev(/; wv\)|Version\/[\d.]+ Chrome/.test(navigator.userAgent) ? 'source/app-webview' : 'source/browser');
+        ev('lang/' + (navigator.language || 'unknown').slice(0, 2).toLowerCase());
+        localStorage.setItem('eq_metadata_seen', today);
+      }
+    } catch (error) {
+      console.warn('Unable to save GoatCounter source and language tracking state.', error);
+    }
+    try {
       if (localStorage.getItem('eq_last_seen') === today) return;
       localStorage.setItem('eq_last_seen', today);
       var days = (parseInt(localStorage.getItem('eq_days'), 10) || 0) + 1;
@@ -332,11 +394,9 @@ window.goatcounter = {
       ev('daily-user');
       ev(days === 1 ? 'new-user' : 'returning-user');
       if ([3, 7, 15, 30].indexOf(days) !== -1) ev('loyal/day-' + days);
-
-      // 2. Source and language, once per day
-      if (/; wv\)|Version\/[\d.]+ Chrome/.test(navigator.userAgent)) ev('source/app-webview');
-      ev('lang/' + (navigator.language || 'unknown').slice(0, 2).toLowerCase());
-    } catch (e) {}
+    } catch (error) {
+      console.warn('Unable to save GoatCounter daily visitor tracking state.', error);
+    }
   }
 
   // 3. Downloads and outbound links
@@ -344,6 +404,14 @@ window.goatcounter = {
     try {
       var a = e.target.closest && e.target.closest('a[href]');
       if (!a) return;
+      var chapterCard = a.closest('.chapter-card');
+      if (chapterCard) {
+        var resource = a.classList.contains('podcast-link') ? 'podcast' :
+          a.classList.contains('text-audio-link') ? 'text-audio' : 'chapter-document';
+        ev('resource/' + resource + '/' + chapterCard.dataset.medium + '/' +
+          chapterCard.dataset.subject + '/chapter-' + chapterCard.dataset.chapter);
+        return;
+      }
       var href = a.getAttribute('href') || '';
       var m = href.match(/\.(pdf|docx?|pptx?|xlsx?|mp3|m4a|zip)(\?|#|$)/i);
       if (m) ev('download/' + decodeURIComponent(href.split('?')[0].split('/').pop()));
