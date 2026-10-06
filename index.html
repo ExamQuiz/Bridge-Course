@@ -297,5 +297,27 @@
   </script>
   <script data-goatcounter="https://examquiz.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
+  <script>
+    window.addEventListener("load",function () {
+      const counter=window.goatcounter;
+      if (!counter||typeof counter.count!=="function") {
+        console.error("GoatCounter is unavailable; daily and new-user events were not recorded.");
+        return;
+      }
+      try {
+        const today=new Date().toISOString().slice(0,10);
+        if (localStorage.getItem("eq_last_seen")!==today) {
+          counter.count({ path:"event/daily-user", title:"Daily user", event:true });
+          localStorage.setItem("eq_last_seen",today);
+        }
+        if (!localStorage.getItem("eq_first_seen")) {
+          counter.count({ path:"event/new-user", title:"New user", event:true });
+          localStorage.setItem("eq_first_seen",today);
+        }
+      } catch (error) {
+        console.error("Unable to record GoatCounter daily or new-user events.",error);
+      }
+    });
+  </script>
 </body>
 </html>
