@@ -118,6 +118,12 @@
     .footer-details a { color:#b7e8d3; }
     .footer-bottom { width:min(820px,calc(100% - 40px)); margin:auto; padding:12px 0 16px; border-top:1px solid rgba(213,231,225,.16); color:#91aca8; font-size:12px; }
     .footer-bottom a { color:#b7e8d3; }
+    .footer-actions { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:10px; }
+    .footer-action-button { padding:7px 11px; color:#d9f0e8; background:transparent; border:1px solid #55717b; border-radius:5px; font:inherit; cursor:pointer; }
+    .footer-action-button:hover { border-color:var(--white); background:#294358; }
+    .share-options { display:flex; flex-wrap:wrap; gap:12px; }
+    .share-options[hidden] { display:none; }
+    .share-options a,.share-options button { padding:0; color:#b7e8d3; background:none; border:0; font:inherit; text-decoration:underline; cursor:pointer; }
     .secondary-button { padding:11px 16px; color:#d9f0e8; background:transparent; border:1px solid #55717b; border-radius:5px; text-decoration:none; }
     .secondary-button:hover { border-color:var(--white); background:#294358; }
     .quiz-card { margin-bottom:18px; padding:clamp(24px,5vw,40px); background:var(--card-bg); border:2px solid var(--card-border); border-radius:16px; box-shadow:var(--shadow); }
@@ -151,7 +157,7 @@
   </main>
   <footer class="site-footer"><div class="footer-inner"><div><p class="footer-heading">About Developer</p><p class="footer-details">शिक्षा के क्षेत्र में योगदान देने के प्रति उत्साहित!<br>आप जूनियर और सीनियर स्टूडेंट्स को पढ़ाने के लिए मेरे फ्री लर्निंग ऐप को डाउनलोड कर सकते है, ऐप Google Play Store पर उपलब्ध है :)<br><a href="https://play.google.com/store/apps/details?id=com.smartkid.explorer&pcampaignid=web_share" target="_blank" rel="noopener">Smart Kid Explorer on Google Play</a></p></div><div><p class="footer-heading">About Page</p><p class="footer-details">ज़्यादातर सेवारत शिक्षक मोबाइल फ़ोन का इस्तेमाल करते हैं और ब्रिज कोर्स के सिलेबस में 6 विषयों के तहत 50 से ज़्यादा चैप्टर,  थ्योरी , प्रैक्टिकल इत्यादि। ऐसे में मोबाइल फ़ोन में डॉक्यूमेंट्स और स्टडी कंटेंट को मैनेज करना व पढ़ाई करना  मुश्किल होता है। साथ ही, रोज़ाना स्कूल में अधिकांश समय टीचिंग सेवाओं निकल जाता है। हम सभी इस  कोर्स की अहमियत जानते हैं। इस समस्या को हल करने के लिए यह पेज बनाया गया है ताकि सभी स्टडी मटीरियल (AI से बने Audio Lession, Podcast, MCQs, Lession Plan etc for Reference) एक ही जगह मिल सकें। इस पेज का मकसद ज़रूरतमंद लोगों की मदद करना है। यह सेवा बिलकुल फ्री है, और किसी भी तरह का गलत इरादा नहीं है, इसलिए कृपया किसी भी गलत अफवाहों पर भरोसा न करें और इस पेज का इस्तेमाल अपनी तैयारी को बेहतर बनाने के लिए करें और जरुरत मंद लोगों को यह पेज शेयर करें।
 
-ज़रूरी सूचना: यह  वेबपेज आपका नाम, फ़ोन नंबर, ईमेल पता(पर्सनल डाटा)  नहीं मांगती। आपकी क्विज़ कोशिशों का रिकॉर्ड और कुछ वेबसाइट सेटिंग्स आपके ब्राउज़र के स्टोरेज में सेव हो सकती हैं।  सेवाओं को बेहतर के लिए analytics सर्विसेज का इस्तेमाल किया जाता है; इसके ज़रिए पेज विज़िट, भाषा, बाहरी लिंक पर क्लिक और साइट के उपयोग से जुड़े कुछ आँकड़े रिकॉर्ड हो सकते हैं। Analytics सेवा सुविधा को बेहतर बनाने हेतु है — स्टडी मटेरियल मार्गदर्शन के लिए है; असाइनमेंट, पाठ योजना फॉर्मेट और अन्य आधिकारिक आवश्यकताओं की पुष्टि NIOS की वेबसाइट से करें। </p></div></div><div class="footer-bottom">Email: <a href="mailto:examquizpreparation@gmail.com">examquizpreparation@gmail.com</a></div></footer>
+ज़रूरी सूचना: यह  वेबपेज आपका नाम, फ़ोन नंबर, ईमेल पता(पर्सनल डाटा)  नहीं मांगती। आपकी क्विज़ कोशिशों का रिकॉर्ड और कुछ वेबसाइट सेटिंग्स आपके ब्राउज़र के स्टोरेज में सेव हो सकती हैं।  सेवाओं को बेहतर के लिए analytics सर्विसेज का इस्तेमाल किया जाता है; इसके ज़रिए पेज विज़िट, भाषा, बाहरी लिंक पर क्लिक और साइट के उपयोग से जुड़े कुछ आँकड़े रिकॉर्ड हो सकते हैं। Analytics सेवा सुविधा को बेहतर बनाने हेतु है — स्टडी मटेरियल मार्गदर्शन के लिए है; असाइनमेंट, पाठ योजना फॉर्मेट और अन्य आधिकारिक आवश्यकताओं की पुष्टि NIOS की वेबसाइट से करें। </p></div></div><div class="footer-bottom"><div>Support Email: <a href="mailto:examquizpreparation@gmail.com">examquizpreparation@gmail.com</a></div><div class="footer-actions"><a href="https://forms.gle/zkvhKgHJHzvz1y3K9" target="_blank" rel="noopener" data-goatcounter-click="feedback-form" data-goatcounter-title="Feedback form">Send feedback</a><button id="share-page" class="footer-action-button" type="button" aria-expanded="false" aria-controls="share-options">Share Website with other Teachers</button><div id="share-options" class="share-options" hidden><a id="share-whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a><a id="share-email" href="#">Email</a><button id="copy-page-link" type="button">Copy link</button></div><span id="share-status" role="status" aria-live="polite"></span></div></div></footer>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
@@ -319,6 +325,39 @@
     document.querySelector("#back-to-subjects").onclick=()=>showOnly(subjectsView);
     document.querySelector("#home-top").onclick=goHome;
     document.querySelector("#progress-top").onclick=()=>{ trackAnalyticsEvent("navigation/progress-open"); stopSpeaking(); renderProgress(); showOnly(progressView); };
+    const sharePageButton=document.querySelector("#share-page"), shareOptions=document.querySelector("#share-options"), shareStatus=document.querySelector("#share-status"), sharedPageUrl=new URL(window.location.href);
+    sharedPageUrl.search=""; sharedPageUrl.hash="";
+    const shareUrl=sharedPageUrl.href, shareTitle=document.title, shareText=`${shareTitle} ${shareUrl}`;
+    document.querySelector("#share-whatsapp").href=`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+    document.querySelector("#share-email").href=`mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(shareUrl)}`;
+    sharePageButton.onclick=async()=>{
+      trackAnalyticsEvent("share/open");
+      if (typeof navigator.share==="function") {
+        try {
+          await navigator.share({title:shareTitle,text:shareTitle,url:shareUrl});
+          trackAnalyticsEvent("share/native");
+          return;
+        } catch (shareError) {
+          if (shareError.name==="AbortError") return;
+          console.warn("Native page sharing failed; showing alternative share options.",shareError);
+        }
+      }
+      const isExpanded=sharePageButton.getAttribute("aria-expanded")==="true";
+      sharePageButton.setAttribute("aria-expanded",String(!isExpanded));
+      shareOptions.hidden=isExpanded;
+    };
+    document.querySelector("#share-whatsapp").addEventListener("click",()=>trackAnalyticsEvent("share/whatsapp"));
+    document.querySelector("#share-email").addEventListener("click",()=>trackAnalyticsEvent("share/email"));
+    document.querySelector("#copy-page-link").onclick=async()=>{
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        shareStatus.textContent="Link copied.";
+      } catch (copyError) {
+        console.warn("Clipboard access failed; showing the page URL for manual copying.",copyError);
+        window.prompt("Copy this page link:",shareUrl);
+      }
+      trackAnalyticsEvent("share/copy-link");
+    };
     document.querySelector("#back-to-chapters").onclick=exitQuiz;
     errorBackToChapters.onclick=()=>{ error.hidden=true; showOnly(chaptersView); };
     previousQuestion.onclick=()=>{ if (activeQuestionIndex>0) { activeQuestionIndex-=1; renderActiveQuestion(true); } };
