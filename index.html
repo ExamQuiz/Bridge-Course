@@ -119,11 +119,18 @@
     .footer-bottom { width:min(820px,calc(100% - 40px)); margin:auto; padding:12px 0 16px; border-top:1px solid rgba(213,231,225,.16); color:#91aca8; font-size:12px; }
     .footer-bottom a { color:#b7e8d3; }
     .footer-actions { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:10px; }
-    .footer-action-button { padding:7px 11px; color:#d9f0e8; background:transparent; border:1px solid #55717b; border-radius:5px; font:inherit; cursor:pointer; }
-    .footer-action-button:hover { border-color:var(--white); background:#294358; }
+    .footer-action-button,.footer-feedback-link { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:42px; padding:10px 16px; border:1px solid transparent; border-radius:999px; font:600 13px/1.2 "DM Sans",sans-serif; text-decoration:none!important; cursor:pointer; transition:transform .18s ease,box-shadow .18s ease,background .18s ease; }
+    .footer-feedback-link { color:#102f36!important; background:linear-gradient(135deg,#b7e8d3,#88d8b9); box-shadow:0 4px 12px rgba(136,216,185,.18); }
+    .footer-actions > a[href^="https://forms.gle/"] { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:42px; padding:10px 16px; color:#102f36!important; background:linear-gradient(135deg,#b7e8d3,#88d8b9); border:1px solid transparent; border-radius:999px; box-shadow:0 4px 12px rgba(136,216,185,.18); font:600 13px/1.2 "DM Sans",sans-serif; text-decoration:none; transition:transform .18s ease,box-shadow .18s ease; }
+    .footer-actions > a[href^="https://forms.gle/"]::before { content:"💬"; }
+    .footer-action-button { color:#f4fbf8; background:linear-gradient(135deg,#315d67,#254951); border-color:rgba(183,232,211,.38); box-shadow:0 4px 12px rgba(0,0,0,.16); }
+    .footer-action-button:hover,.footer-feedback-link:hover,.footer-actions > a[href^="https://forms.gle/"]:hover { transform:translateY(-2px); box-shadow:0 7px 18px rgba(0,0,0,.22); }
+    .footer-action-button:focus-visible,.footer-feedback-link:focus-visible,.footer-actions > a[href^="https://forms.gle/"]:focus-visible { outline:3px solid #f0c674; outline-offset:3px; }
+    #share-page::before { content:""; display:inline-block; width:20px; height:20px; flex:0 0 20px; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2325D366' d='M12 2a10 10 0 0 0-8.66 15L2 22l5.2-1.36A10 10 0 1 0 12 2Z'/%3E%3Cpath fill='white' d='M9.15 7.3c-.25-.55-.51-.56-.75-.57h-.64c-.22 0-.57.08-.87.41-.3.32-1.14 1.11-1.14 2.72 0 1.6 1.17 3.15 1.33 3.37.16.21 2.26 3.62 5.58 4.93 2.76 1.1 3.32.88 3.92.82.6-.05 1.94-.79 2.21-1.55.28-.76.28-1.41.2-1.55-.08-.13-.3-.21-.62-.37-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.16-.21.32-.85 1.07-1.04 1.29-.19.21-.38.24-.71.08-.33-.16-1.39-.51-2.65-1.62-.98-.87-1.64-1.95-1.83-2.28-.19-.32-.02-.5.14-.66.14-.14.32-.38.49-.57.16-.19.21-.32.32-.54.11-.22.06-.41-.03-.57-.08-.16-.72-1.78-1.02-2.43Z'/%3E%3C/svg%3E") center/contain no-repeat; }
     .share-options { display:flex; flex-wrap:wrap; gap:12px; }
     .share-options[hidden] { display:none; }
     .share-options a,.share-options button { padding:0; color:#b7e8d3; background:none; border:0; font:inherit; text-decoration:underline; cursor:pointer; }
+    .share-options a:hover,.share-options button:hover { color:#fff; }
     .secondary-button { padding:11px 16px; color:#d9f0e8; background:transparent; border:1px solid #55717b; border-radius:5px; text-decoration:none; }
     .secondary-button:hover { border-color:var(--white); background:#294358; }
     .quiz-card { margin-bottom:18px; padding:clamp(24px,5vw,40px); background:var(--card-bg); border:2px solid var(--card-border); border-radius:16px; box-shadow:var(--shadow); }
@@ -326,6 +333,44 @@
     document.querySelector("#home-top").onclick=goHome;
     document.querySelector("#progress-top").onclick=()=>{ trackAnalyticsEvent("navigation/progress-open"); stopSpeaking(); renderProgress(); showOnly(progressView); };
     const sharePageButton=document.querySelector("#share-page"), shareOptions=document.querySelector("#share-options"), shareStatus=document.querySelector("#share-status"), sharedPageUrl=new URL(window.location.href);
+    const visitorCountEndpoint="https://examquiz-visitor-count.ye-s.workers.dev/api/visits";
+    const visitorCountButton=document.createElement("button"), visitorCountStatus=document.createElement("span");
+    visitorCountButton.id="visit-count";
+    visitorCountButton.className="footer-action-button";
+    visitorCountButton.type="button";
+    visitorCountButton.textContent="👁️ Page views · last 24 hours";
+    visitorCountButton.title="Counts use 24 completed UTC-hour buckets and exclude traffic from the current partial hour.";
+    visitorCountButton.setAttribute("aria-describedby","visit-count-status");
+    visitorCountStatus.id="visit-count-status";
+    visitorCountStatus.setAttribute("role","status");
+    visitorCountStatus.setAttribute("aria-live","polite");
+    sharePageButton.after(visitorCountButton,visitorCountStatus);
+    visitorCountButton.onclick=async()=>{
+      if (!visitorCountEndpoint) {
+        visitorCountStatus.textContent="Visit count service is not configured yet.";
+        return;
+      }
+      visitorCountButton.disabled=true;
+      visitorCountButton.setAttribute("aria-busy","true");
+      visitorCountButton.textContent="Loading visit count…";
+      visitorCountStatus.textContent="";
+      try {
+        const response=await fetch(visitorCountEndpoint,{cache:"no-store",signal:AbortSignal.timeout(10000)});
+        if (!response.ok) throw new Error(`Visit count endpoint returned ${response.status}.`);
+        const result=await response.json();
+        if (!Number.isSafeInteger(result.pageViews)||result.pageViews<0) throw new Error("Visit count endpoint returned an invalid count.");
+        visitorCountButton.textContent=`👁️ ${result.pageViews.toLocaleString()} page views · last 24 hours`;
+        visitorCountButton.title=`Counts use the 24 completed UTC hours ending ${new Date(result.generatedAt).toLocaleString()}.`;
+        trackAnalyticsEvent("navigation/visit-count-open");
+      } catch (countError) {
+        console.warn("Unable to load the last-24-hour visit count.",countError);
+        visitorCountButton.textContent="👁️ Page views · last 24 hours";
+        visitorCountStatus.textContent="Visit count unavailable. Please try again later.";
+      } finally {
+        visitorCountButton.disabled=false;
+        visitorCountButton.removeAttribute("aria-busy");
+      }
+    };
     sharedPageUrl.search=""; sharedPageUrl.hash="";
     const shareUrl=sharedPageUrl.href, shareTitle=document.title, shareText=`${shareTitle} ${shareUrl}`;
     document.querySelector("#share-whatsapp").href=`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
