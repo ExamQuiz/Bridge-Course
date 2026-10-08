@@ -118,14 +118,11 @@
     .footer-details a { color:#b7e8d3; }
     .footer-bottom { width:min(820px,calc(100% - 40px)); margin:auto; padding:12px 0 16px; border-top:1px solid rgba(213,231,225,.16); color:#91aca8; font-size:12px; }
     .footer-bottom a { color:#b7e8d3; }
-    .footer-actions { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-top:10px; }
-    .footer-action-button,.footer-feedback-link { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:42px; padding:10px 16px; border:1px solid transparent; border-radius:999px; font:600 13px/1.2 "DM Sans",sans-serif; text-decoration:none!important; cursor:pointer; transition:transform .18s ease,box-shadow .18s ease,background .18s ease; }
-    .footer-feedback-link { color:#102f36!important; background:linear-gradient(135deg,#b7e8d3,#88d8b9); box-shadow:0 4px 12px rgba(136,216,185,.18); }
-    .footer-actions > a[href^="https://forms.gle/"] { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:42px; padding:10px 16px; color:#102f36!important; background:linear-gradient(135deg,#b7e8d3,#88d8b9); border:1px solid transparent; border-radius:999px; box-shadow:0 4px 12px rgba(136,216,185,.18); font:600 13px/1.2 "DM Sans",sans-serif; text-decoration:none; transition:transform .18s ease,box-shadow .18s ease; }
-    .footer-actions > a[href^="https://forms.gle/"]::before { content:"💬"; }
-    .footer-action-button { color:#f4fbf8; background:linear-gradient(135deg,#315d67,#254951); border-color:rgba(183,232,211,.38); box-shadow:0 4px 12px rgba(0,0,0,.16); }
-    .footer-action-button:hover,.footer-feedback-link:hover,.footer-actions > a[href^="https://forms.gle/"]:hover { transform:translateY(-2px); box-shadow:0 7px 18px rgba(0,0,0,.22); }
-    .footer-action-button:focus-visible,.footer-feedback-link:focus-visible,.footer-actions > a[href^="https://forms.gle/"]:focus-visible { outline:3px solid #f0c674; outline-offset:3px; }
+    .footer-actions { display:flex; flex-direction:column; align-items:stretch; gap:12px; margin-top:10px; }
+    .footer-primary-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .footer-primary-actions > a,.footer-primary-actions > button { box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; height:52px; min-width:0; padding:8px 12px; color:#f4fbf8!important; background:linear-gradient(135deg,#315d67,#254951); border:1px solid rgba(183,232,211,.38); border-radius:999px; box-shadow:0 4px 12px rgba(0,0,0,.16); font:600 13px/1.2 "DM Sans",sans-serif; text-align:center; text-decoration:none!important; overflow-wrap:anywhere; cursor:pointer; transition:transform .18s ease,box-shadow .18s ease,background .18s ease; }
+    .footer-primary-actions > a:hover,.footer-primary-actions > button:hover { transform:translateY(-2px); box-shadow:0 7px 18px rgba(0,0,0,.22); }
+    .footer-primary-actions > a:focus-visible,.footer-primary-actions > button:focus-visible { outline:3px solid #f0c674; outline-offset:3px; }
     #share-page::before { content:""; display:inline-block; width:20px; height:20px; flex:0 0 20px; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2325D366' d='M12 2a10 10 0 0 0-8.66 15L2 22l5.2-1.36A10 10 0 1 0 12 2Z'/%3E%3Cpath fill='white' d='M9.15 7.3c-.25-.55-.51-.56-.75-.57h-.64c-.22 0-.57.08-.87.41-.3.32-1.14 1.11-1.14 2.72 0 1.6 1.17 3.15 1.33 3.37.16.21 2.26 3.62 5.58 4.93 2.76 1.1 3.32.88 3.92.82.6-.05 1.94-.79 2.21-1.55.28-.76.28-1.41.2-1.55-.08-.13-.3-.21-.62-.37-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.16-.21.32-.85 1.07-1.04 1.29-.19.21-.38.24-.71.08-.33-.16-1.39-.51-2.65-1.62-.98-.87-1.64-1.95-1.83-2.28-.19-.32-.02-.5.14-.66.14-.14.32-.38.49-.57.16-.19.21-.32.32-.54.11-.22.06-.41-.03-.57-.08-.16-.72-1.78-1.02-2.43Z'/%3E%3C/svg%3E") center/contain no-repeat; }
     .share-options { display:flex; flex-wrap:wrap; gap:12px; }
     .share-options[hidden] { display:none; }
@@ -148,6 +145,7 @@
     @media (max-width:760px) { .subject-grid { grid-template-columns:repeat(2,1fr); } .chapter-layout { grid-template-columns:1fr; gap:18px; } }
     @media (max-width:760px) { .chapter-progress-grid { grid-template-columns:repeat(2,1fr); } }
     @media (max-width:520px) { .header-inner,main,.footer-inner,.footer-bottom { width:min(100% - 24px,1120px); } .is-inner-view main { min-height:calc(100vh - 330px); } .header-inner { padding:18px 0 24px; } .topline { gap:8px; } .top-actions { gap:6px; } .brand { font-size:17px; } .secondary-button { padding:9px 10px; font-size:12px; } .eyebrow { margin:26px 0 8px; font-size:10px; } h1 { max-width:340px; font-size:clamp(2rem,10vw,2.8rem); } .subtitle { margin-top:12px; font-size:14px; line-height:1.45; } main { padding:24px 0 36px; } .view-heading { margin-bottom:16px; } .view-heading h2 { font-size:26px; } .view-heading p { font-size:12px; } .subject-grid,.chapter-list,.progress-summary { grid-template-columns:1fr; gap:10px; } .subject-card { min-height:96px; padding:15px; border-radius:11px; } .subject-index { width:32px; height:32px; border-radius:9px; } .subject-card h3 { font-size:17px; } .chapter-layout { gap:12px; } .chapter-title { font-size:26px; } .chapter-copy { margin-bottom:14px; font-size:13px; } .chapter-card { align-items:flex-start; padding:15px 16px; } .chapter-actions { align-items:flex-end; flex-direction:column; gap:6px; } .document-link { padding:7px 8px; font-size:11px; } .text-audio-link { max-width:132px; min-height:34px; padding:7px 8px; font-size:11px; } .notice { padding:16px; font-size:14px; } .view-heading,.quiz-toolbar { align-items:flex-start; flex-direction:column; } .quiz-toolbar { gap:10px; margin-bottom:12px; } .quiz-toolbar p { margin-top:5px; font-size:15px; } .quiz-actions { width:100%; } .quiz-actions .primary-button { flex:1; } .quiz-card { margin-bottom:12px; padding:18px; border-radius:12px; } .quiz-card h2 { margin:10px 0 16px; font-size:20px; } .options { gap:7px; } .option { min-height:44px; padding:11px; font-size:14px; } .feedback { margin-top:12px; padding:12px; font-size:13px; } .quiz-navigation { gap:10px; } .quiz-navigation button { padding:10px 12px; } .subject-progress { padding:14px; } .subject-progress-header { align-items:flex-start; flex-direction:column; gap:4px; margin-bottom:12px; } .subject-progress-header strong { font-size:18px; } .chapter-progress-grid { grid-template-columns:1fr 1fr; gap:7px; } .chapter-progress { min-height:92px; padding:11px; } .chapter-progress-score { margin-top:7px; font-size:19px; } .footer-inner { grid-template-columns:1fr; gap:14px; padding:18px 0 12px; } .footer-heading { margin-bottom:6px; } .footer-details { font-size:12px; line-height:1.5; } .footer-bottom { padding:9px 0 12px; font-size:11px; } }
+    @media (max-width:520px) { .footer-primary-actions { gap:6px; } .footer-primary-actions > a,.footer-primary-actions > button { gap:4px; padding:6px 4px; font-size:10px; } }
     @media (max-width:520px) { .chapter-actions > .document-link { width:144px; max-width:100%; min-height:40px; flex:0 0 auto; padding:7px 9px; font-size:12px; } }
   </style>
 </head>
@@ -164,7 +162,7 @@
   </main>
   <footer class="site-footer"><div class="footer-inner"><div><p class="footer-heading">About Developer</p><p class="footer-details">शिक्षा के क्षेत्र में योगदान देने के प्रति उत्साहित!<br>आप जूनियर और सीनियर स्टूडेंट्स को पढ़ाने के लिए मेरे फ्री लर्निंग ऐप को डाउनलोड कर सकते है, ऐप Google Play Store पर उपलब्ध है :)<br><a href="https://play.google.com/store/apps/details?id=com.smartkid.explorer&pcampaignid=web_share" target="_blank" rel="noopener">Smart Kid Explorer on Google Play</a></p></div><div><p class="footer-heading">About Page</p><p class="footer-details">ज़्यादातर सेवारत शिक्षक मोबाइल फ़ोन का इस्तेमाल करते हैं और ब्रिज कोर्स के सिलेबस में 6 विषयों के तहत 50 से ज़्यादा चैप्टर,  थ्योरी , प्रैक्टिकल इत्यादि। ऐसे में मोबाइल फ़ोन में डॉक्यूमेंट्स और स्टडी कंटेंट को मैनेज करना व पढ़ाई करना  मुश्किल होता है। साथ ही, रोज़ाना स्कूल में अधिकांश समय टीचिंग सेवाओं निकल जाता है। हम सभी इस  कोर्स की अहमियत जानते हैं। इस समस्या को हल करने के लिए यह पेज बनाया गया है ताकि सभी स्टडी मटीरियल (AI से बने Audio Lession, Podcast, MCQs, Lession Plan etc for Reference) एक ही जगह मिल सकें। इस पेज का मकसद ज़रूरतमंद लोगों की मदद करना है। यह सेवा बिलकुल फ्री है, और किसी भी तरह का गलत इरादा नहीं है, इसलिए कृपया किसी भी गलत अफवाहों पर भरोसा न करें और इस पेज का इस्तेमाल अपनी तैयारी को बेहतर बनाने के लिए करें और जरुरत मंद लोगों को यह पेज शेयर करें।
 
-ज़रूरी सूचना: यह  वेबपेज आपका नाम, फ़ोन नंबर, ईमेल पता(पर्सनल डाटा)  नहीं मांगती। आपकी क्विज़ कोशिशों का रिकॉर्ड और कुछ वेबसाइट सेटिंग्स आपके ब्राउज़र के स्टोरेज में सेव हो सकती हैं।  सेवाओं को बेहतर के लिए analytics सर्विसेज का इस्तेमाल किया जाता है; इसके ज़रिए पेज विज़िट, भाषा, बाहरी लिंक पर क्लिक और साइट के उपयोग से जुड़े कुछ आँकड़े रिकॉर्ड हो सकते हैं। Analytics सेवा सुविधा को बेहतर बनाने हेतु है — स्टडी मटेरियल मार्गदर्शन के लिए है; असाइनमेंट, पाठ योजना फॉर्मेट और अन्य आधिकारिक आवश्यकताओं की पुष्टि NIOS की वेबसाइट से करें। </p></div></div><div class="footer-bottom"><div>Support Email: <a href="mailto:examquizpreparation@gmail.com">examquizpreparation@gmail.com</a></div><div class="footer-actions"><a href="https://forms.gle/zkvhKgHJHzvz1y3K9" target="_blank" rel="noopener" data-goatcounter-click="feedback-form" data-goatcounter-title="Feedback form">Send feedback</a><button id="share-page" class="footer-action-button" type="button" aria-expanded="false" aria-controls="share-options">Share Website with other Teachers</button><div id="share-options" class="share-options" hidden><a id="share-whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a><a id="share-email" href="#">Email</a><button id="copy-page-link" type="button">Copy link</button></div><span id="share-status" role="status" aria-live="polite"></span></div></div></footer>
+ज़रूरी सूचना: यह  वेबपेज आपका नाम, फ़ोन नंबर, ईमेल पता(पर्सनल डाटा)  नहीं मांगती। आपकी क्विज़ कोशिशों का रिकॉर्ड और कुछ वेबसाइट सेटिंग्स आपके ब्राउज़र के स्टोरेज में सेव हो सकती हैं।  सेवाओं को बेहतर के लिए analytics सर्विसेज का इस्तेमाल किया जाता है; इसके ज़रिए पेज विज़िट, भाषा, बाहरी लिंक पर क्लिक और साइट के उपयोग से जुड़े कुछ आँकड़े रिकॉर्ड हो सकते हैं। Analytics सेवा सुविधा को बेहतर बनाने हेतु है — स्टडी मटेरियल मार्गदर्शन के लिए है; असाइनमेंट, पाठ योजना फॉर्मेट और अन्य आधिकारिक आवश्यकताओं की पुष्टि NIOS की वेबसाइट से करें। </p></div></div><div class="footer-bottom"><div>Support Email: <a href="mailto:examquizpreparation@gmail.com">examquizpreparation@gmail.com</a></div><div class="footer-actions"><a href="https://forms.gle/zkvhKgHJHzvz1y3K9" target="_blank" rel="noopener" data-goatcounter-click="feedback-form" data-goatcounter-title="Feedback form">Send feedback</a><button id="share-page" class="footer-action-button" type="button" aria-expanded="false" aria-controls="share-options">Share Website</button><div id="share-options" class="share-options" hidden><a id="share-whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a><a id="share-email" href="#">Email</a><button id="copy-page-link" type="button">Copy link</button></div><span id="share-status" role="status" aria-live="polite"></span></div></div></footer>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
@@ -333,44 +331,82 @@
     document.querySelector("#home-top").onclick=goHome;
     document.querySelector("#progress-top").onclick=()=>{ trackAnalyticsEvent("navigation/progress-open"); stopSpeaking(); renderProgress(); showOnly(progressView); };
     const sharePageButton=document.querySelector("#share-page"), shareOptions=document.querySelector("#share-options"), shareStatus=document.querySelector("#share-status"), sharedPageUrl=new URL(window.location.href);
+    const footerActions=sharePageButton.closest(".footer-actions"), footerPrimaryActions=document.createElement("div");
+    footerPrimaryActions.className="footer-primary-actions";
+    const feedbackButton=footerActions.querySelector('a[href^="https://forms.gle/"]');
+    footerActions.insertBefore(footerPrimaryActions,feedbackButton);
+    footerPrimaryActions.append(feedbackButton,sharePageButton);
     const visitorCountEndpoint="https://examquiz-visitor-count.ye-s.workers.dev/api/visits";
     const visitorCountButton=document.createElement("button"), visitorCountStatus=document.createElement("span");
     visitorCountButton.id="visit-count";
     visitorCountButton.className="footer-action-button";
     visitorCountButton.type="button";
-    visitorCountButton.textContent="👁️ Page views · last 24 hours";
-    visitorCountButton.title="Counts use 24 completed UTC-hour buckets and exclude traffic from the current partial hour.";
+    visitorCountButton.textContent="👁️ Loading today's page views…";
+    visitorCountButton.title="Today's page views, refreshed automatically every 5 minutes.";
     visitorCountButton.setAttribute("aria-describedby","visit-count-status");
     visitorCountStatus.id="visit-count-status";
     visitorCountStatus.setAttribute("role","status");
     visitorCountStatus.setAttribute("aria-live","polite");
-    sharePageButton.after(visitorCountButton,visitorCountStatus);
-    visitorCountButton.onclick=async()=>{
+    footerPrimaryActions.append(visitorCountButton);
+    footerPrimaryActions.after(visitorCountStatus);
+    let visitorCountRequest=null, visitorCountLastAttempt=0, visitorCountValue=null;
+    const visitCountRefreshInterval=5*60*1000;
+    async function refreshVisitorCount(force=false) {
       if (!visitorCountEndpoint) {
         visitorCountStatus.textContent="Visit count service is not configured yet.";
         return;
       }
-      visitorCountButton.disabled=true;
-      visitorCountButton.setAttribute("aria-busy","true");
-      visitorCountButton.textContent="Loading visit count…";
-      visitorCountStatus.textContent="";
-      try {
-        const response=await fetch(visitorCountEndpoint,{cache:"no-store",signal:AbortSignal.timeout(10000)});
-        if (!response.ok) throw new Error(`Visit count endpoint returned ${response.status}.`);
-        const result=await response.json();
-        if (!Number.isSafeInteger(result.pageViews)||result.pageViews<0) throw new Error("Visit count endpoint returned an invalid count.");
-        visitorCountButton.textContent=`👁️ ${result.pageViews.toLocaleString()} page views · last 24 hours`;
-        visitorCountButton.title=`Counts use the 24 completed UTC hours ending ${new Date(result.generatedAt).toLocaleString()}.`;
-        trackAnalyticsEvent("navigation/visit-count-open");
-      } catch (countError) {
-        console.warn("Unable to load the last-24-hour visit count.",countError);
-        visitorCountButton.textContent="👁️ Page views · last 24 hours";
-        visitorCountStatus.textContent="Visit count unavailable. Please try again later.";
-      } finally {
-        visitorCountButton.disabled=false;
-        visitorCountButton.removeAttribute("aria-busy");
+      if (window.location.origin!=="https://examquiz.github.io") {
+        visitorCountStatus.textContent="Visit count is available on https://examquiz.github.io; local previews and other origins are blocked.";
+        return;
       }
-    };
+      if (visitorCountRequest) return visitorCountRequest;
+      if (!force&&Date.now()-visitorCountLastAttempt<visitCountRefreshInterval) return;
+      visitorCountLastAttempt=Date.now();
+      visitorCountButton.setAttribute("aria-busy","true");
+      if (visitorCountValue===null) visitorCountButton.textContent="👁️ Loading today's page views…";
+      visitorCountStatus.textContent=visitorCountValue===null?"":"Refreshing…";
+      visitorCountRequest=(async()=>{
+        try {
+          const response=await fetch(visitorCountEndpoint,{cache:"no-store",signal:AbortSignal.timeout(10000)});
+          const responseText=await response.text();
+          let result={};
+          try {
+            result=responseText?JSON.parse(responseText):{};
+          } catch {
+            if (!response.ok) throw new Error(`Visit count service returned HTTP ${response.status} (${responseText.slice(0,80)}).`);
+            throw new Error("Visit count service returned an invalid response.");
+          }
+          if (!response.ok) {
+            const upstreamStatus=Number.isInteger(result.upstreamStatus)?` GoatCounter returned HTTP ${result.upstreamStatus}.`:"";
+            const reason=typeof result.reason==="string"?` ${result.reason}`:"";
+            throw new Error(`Visit count service returned HTTP ${response.status}.${upstreamStatus}${reason}`);
+          }
+          if (!Number.isSafeInteger(result.pageViews)||result.pageViews<0) throw new Error("Visit count endpoint returned an invalid count.");
+          visitorCountValue=result.pageViews;
+          const istTime=value=>new Intl.DateTimeFormat("en-IN",{hour:"numeric",minute:"2-digit",timeZone:"Asia/Kolkata"}).format(new Date(value));
+          visitorCountButton.textContent=`👁️ ${result.pageViews.toLocaleString()} page views today (IST)`;
+          visitorCountButton.title=`Counts from 00:00 IST through ${istTime(result.end)} IST (completed hours only); refreshes every 5 minutes.`;
+          visitorCountStatus.textContent=`Updated ${istTime(result.generatedAt)} IST. Count includes completed hours only.`;
+        } catch (countError) {
+          console.warn("Unable to refresh today's page-view count.",countError);
+          if (visitorCountValue===null) visitorCountButton.textContent="👁️ Today's page views unavailable";
+          visitorCountStatus.textContent=`Visit count refresh failed. ${countError.message}`;
+        } finally {
+          visitorCountButton.removeAttribute("aria-busy");
+          visitorCountRequest=null;
+        }
+      })();
+      return visitorCountRequest;
+    }
+    visitorCountButton.onclick=()=>refreshVisitorCount(true);
+    void refreshVisitorCount();
+    window.setInterval(()=>{
+      if (!document.hidden) void refreshVisitorCount();
+    },visitCountRefreshInterval);
+    document.addEventListener("visibilitychange",()=>{
+      if (!document.hidden) void refreshVisitorCount();
+    });
     sharedPageUrl.search=""; sharedPageUrl.hash="";
     const shareUrl=sharedPageUrl.href, shareTitle=document.title, shareText=`${shareTitle} ${shareUrl}`;
     document.querySelector("#share-whatsapp").href=`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
