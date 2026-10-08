@@ -341,8 +341,8 @@
     visitorCountButton.id="visit-count";
     visitorCountButton.className="footer-action-button";
     visitorCountButton.type="button";
-    visitorCountButton.textContent="👁️ Loading today's page views…";
-    visitorCountButton.title="Today's page views, refreshed automatically every 5 minutes.";
+    visitorCountButton.textContent="👁️ Loading today's GoatCounter hits…";
+    visitorCountButton.title="Today's GoatCounter total, including page views and tracked events; refreshed automatically every 5 minutes.";
     visitorCountButton.setAttribute("aria-describedby","visit-count-status");
     visitorCountStatus.id="visit-count-status";
     visitorCountStatus.setAttribute("role","status");
@@ -364,7 +364,7 @@
       if (!force&&Date.now()-visitorCountLastAttempt<visitCountRefreshInterval) return;
       visitorCountLastAttempt=Date.now();
       visitorCountButton.setAttribute("aria-busy","true");
-      if (visitorCountValue===null) visitorCountButton.textContent="👁️ Loading today's page views…";
+      if (visitorCountValue===null) visitorCountButton.textContent="👁️ Loading today's GoatCounter hits…";
       visitorCountStatus.textContent=visitorCountValue===null?"":"Refreshing…";
       visitorCountRequest=(async()=>{
         try {
@@ -382,15 +382,15 @@
             const reason=typeof result.reason==="string"?` ${result.reason}`:"";
             throw new Error(`Visit count service returned HTTP ${response.status}.${upstreamStatus}${reason}`);
           }
-          if (!Number.isSafeInteger(result.pageViews)||result.pageViews<0) throw new Error("Visit count endpoint returned an invalid count.");
-          visitorCountValue=result.pageViews;
+          if (!Number.isSafeInteger(result.trackedHits)||result.trackedHits<0) throw new Error("Visit count endpoint returned an invalid count.");
+          visitorCountValue=result.trackedHits;
           const istTime=value=>new Intl.DateTimeFormat("en-IN",{hour:"numeric",minute:"2-digit",timeZone:"Asia/Kolkata"}).format(new Date(value));
-          visitorCountButton.textContent=`👁️ ${result.pageViews.toLocaleString()} page views today (IST)`;
-          visitorCountButton.title=`Counts from 00:00 IST through ${istTime(result.end)} IST (completed hours only); refreshes every 5 minutes.`;
+          visitorCountButton.textContent=`👁️ ${result.trackedHits.toLocaleString()} GoatCounter hits today (IST)`;
+          visitorCountButton.title=`Counts GoatCounter total hits, including tracked events, from 00:00 IST through ${istTime(result.end)} IST (completed hours only); refreshes every 5 minutes.`;
           visitorCountStatus.textContent=`Updated ${istTime(result.generatedAt)} IST. Count includes completed hours only.`;
         } catch (countError) {
           console.warn("Unable to refresh today's page-view count.",countError);
-          if (visitorCountValue===null) visitorCountButton.textContent="👁️ Today's page views unavailable";
+          if (visitorCountValue===null) visitorCountButton.textContent="👁️ Today's GoatCounter count unavailable";
           visitorCountStatus.textContent=`Visit count refresh failed. ${countError.message}`;
         } finally {
           visitorCountButton.removeAttribute("aria-busy");
