@@ -32,6 +32,13 @@
     .view-heading { display:flex; align-items:end; justify-content:space-between; gap:20px; margin-bottom:24px; }
     .view-heading h2 { margin:0; font-size:32px; letter-spacing:-.05em; }
     .view-heading p { margin:6px 0 0; color:var(--muted); font-size:14px; }
+    .community-message { margin:0 0 22px; overflow:hidden; border:1px solid #b9e2d0; border-radius:10px; color:#164b43; background:#e6f5ed; }
+    .community-message-track { display:flex; width:max-content; animation:community-message-scroll 36s linear infinite; }
+    .community-message:hover .community-message-track,.community-message:focus-within .community-message-track { animation-play-state:paused; }
+    .community-message-copy { display:block; flex:0 0 auto; padding:12px 36px 12px 0; font-size:14px; font-weight:600; white-space:nowrap; }
+    .community-message-copy a { color:#075e61; text-decoration:underline; text-underline-offset:2px; }
+    @keyframes community-message-scroll { to { transform:translateX(-50%); } }
+    @media (prefers-reduced-motion:reduce) { .community-message { overflow:visible; } .community-message-track { width:auto; animation:none; } .community-message-copy { min-width:0; flex:1 1 auto; padding:12px; white-space:normal; } .community-message-copy[aria-hidden="true"] { display:none; } }
     .subject-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
     .subject-card { display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto auto; min-height:122px; padding:22px; align-items:center; column-gap:14px; text-align:left; background:var(--card-bg); border:2px solid var(--card-border); border-radius:14px; box-shadow:0 7px 18px rgba(22,42,58,.04); transition:transform .2s,border-color .2s,box-shadow .2s; backdrop-filter:blur(10px); }
     .subject-card:hover { border-color:var(--teal); background:var(--card-hover); box-shadow:var(--shadow); transform:translateY(-3px); }
@@ -154,7 +161,7 @@
   <main>
     <div id="loading" class="notice">Loading your quiz library...</div>
     <div id="error" class="notice error" hidden><div class="error-content"><span id="error-message"></span><button id="error-back-to-chapters" class="back-button" type="button">← Back to chapters</button></div></div>
-    <section id="medium-view" hidden><div class="view-heading"><div><h2>अपना माध्यम चुनें</h2><p>अपने विषय और पाठ्यक्रम सामग्री की भाषा चुनें</p></div></div><div id="mediums" class="subject-grid"></div></section>
+    <section id="medium-view" hidden><aside class="community-message" aria-label="Developer message"><div class="community-message-track"><span class="community-message-copy">Important Message : अगर आपके पास रेफरेंस असाइनमेंट, नोट्स या कोई और मददगार कंटेंट है, तो <a href="mailto:examquizpreparation@gmail.com">हमें ईमेल करें</a> हम इसे यहाँ उपलब्ध कर देंगे ताकि दूसरों को भी फ़ायदा हो। इस कम्युनिटी में योगदान दें और साथी शिक्षकों की मदद करें. धन्यवाद!&nbsp;&nbsp;&nbsp; ✦&nbsp;&nbsp;&nbsp;</span><span class="community-message-copy" aria-hidden="true">&nbsp;&nbsp;&nbsp; ✦&nbsp;&nbsp;&nbsp;</span></div></aside><div class="view-heading"><div><h2>अपना माध्यम चुनें</h2><p>अपने विषय और पाठ्यक्रम सामग्री की भाषा चुनें</p></div></div><div id="mediums" class="subject-grid"></div></section>
     <section id="subjects-view" hidden><div class="view-heading"><div><h2>एक विषय चुनें</h2><p id="subject-copy">Seven subjects, ready whenever you are.</p></div><button id="back-to-mediums" class="back-button" type="button">← Back to mediums</button></div><div id="subjects" class="subject-grid"></div></section>
     <section id="chapters-view" hidden><div class="chapter-layout"><div class="chapter-navigation"><button id="back-to-subjects" class="back-button" type="button">← Back to subjects</button><button id="back-to-mediums-from-chapters" class="back-button" type="button">← Back to mediums</button></div><div><h2 id="chapter-title" class="chapter-title"></h2><p class="chapter-copy">शुरू करने के लिए एक चैप्टर चुनें। हर चैप्टर में लगभग 100 प्रैक्टिस सवाल हैं। हर क्विज़ सेट में सिर्फ़ 30 यूनिक सवाल दिखेंगे</p><div id="chapters" class="chapter-list"></div></div></div></section>
     <section id="progress-view" hidden><div class="view-heading"><div><h2>My progress</h2><p>Your subject-wise practice history on this device.</p></div></div><div id="progress-list" class="progress-list"></div></section>
@@ -385,7 +392,7 @@
           if (!Number.isSafeInteger(result.trackedHits)||result.trackedHits<0) throw new Error("Visit count endpoint returned an invalid count.");
           visitorCountValue=result.trackedHits;
           const istTime=value=>new Intl.DateTimeFormat("en-IN",{hour:"numeric",minute:"2-digit",timeZone:"Asia/Kolkata"}).format(new Date(value));
-          visitorCountButton.textContent=`👁️ ${result.trackedHits.toLocaleString()} Visits today (IST)`;
+          visitorCountButton.textContent=`👁️ Total Website Visit today: ${result.trackedHits.toLocaleString()}`;
           visitorCountButton.title=`Counts GoatCounter total hits, including tracked events, from 00:00 IST through ${istTime(result.end)} IST (completed hours only); refreshes every 5 minutes.`;
           visitorCountStatus.textContent=`Updated ${istTime(result.generatedAt)} IST. Count includes completed hours only.`;
         } catch (countError) {
