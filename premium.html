@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ExamQuiz Premium</title>
+<style>
+  :root { --brand:#4f46e5; --bg:#f8fafc; --ink:#0f172a; --muted:#64748b; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Arial, sans-serif; background:var(--bg); color:var(--ink); }
+  main { max-width: 520px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 24px; margin: 8px 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .card { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:18px; }
+  label { display:block; font-size:14px; font-weight:bold; margin:12px 0 6px; }
+  input { width:100%; padding:12px; font-size:16px; border:1px solid #cbd5e1; border-radius:10px; }
+  button { cursor:pointer; font-size:16px; font-weight:bold; border:0; border-radius:10px; padding:12px 16px; }
+  .primary { background:var(--brand); color:#fff; width:100%; margin-top:16px; }
+  .link { background:none; color:var(--brand); padding:8px 0; font-size:14px; }
+  .msg { margin-top:12px; font-size:14px; min-height:20px; }
+  .err { color:#b91c1c; } .ok { color:#15803d; }
+  ul { list-style:none; padding:0; margin:12px 0 0; }
+  li { margin:0 0 10px; }
+  li button { width:100%; text-align:left; background:#eef2ff; color:#1e1b4b; }
+  li small { display:block; color:var(--muted); font-weight:normal; margin-top:2px; }
+  .row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1>ExamQuiz Premium</h1>
+  <p class="sub">Members-only study pack. Sign in with the details we sent you on WhatsApp.</p>
+
+  <section id="loginBox" class="card">
+    <form id="loginForm">
+      <label for="email">Email / User ID</label>
+      <input id="email" type="email" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <button class="primary" type="submit">Sign in</button>
+    </form>
+    <button class="link" id="forgot" type="button">Forgot password?</button>
+    <div id="loginMsg" class="msg" role="status"></div>
+  </section>
+
+  <section id="contentBox" class="card" hidden>
+    <div class="row">
+      <div id="who" style="font-size:14px;color:var(--muted)"></div>
+      <button class="link" id="logout" type="button">Sign out</button>
+    </div>
+    <div id="expiry" class="msg"></div>
+    <ul id="files"></ul>
+    <div id="contentMsg" class="msg" role="status"></div>
+  </section>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, getDocs, query, orderBy }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getStorage, ref, getDownloadURL }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+// TODO: paste your Firebase web app config here (Firebase console > Project settings > Your apps).
+// These values are safe to be public; the security rules protect the content.
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyB8uOMIZvbtGin3kNsEx3BD_UKepP4ChdQ",
+  authDomain: "examquiz-75514.firebaseapp.com",
+  projectId: "examquiz-75514",
+  storageBucket: "examquiz-75514.firebasestorage.app",
+  messagingSenderId: "654411434962",
+  appId: "1:654411434962:web:31b663306d2e260a44960b",
+  measurementId: "G-0DE601SMRL"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+const $ = (id) => document.getElementById(id);
+const setMsg = (el, text, cls) => { el.textContent = text; el.className = "msg " + (cls || ""); };
+
+$("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  setMsg($("loginMsg"), "Signing in...");
+  try {
+    await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value);
+    $("password").value = "";
+    setMsg($("loginMsg"), "");
+  } catch (err) {
+    setMsg($("loginMsg"), "Wrong email or password. Please try again.", "err");
+  }
+});
+
+$("forgot").addEventListener("click", async () => {
+  const email = $("email").value.trim();
+  if (!email) { setMsg($("loginMsg"), "Type your email above first.", "err"); return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (err) { /* do not reveal whether the account exists */ }
+  setMsg($("loginMsg"), "If this email has an account, a reset link has been sent.", "ok");
+});
+
+$("logout").addEventListener("click", () => signOut(auth));
+
+async function showContent(user) {
+  const token = await user.getIdTokenResult(true);
+  const until = Number(token.claims.premiumUntil || 0);
+  $("who").textContent = user.email;
+  $("files").replaceChildren();
+  setMsg($("contentMsg"), "");
+
+  if (!until || until < Date.now()) {
+    setMsg($("expiry"), "Your premium access is not active. Please contact support to renew.", "err");
+    return;
+  }
+  const d = new Date(until).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  setMsg($("expiry"), "Access valid until " + d, "ok");
+
+  try {
+    const snap = await getDocs(query(collection(db, "content"), orderBy("order")));
+    if (snap.empty) { setMsg($("contentMsg"), "No files added yet."); return; }
+    snap.forEach((docSnap) => {
+      const item = docSnap.data();
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = item.title || item.path;
+      if (item.type) {
+        const small = document.createElement("small");
+        small.textContent = item.type;
+        btn.appendChild(small);
+      }
+      btn.addEventListener("click", async () => {
+        try {
+          const url = item.url || await getDownloadURL(ref(storage, item.path));
+          window.open(url, "_blank", "noopener");
+        } catch (err) {
+          setMsg($("contentMsg"), "Could not open this file. Please try again or contact support.", "err");
+        }
+      });
+      li.appendChild(btn);
+      $("files").appendChild(li);
+    });
+  } catch (err) {
+    setMsg($("contentMsg"), "Could not load your files. Please sign in again.", "err");
+  }
+}
+
+onAuthStateChanged(auth, (user) => {
+  $("loginBox").hidden = !!user;
+  $("contentBox").hidden = !user;
+  if (user) showContent(user);
+});
+</script>
+</body>
+</html>
