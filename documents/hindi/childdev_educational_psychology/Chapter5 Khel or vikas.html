@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>पाठ 5: खेल और विकास – ऑडियो</title>
+<style>
+:root{--bg:#f7f6f2;--card:#fff;--tx:#1d2330;--mut:#5d6575;--ac:#1f3d99;--hl:#ffe9a8;--bd:#d9d7ce;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171f;--card:#1d222d;--tx:#eceef3;--mut:#9aa3b5;--ac:#8fa8ff;--hl:#4a3f12;--bd:#313848;color-scheme:dark}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.8 "Noto Sans Devanagari","Mangal",system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:1.4rem;color:var(--ac);margin:8px 0 2px}
+.sub{color:var(--mut);font-size:.9rem;margin:0 0 12px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;z-index:5}
+button,select{font:inherit;font-size:.9rem;padding:8px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)}
+button.p{background:var(--ac);color:#fff;border-color:var(--ac)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.p{color:#111}}
+#msg{color:var(--mut);font-size:.85rem;margin:8px 2px}
+section{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:6px 16px 12px;margin:12px 0}
+section.on{border-color:var(--ac);border-width:2px}
+h2{font-size:1.1rem;color:var(--ac);display:flex;justify-content:space-between;gap:8px;align-items:center}
+.s{cursor:pointer;border-radius:4px}
+.s.cur{background:var(--hl)}
+textarea{width:100%;min-height:90px;font:inherit;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;box-sizing:border-box}
+</style>
+</head>
+<body>
+<main>
+<h1>पाठ 5: खेल और विकास</h1>
+<p class="sub">बाल विकास और शैक्षिक मनोविज्ञान · इकाई 2 · सुनें और साथ-साथ पढ़ें (hi-IN)</p>
+<div class="bar">
+<button class="p" id="play">▶ सुनें</button>
+<button id="pause">⏸ रोकें</button>
+<button id="stop">⏹ बंद</button>
+<button id="prev">⏮</button>
+<button id="next">⏭</button>
+<label>गति <select id="rate"><option value="0.7">धीमी</option><option value="0.85" selected>सामान्य</option><option value="1.05">तेज़</option></select></label>
+<select id="voice" aria-label="आवाज़"></select>
+</div>
+<div id="msg"></div>
+<div id="list"></div>
+<section>
+<h2>अपना पाठ जोड़ें</h2>
+<textarea id="own" placeholder="कोई और अंश यहाँ चिपकाएँ…"></textarea>
+<p><button id="addown">इसे सूची में जोड़ें</button></p>
+</section>
+<p class="sub">नोट: यह अध्याय का संक्षिप्त ऑडियो-पाठ है; आवाज़ आपके डिवाइस की हिन्दी वॉइस से आती है।</p>
+</main>
+<script>
+var S=[
+["5.1 भूमिका","खेल, बच्चों के मनोरंजन का ही एक साधन नहीं है, बल्कि यह शिक्षण और सीखने का भी एक महत्वपूर्ण तरीका है। खेल के माध्यम से वे सीखते हैं, बढ़ते हैं और अपने आस-पास की दुनिया से जुड़ते हैं। लुका-छिपी जैसे सहज मुक्त खेल से लेकर खो-खो जैसे संरचित स्वदेशी खेलों तक, खेल बच्चे की विकास यात्रा में एक आधारशिला है। यह शारीरिक विकास का पोषण करता है, संज्ञानात्मक और भावनात्मक क्षमताओं को बढ़ाता है और रचनात्मकता को बढ़ावा देता है। खेल भारतीय पंचकोश विकास पद्धति के बिलकुल करीब है।"],
+["5.2 सीखने के प्रतिफल","इस पाठ को पढ़ने के बाद शिक्षार्थी वास्तविक दुनिया के उदाहरणों के साथ खेल गतिविधियों को जोड़कर समग्र विकास में उनकी भूमिका प्रदर्शित करते हैं। वे सीखने की स्वतंत्रता का समर्थन करने वाली और साथियों के बीच संघर्ष को समाप्त करने में मदद करने वाली खेल-आधारित गतिविधियाँ डिज़ाइन करते हैं। वे खेल में संघर्ष और संवाद की गतिशीलता को समझते हैं।"],
+["5.3 खेल और बचपन","खेल एक प्राकृतिक, समावेशी और आनंदमय गतिविधि है, जिसमें सभी बच्चे शामिल हो सकते हैं, चाहे उनकी पृष्ठभूमि, संस्कृति या क्षमता कुछ भी हो। बच्चे खेल के माध्यम से सीख रहे होते हैं, चाहे वे दौड़ रहे हों, चित्र बना रहे हों, निर्माण कर रहे हों या किसी और के होने का नाटक कर रहे हों। खेल से संचार, समस्या-समाधान, सहयोग और आत्म-नियमन जैसे जीवन कौशल विकसित होते हैं। गेंद पकड़ने का खेल मोटर कौशल सुधारता है, जबकि शिक्षक या डॉक्टर बनने का अभिनय भाषा और सामाजिक समझ बढ़ाता है। यूनिसेफ की रिपोर्ट के अनुसार खेल-आधारित शिक्षा गहरी भागीदारी, रचनात्मकता और लचीलेपन को बढ़ावा देती है।"],
+["5.4 खेल के प्रकार: मुक्त और संरचित खेल","मुक्त खेल पूरी तरह बच्चे द्वारा शुरू और निर्देशित किया जाता है। इसमें कोई पूर्व निर्धारित नियम या लक्ष्य नहीं होते। खिलौना बर्तनों से खाना पकाने की नकल करना या तकियों से किला बनाना इसके उदाहरण हैं। मुक्त खेल रचनात्मकता, स्वतंत्रता और भावनात्मक अभिव्यक्ति को बढ़ावा देता है। संरचित खेल में पूर्व-निर्धारित नियम, उद्देश्य और अक्सर किसी वयस्क का मार्गदर्शन होता है। इससे बच्चे बारी लेना, धैर्य, ध्यान और अनुशासन सीखते हैं। दोनों प्रकार के खेल आवश्यक हैं। मुक्त खेल आत्म-अभिव्यक्ति का पोषण करता है, जबकि संरचित खेल ध्यान और अनुशासन का निर्माण करता है।"],
+["5.4.3 इंडोर और आउटडोर खेल","इंडोर खेल में पहेलियाँ, कहानी सुनाना, निर्माण खेल और बोर्ड गेम शामिल हैं, जो आलोचनात्मक चिंतन, सूक्ष्म मोटर कौशल, भाषा और दीर्घकालिक ध्यान विकसित करते हैं। एकांत खेल और समानांतर खेल भी इसमें आते हैं। बाहरी खेल पार्क या मैदान में होते हैं। दौड़ना, कूदना और चढ़ना स्थूल गतिक कौशल, संतुलन और मांसपेशियों की मजबूती बढ़ाते हैं। लुका-छिपी और खो-खो जैसे खेल टीम वर्क और नियमों की समझ भी देते हैं। धूप से विटामिन डी भी मिलता है। दोनों का संतुलन बच्चों में अनुकूलनशीलता और आत्म-नियमन विकसित करता है।"],
+["5.4.5 रचनात्मक खेल और भूमिका निभाना","रचनात्मक खेल में पेंटिंग, ड्राइंग, मिट्टी की मूर्तिकला, गाना और कल्पनाशील कहानियाँ बनाना शामिल हैं। इनमें सही या गलत उत्तर की सीमा नहीं होती, इसलिए बच्चे खुलकर प्रयोग और अभिव्यक्ति करते हैं। भूमिका निभाने में बच्चे शिक्षक, दुकानदार या अग्निशामक जैसे पात्रों का अभिनय करते हैं। इससे सहानुभूति, संचार कौशल और सांस्कृतिक जागरूकता बढ़ती है। दोनों प्रकार के खेल कल्पना को उत्तेजित करते हैं और बच्चों को दुनिया को अनेक दृष्टिकोणों से समझना सिखाते हैं।"],
+["5.5 स्वदेशी खेल और सांस्कृतिक संदर्भ","स्वदेशी खेल वे पारंपरिक खेल हैं जो समुदायों द्वारा पीढ़ियों से खेले जाते रहे हैं। ये मौखिक परंपराओं से हस्तांतरित होते हैं, सरल होते हैं, न्यूनतम उपकरण माँगते हैं और सभी बच्चों के लिए समावेशी होते हैं। उदाहरणों में दौड़ना और पकड़ना, गिल्ली-डंडा, कबड्डी, पिट्ठू और खो-खो शामिल हैं। कबड्डी टीमवर्क, शक्ति और रणनीति बढ़ाती है। लगोरी समन्वय और समूह नियोजन बनाती है। स्टापू संतुलन, गिनती और मोटर कौशल सुधारता है। गिल्ली-डंडा हाथ-आँख समन्वय और ध्यान बढ़ाता है। कंचे गिनती, अनुमान और बारी से खेलना सिखाते हैं।"],
+["5.5.3 सीखने में पारंपरिक खेलों की भूमिका","खेल से सामाजिक कौशल विकसित होते हैं, जैसे बारी लेना, धैर्य, निष्पक्षता, हार और जीत को शालीनता से स्वीकार करना और दूसरों का सम्मान। भावनात्मक रूप से बच्चे उत्साह और निराशा को संभालना और लचीलापन सीखते हैं। शारीरिक रूप से शक्ति, फुर्ती और सहनशक्ति विकसित होती है। संज्ञानात्मक रूप से रणनीतिक सोच, अवलोकन, स्मृति और समस्या-समाधान की क्षमता बढ़ती है। जापान का केंडमा, अफ्रीका का मनकला और मेक्सिको की लोटेरिया जैसे दूसरे देशों के खेल भी समान लक्ष्य साझा करते हैं और विविधता के प्रति सम्मान सिखाते हैं।"],
+["5.6 खेल और समग्र विकास","खेल दौड़ने, कूदने और संतुलन जैसे स्थूल कौशल तथा पकड़ने, चित्र बनाने और हाथ-आँख समन्वय जैसे सूक्ष्म कौशल को बढ़ावा देता है। नियमित शारीरिक खेल तनाव कम करता है और आजीवन व्यायाम की आदत बनाता है। सामाजिक और भावनात्मक रूप से बच्चे साझा करना, सहयोग, सहानुभूति, निराशा को संभालना और नियमों पर बातचीत करना सीखते हैं। पहेलियाँ तर्क शक्ति बढ़ाती हैं और भूमिका निभाना भाषा तथा कहानी कहने का कौशल। बाज़ार का खेल संख्याएँ और पैसे सिखाता है, और ब्लॉकों की मीनार संतुलन, योजना और स्थानिक समझ।"],
+["5.7 खेल-आधारित गतिविधियों की रूपरेखा","एक अच्छी खेल गतिविधि बाल-केंद्रित, मनोरंजक, मुक्त-अंत, विकासात्मक रूप से उपयुक्त और समावेशी होती है। वह जीतने या जल्दी खत्म करने के बारे में नहीं, बल्कि सम्मानजनक वातावरण में करके सीखने के बारे में होती है। खेल भाषा, गणित, ईवीएस और कला, हर विषय का हिस्सा हो सकता है। गतिविधियों में स्थानीय सामग्री और विभिन्न संस्कृतियों की कहानियों और खेलों को शामिल करें। शारीरिक, संज्ञानात्मक, संवेदी और सामाजिक-भावनात्मक ज़रूरतों के अनुसार खेलों को अनुकूलित करें, जैसे सिट-डाउन टैग, दृश्य सहायता, शांत स्थान और बारी-बारी का सहारा। इससे संबद्धता, सामाजिक कौशल और भावनात्मक कल्याण बढ़ता है। उदाहरण हैं नंबर हॉप खेल, कहानी नाटक समूह और स्थानीय बाज़ार रोल प्ले।"],
+["5.8 खेल में संघर्ष, सहयोग और संवाद","खेल में संघर्ष तब उठते हैं जब बच्चे नियमों पर असहमत होते हैं या बारी लेने और साझा करने में कठिनाई महसूस करते हैं। ये स्वाभाविक हैं और सीखने के क्षण होते हैं। शिक्षक को तुरंत हस्तक्षेप करने के बजाय अवलोकन करना चाहिए और ज़रूरत पर समर्थन देना चाहिए। सहयोग को समूह निर्माण कार्य, गेंद पास करने वाले खेल, रिले दौड़ और समूह गीत से बढ़ावा मिलता है। संघर्ष सुलझाने के लिए बच्चों को शब्दों में भावनाएँ व्यक्त करने, टाइमर से बारी लेने, साथ मिलकर हल सोचने और खेल के बाद चिंतन करने के लिए प्रेरित करें। शिक्षक पर्यवेक्षक, सुविधाप्रदाता और मार्गदर्शक की भूमिका निभाते हैं।"],
+["5.9 चिंतन और अनुप्रयोग","शिक्षकों को सोचना चाहिए कि क्या वे रोज़ स्वतंत्र और निर्देशित खेल के लिए पर्याप्त समय देते हैं, क्या सभी बच्चे सक्रिय रूप से भाग ले रहे हैं, और संघर्ष के समय वे कैसे प्रतिक्रिया करते हैं। कक्षा दो में बारी टाइमर से बच्चों ने साझा करना सीखा। एक ग्रामीण स्कूल में शुक्रवार को स्टापू और पिट्ठू से बच्चे अधिक सक्रिय हुए। राष्ट्रीय शिक्षा नीति 2020 दक्षता-आधारित, आनंददायक और गतिविधि-आधारित अधिगम पर बल देती है। खेल आधारभूत साक्षरता और संख्या ज्ञान, आलोचनात्मक चिंतन, बहुभाषी अभिव्यक्ति और सांस्कृतिक जड़ों को बढ़ावा देता है। इसलिए खेल कोई अतिरिक्त गतिविधि नहीं, बल्कि एक मौलिक आवश्यकता है।"],
+["5.10 सारांश","खेल एक स्वाभाविक और आवश्यक गतिविधि है, जो शारीरिक, संज्ञानात्मक, भावनात्मक और सामाजिक विकास में केंद्रीय भूमिका निभाती है। मुक्त, संरचित, इंडोर, आउटडोर, रचनात्मक और रोल प्ले का संतुलित संयोजन समग्र विकास को बढ़ावा देता है। स्वदेशी खेल बच्चों को सांस्कृतिक जड़ों से जोड़ते हैं। संघर्ष, सहयोग और संवाद खेल के प्राकृतिक अंग हैं, और शिक्षक इनके माध्यम से बच्चों का मार्गदर्शन करते हैं।"],
+["5.11 पाठांत प्रश्न (चुने हुए)","प्रश्न एक। खेल के बारे में आपकी क्या समझ है? आप इसे किसी अभिभावक को कैसे समझाएँगे? प्रश्न दो। मुक्त खेल और संरचित खेल में आप किस प्रकार अंतर करेंगे? प्रत्येक का एक उदाहरण दीजिए। प्रश्न तीन। स्वदेशी खेल क्या हैं? अपने बचपन में खेले गए किसी दो स्वदेशी खेलों के नाम लिखिए। प्रश्न चार। खेल के दौरान संघर्ष क्यों उत्पन्न होते हैं, और अधिगम के लिए वे क्यों महत्वपूर्ण हैं? प्रश्न पाँच। खेल-आधारित अधिगम में शिक्षक का आत्म-चिंतन क्यों महत्वपूर्ण है?"]
+];
+var $=function(i){return document.getElementById(i)},list=$("list"),msg=$("msg"),vsel=$("voice");
+var si=0,ci=0,run=false,sents=[],cur=null;
+function split(t){return t.match(/[^।?!]+[।?!]?/g).map(function(x){return x.trim()}).filter(Boolean)}
+function render(){
+ list.innerHTML="";sents=S.map(function(s){return split(s[1])});
+ S.forEach(function(s,i){
+  var e=document.createElement("section");e.id="sec"+i;
+  var h=document.createElement("h2");h.textContent=s[0];
+  var b=document.createElement("button");b.textContent="▶";b.onclick=function(){go(i,0)};h.appendChild(b);e.appendChild(h);
+  var p=document.createElement("p");
+  sents[i].forEach(function(t,j){var sp=document.createElement("span");sp.className="s";sp.id="s"+i+"_"+j;sp.textContent=t+" ";sp.onclick=function(){go(i,j)};p.appendChild(sp)});
+  e.appendChild(p);list.appendChild(e)});
+}
+function voices(){
+ var v=(window.speechSynthesis?speechSynthesis.getVoices():[]).filter(function(x){return /^hi/i.test(x.lang)});
+ vsel.innerHTML="";
+ v.forEach(function(x){var o=document.createElement("option");o.value=x.name;o.textContent=x.name+" ("+x.lang+")";vsel.appendChild(o)});
+ if(!v.length){var o=document.createElement("option");o.textContent="डिफ़ॉल्ट आवाज़";vsel.appendChild(o);
+  msg.textContent="हिन्दी आवाज़ नहीं मिली। डिवाइस की सेटिंग्स में Hindi (India) टेक्स्ट-टू-स्पीच आवाज़ जोड़ें।"}
+ else msg.textContent="";
+}
+function mark(){
+ document.querySelectorAll(".cur").forEach(function(x){x.classList.remove("cur")});
+ document.querySelectorAll("section.on").forEach(function(x){x.classList.remove("on")});
+ var e=$("s"+si+"_"+ci);if(e){e.classList.add("cur");$("sec"+si).classList.add("on");e.scrollIntoView({block:"center",behavior:"smooth"})}
+}
+function speak(){
+ if(!run)return;
+ if(si>=S.length){stopAll();return}
+ if(ci>=sents[si].length){si++;ci=0;return speak()}
+ mark();
+ var u=new SpeechSynthesisUtterance(sents[si][ci]);u.lang="hi-IN";u.rate=parseFloat($("rate").value);
+ var v=speechSynthesis.getVoices().filter(function(x){return x.name===vsel.value})[0];if(v)u.voice=v;
+ u.onend=function(){if(run&&u===cur){ci++;speak()}};
+ cur=u;speechSynthesis.speak(u);
+}
+function go(i,j){if(!window.speechSynthesis){msg.textContent="यह ब्राउज़र आवाज़ का समर्थन नहीं करता।";return}
+ cur=null;speechSynthesis.cancel();si=i;ci=j;run=true;setTimeout(speak,80)}
+function stopAll(){run=false;cur=null;speechSynthesis.cancel();document.querySelectorAll(".cur").forEach(function(x){x.classList.remove("cur")})}
+$("play").onclick=function(){go(si,ci)};
+$("pause").onclick=function(){run=false;cur=null;speechSynthesis.cancel()};
+$("stop").onclick=function(){stopAll();si=0;ci=0};
+$("next").onclick=function(){go(Math.min(si+1,S.length-1),0)};
+$("prev").onclick=function(){go(Math.max(si-1,0),0)};
+$("rate").onchange=function(){if(run)go(si,ci)};
+vsel.onchange=function(){if(run)go(si,ci)};
+$("addown").onclick=function(){var t=$("own").value.trim();if(!t)return;S.push(["मेरा जोड़ा गया पाठ",t]);$("own").value="";render()};
+render();voices();
+if(window.speechSynthesis)speechSynthesis.onvoiceschanged=voices;
+</script>
+</body>
+</html>

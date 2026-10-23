@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>पाठ 4: विकास – ऑडियो</title>
+<style>
+:root{--bg:#f7f6f2;--card:#fff;--tx:#1d2330;--mut:#5d6575;--ac:#1f3d99;--hl:#ffe9a8;--bd:#d9d7ce;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171f;--card:#1d222d;--tx:#eceef3;--mut:#9aa3b5;--ac:#8fa8ff;--hl:#4a3f12;--bd:#313848;color-scheme:dark}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.8 "Noto Sans Devanagari","Mangal",system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:1.4rem;color:var(--ac);margin:8px 0 2px}
+.sub{color:var(--mut);font-size:.9rem;margin:0 0 12px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;z-index:5}
+button,select{font:inherit;font-size:.9rem;padding:8px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)}
+button.p{background:var(--ac);color:#fff;border-color:var(--ac)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.p{color:#111}}
+#msg{color:var(--mut);font-size:.85rem;margin:8px 2px}
+section{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:6px 16px 12px;margin:12px 0}
+section.on{border-color:var(--ac);border-width:2px}
+h2{font-size:1.1rem;color:var(--ac);display:flex;justify-content:space-between;gap:8px;align-items:center}
+.s{cursor:pointer;border-radius:4px}
+.s.cur{background:var(--hl)}
+textarea{width:100%;min-height:90px;font:inherit;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;box-sizing:border-box}
+</style>
+</head>
+<body>
+<main>
+<h1>पाठ 4: विकास</h1>
+<p class="sub">बाल विकास और शैक्षिक मनोविज्ञान · इकाई 2 · सुनें और साथ-साथ पढ़ें (hi-IN)</p>
+<div class="bar">
+<button class="p" id="play">▶ सुनें</button>
+<button id="pause">⏸ रोकें</button>
+<button id="stop">⏹ बंद</button>
+<button id="prev">⏮</button>
+<button id="next">⏭</button>
+<label>गति <select id="rate"><option value="0.7">धीमी</option><option value="0.85" selected>सामान्य</option><option value="1.05">तेज़</option></select></label>
+<select id="voice" aria-label="आवाज़"></select>
+</div>
+<div id="msg"></div>
+<div id="list"></div>
+<section>
+<h2>अपना पाठ जोड़ें</h2>
+<textarea id="own" placeholder="कोई और अंश यहाँ चिपकाएँ…"></textarea>
+<p><button id="addown">इसे सूची में जोड़ें</button></p>
+</section>
+<p class="sub">नोट: यह अध्याय का संक्षिप्त ऑडियो-पाठ है; आवाज़ आपके डिवाइस की हिन्दी वॉइस से आती है।</p>
+</main>
+<script>
+var S=[
+["4.1 भूमिका","पाठ 3 में हमने स्व की भारतीय अवधारणा का अध्ययन किया, जिसमें मन, बुद्धि और स्मृति के पारस्परिक संबंधों के साथ-साथ पंचकोशीय विकास के समग्र ढाँचे को समझा गया। पाठ 4 इस समझ को आगे बढ़ाते हुए यह विवेचन करता है कि आधारभूत एवं प्रारंभिक अवस्था में बच्चे शारीरिक, संज्ञानात्मक, सामाजिक-भावनात्मक, नैतिक तथा भाषायी आयामों में कैसे विकास करते हैं। इसमें यह भी देखा जाएगा कि परिवार, समवयस्क समूह और विद्यालय बच्चों के विकास को कैसे आकार देते हैं।"],
+["4.2 सीखने के प्रतिफल","इस पाठ को पढ़ने के बाद शिक्षार्थी तीन से ग्यारह वर्ष के बच्चों में विभिन्न विकासात्मक आयामों की विशेषताओं और विकास-चरणों की पहचान करते हैं। वे विकास के लिए उचित अधिगम को प्रोत्साहित करने में परिवार, विद्यालय, शिक्षक और समुदाय की भूमिका का विवरण प्रस्तुत करते हैं। वे संतुलित विकास को बढ़ावा देने वाले अधिगम-कार्यकलापों की रूपरेखा भी तैयार करते हैं।"],
+["4.3 समग्र दृष्टिकोण के रूप में बाल विकास","बाल विकास एकांगी प्रक्रिया नहीं है। यह एक गतिशील प्रक्रिया है, जो कई परस्पर-संबद्ध आयामों के माध्यम से क्रमशः विकसित होती है। इन सभी आयामों का संयुक्त विकास ही समग्र विकास को संभव बनाता है।"],
+["4.3.1 शारीरिक विकास","तीन से ग्यारह वर्ष में शारीरिक विकास क्रमिक रूप से होता है और गति, समन्वय, शक्ति तथा स्वास्थ्य के विकास-चरण इसमें शामिल होते हैं। तीन से पाँच वर्ष में बच्चे दौड़ना, कूदना और चढ़ना सीखते हैं तथा सूक्ष्म गतिक कौशल भी विकसित होते हैं। छह से ग्यारह वर्ष में ऊँचाई, वजन और मांसपेशियों की शक्ति बढ़ती है और कौशलों का परिष्करण होता है। नियमित निगरानी से किसी भी विकासात्मक देरी की पहचान समय रहते की जा सकती है। बाह्य खेल, मिट्टी से आकृति निर्माण, अवरोध-पथ गतिविधियाँ और हाथ धोने की दिनचर्या इस विकास में सहायक हैं। आकलन अवलोकन-आधारित, सतत तथा बाल-अनुकूल होना चाहिए।"],
+["4.3.2 संज्ञानात्मक विकास","संज्ञानात्मक विकास से आशय बच्चे की सोचने, समझने और तर्क करने की क्षमता के विकास से है। तीन से ग्यारह वर्ष के बच्चे पियाजे के संक्रियापूर्व तथा मूर्त संक्रियात्मक चरण में आते हैं। संक्रियापूर्व चरण में प्रतीकात्मक चिंतन, आत्मकेन्द्रितता और कल्पनात्मक खेल दिखता है, जबकि संरक्षण की समझ कठिन होती है। मूर्त संक्रियात्मक चरण में तार्किक चिंतन, संरक्षण, वर्गीकरण और दूसरों के दृष्टिकोण की समझ विकसित होती है। ध्यान, स्मृति, तर्क और समस्या-समाधान को कहानी सुनना, पहेलियाँ और अवधारणा-मानचित्रण जैसी गतिविधियों से बढ़ावा मिलता है।"],
+["4.3.3 सामाजिक-भावनात्मक विकास","सामाजिक-भावनात्मक विकास में भावनाओं को समझना और नियंत्रित करना, स्वस्थ संबंध बनाना, सहानुभूति दिखाना और उत्तरदायी निर्णय लेना शामिल है। तीन से आठ वर्ष के बच्चे मूल भावनाएँ व्यक्त करते हैं, पर नियमन में कठिनाई अनुभव करते हैं। आठ से ग्यारह वर्ष में भावनाओं पर नियंत्रण, गहरी मित्रता, संघर्ष-समाधान और दूसरों का दृष्टिकोण समझने की क्षमता बढ़ती है। शिक्षक वृत्त-समय, कहानी-कथन, भूमिका-अभिनय और सकारात्मक सुदृढ़ीकरण से इसे समर्थन दे सकते हैं।"],
+["4.3.4 नैतिक विकास","नैतिक विकास वह प्रक्रिया है जिसमें बच्चे सही-गलत में भेद करना सीखते हैं और निष्पक्षता, न्याय, ईमानदारी और उत्तरदायित्व की भावना बनाते हैं। छोटे बच्चे नियमों को स्थिर मानते हैं और दंड या पुरस्कार के आधार पर व्यवहार करते हैं। बड़े बच्चे कार्य के पीछे की मंशा पर विचार करने लगते हैं और समझते हैं कि नियम सामाजिक उद्देश्यों के लिए होते हैं। कथा-कथन, भूमिका-अभिनय और शिक्षक द्वारा स्वयं आदर्श प्रस्तुत करना इसके प्रभावी तरीके हैं।"],
+["4.3.5 भाषा विकास","भाषा विकास संप्रेषण, चिंतन, अधिगम और सामाजिक सहभागिता का मूल आधार है। तीन से पाँच वर्ष में शब्दावली तेज़ी से बढ़ती है और बच्चा पूर्ण वाक्य बोलने तथा सरल कहानी सुनाने लगता है। छह से आठ वर्ष में शब्दावली पाँच हज़ार से अधिक शब्दों तक पहुँचती है और बच्चा पढ़ना तथा छोटे अनुच्छेद लिखना शुरू करता है। नौ से ग्यारह वर्ष में जटिल वाक्य, तार्किक लेखन और आलंकारिक भाषा की समझ विकसित होती है।"],
+["4.4 विकास में विभिन्न हितधारकों की भूमिका","परिवार बच्चों का पहला सामाजिक परिवेश है, जहाँ वे भाषा, व्यवहार और नैतिकता के प्रारंभिक अनुभव पाते हैं। शिक्षक को अभिभावकों के साथ खुला और नियमित संवाद रखना चाहिए। सहपाठी बच्चों के सामाजिक, भावनात्मक, संज्ञानात्मक और भाषायी विकास में महत्वपूर्ण भूमिका निभाते हैं; युग्म कार्य, समूह कार्य और सहपाठी शिक्षण इसमें सहायक हैं। विद्यालय एक संरचित, पोषणकारी और प्रेरक वातावरण देता है, पर संसाधनों की कमी, विविध अधिगम आवश्यकताओं और अभिभावक सहभागिता जैसी चुनौतियाँ भी सामने आती हैं। इनके समाधान के लिए शिक्षक प्रशिक्षण, सहायक स्टाफ और गृह-विद्यालय साझेदारी आवश्यक है।"],
+["4.5 सारांश","इस पाठ में हमने तीन से ग्यारह वर्ष के बच्चों के शारीरिक, संज्ञानात्मक, सामाजिक-भावनात्मक, नैतिक और भाषा विकास को समझा। हमने यह भी देखा कि शिक्षक, परिवार, सहपाठी और विद्यालय मिलकर बच्चे के समग्र विकास को सहयोग देते हैं।"],
+["4.6 पाठांत प्रश्न","प्रश्न एक। शिक्षक ऐसी कौन-सी कक्षा-गतिविधि अभिकल्पित कर सकता है, जो बच्चों के संज्ञानात्मक, सामाजिक-भावनात्मक तथा भाषिक विकास, तीनों को एक साथ समर्थन दे? उपयुक्त उदाहरण सहित स्पष्ट कीजिए। प्रश्न दो। परिवार, सहपाठी और विद्यालय के बीच समन्वय का अभाव बच्चे के समग्र विकास को किन-किन प्रकार से बाधित कर सकता है? तर्क सहित उत्तर दीजिए।"]
+];
+var $=function(i){return document.getElementById(i)},list=$("list"),msg=$("msg"),vsel=$("voice");
+var si=0,ci=0,run=false,sents=[];
+function split(t){return t.match(/[^।?!]+[।?!]?/g).map(function(x){return x.trim()}).filter(Boolean)}
+function render(){
+ list.innerHTML="";sents=S.map(function(s){return split(s[1])});
+ S.forEach(function(s,i){
+  var e=document.createElement("section");e.id="sec"+i;
+  var h=document.createElement("h2");h.textContent=s[0];
+  var b=document.createElement("button");b.textContent="▶";b.onclick=function(){go(i,0)};h.appendChild(b);e.appendChild(h);
+  var p=document.createElement("p");
+  sents[i].forEach(function(t,j){var sp=document.createElement("span");sp.className="s";sp.id="s"+i+"_"+j;sp.textContent=t+" ";sp.onclick=function(){go(i,j)};p.appendChild(sp)});
+  e.appendChild(p);list.appendChild(e)});
+}
+function voices(){
+ var v=(window.speechSynthesis?speechSynthesis.getVoices():[]).filter(function(x){return /^hi/i.test(x.lang)});
+ vsel.innerHTML="";
+ v.forEach(function(x){var o=document.createElement("option");o.value=x.name;o.textContent=x.name+" ("+x.lang+")";vsel.appendChild(o)});
+ if(!v.length){var o=document.createElement("option");o.textContent="डिफ़ॉल्ट आवाज़";vsel.appendChild(o);
+  msg.textContent="हिन्दी आवाज़ नहीं मिली। डिवाइस की सेटिंग्स में Hindi (India) टेक्स्ट-टू-स्पीच आवाज़ जोड़ें।"}
+ else msg.textContent="";
+}
+function mark(){
+ document.querySelectorAll(".cur").forEach(function(x){x.classList.remove("cur")});
+ document.querySelectorAll("section.on").forEach(function(x){x.classList.remove("on")});
+ var e=$("s"+si+"_"+ci);if(e){e.classList.add("cur");$("sec"+si).classList.add("on");e.scrollIntoView({block:"center",behavior:"smooth"})}
+}
+function speak(){
+ if(!run)return;
+ if(si>=S.length){stopAll();return}
+ if(ci>=sents[si].length){si++;ci=0;return speak()}
+ mark();
+ var u=new SpeechSynthesisUtterance(sents[si][ci]);u.lang="hi-IN";u.rate=parseFloat($("rate").value);
+ var v=speechSynthesis.getVoices().filter(function(x){return x.name===vsel.value})[0];if(v)u.voice=v;
+ u.onend=function(){if(run&&u===cur){ci++;speak()}};
+ u.onerror=function(){};
+ cur=u;speechSynthesis.speak(u);
+}
+var cur=null;
+function go(i,j){if(!window.speechSynthesis){msg.textContent="यह ब्राउज़र आवाज़ का समर्थन नहीं करता।";return}
+ cur=null;speechSynthesis.cancel();si=i;ci=j;run=true;setTimeout(speak,80)}
+function stopAll(){run=false;cur=null;speechSynthesis.cancel();document.querySelectorAll(".cur").forEach(function(x){x.classList.remove("cur")})}
+$("play").onclick=function(){go(si,ci)};
+$("pause").onclick=function(){run=false;cur=null;speechSynthesis.cancel()};
+$("stop").onclick=function(){stopAll();si=0;ci=0};
+$("next").onclick=function(){go(Math.min(si+1,S.length-1),0)};
+$("prev").onclick=function(){go(Math.max(si-1,0),0)};
+$("rate").onchange=function(){if(run)go(si,ci)};
+vsel.onchange=function(){if(run)go(si,ci)};
+$("addown").onclick=function(){var t=$("own").value.trim();if(!t)return;S.push(["मेरा जोड़ा गया पाठ",t]);$("own").value="";render()};
+render();voices();
+if(window.speechSynthesis)speechSynthesis.onvoiceschanged=voices;
+</script>
+</body>
+</html>
